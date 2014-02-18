@@ -1,0 +1,245 @@
+/**
+ * @author Joshua Kissoon
+ * @created 20140215
+ * @desc This server handles sending and receiving messages
+ */
+package kademlia.core;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+import kademlia.message.Message;
+import kademlia.message.MessageFactory;
+import kademlia.node.Node;
+import kademlia.operation.Receiver;
+
+public class KadServer
+{
+
+    /* Constants */
+    private static final int DATAGRAM_BUFFER_SIZE = 64 * 1024;      // 64KB
+
+    /* Server Objects */
+    private final int udpPort;
+    private final DatagramSocket socket;
+    private boolean isRunning;
+    private final HashMap<Integer, Receiver> receivers;
+    private final Timer timer;      // Schedule future tasks
+
+    /* Factories */
+    private final MessageFactory messageFactory;
+
+    
+    {
+        isRunning = true;
+    }
+
+    public KadServer(int udpPort, MessageFactory mFactory) throws SocketException
+    {
+        this.udpPort = udpPort;
+        this.socket = new DatagramSocket(udpPort);
+        this.receivers = new HashMap<>();
+        this.timer = new Timer(true);
+
+        this.messageFactory = mFactory;
+
+        /* Start listening for incoming requests in a new thread */
+        this.startListener();
+    }
+
+    /**
+     * Starts the listener to listen for incoming messages
+     */
+    private void startListener()
+    {
+        new Thread()
+        {
+            @Override
+            public void run()
+            {
+                listen();
+            }
+        }.start();
+    }
+
+    /**
+     * Sends a message
+     *
+     * @param msg  The message to send
+     * @param to   The node to send the message to
+     * @param recv The receiver to handle the response message
+     *
+     * @throws IOException
+     */
+    public void sendMessage(Node to, Message msg, Receiver recv) throws IOException
+    {
+        if (!isRunning)
+        {
+            throw new IllegalStateException("Kad Server is not running.");
+        }
+
+        /* Generate a random communication ID */
+        int comm = new Integer(new Random().nextInt());
+
+        /* Setup the receiver to handle message response */
+        receivers.put(comm, recv);
+        timer.schedule(new TimeoutTask(comm, recv), Configuration.RESPONSE_TIMEOUT);
+
+        /* Send the message */
+        sendMessage(to, msg, comm);
+    }
+
+    public void reply(Node to, Message msg, int comm) throws IOException
+    {
+        if (!isRunning)
+        {
+            throw new IllegalStateException("Kad Server is not running.");
+        }
+        sendMessage(to, msg, comm);
+    }
+
+    private void sendMessage(Node to, Message msg, int comm) throws IOException
+    {
+
+
+        /* Setup the message for transmission */
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        DataOutputStream dout = new DataOutputStream(bout);
+        dout.writeInt(comm);
+        dout.writeByte(msg.code());
+        msg.toStream(dout);
+        dout.close();
+
+        byte[] data = bout.toByteArray();
+
+        if (data.length > DATAGRAM_BUFFER_SIZE)
+        {
+            throw new IOException("MEssage is too big");
+        }
+
+        /* Everything is good, now create the packet and send it */
+        DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
+        pkt.setSocketAddress(to.getSocketAddress());
+        socket.send(pkt);
+    }
+
+    /**
+     * Listen for incoming messages in a separate thread
+     */
+    private void listen()
+    {
+        try
+        {
+            while (isRunning)
+            {
+                try
+                {
+                    /* Wait for a packet */
+                    byte[] buffer = new byte[DATAGRAM_BUFFER_SIZE];
+                    DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+                    socket.receive(packet);
+
+                    /* We've received a packet, now handle it */
+                    ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());
+                    DataInputStream din = new DataInputStream(bin);
+
+                    /* Read in the conversation Id to know which handler to handle this response */
+                    int comm = din.readInt();
+                    byte messCode = din.readByte();
+
+                    Message msg = messageFactory.createMessage(messCode, din);
+                    din.close();
+                    System.out.println("Message Received: " + msg);
+
+                    System.out.println("Receivers: " + receivers);
+
+                    /* Get a receiver for this message */
+                    Receiver receiver;
+                    if (this.receivers.containsKey(comm))
+                    {
+                        /* If there is a reciever in the receivers to handle this */
+                        receiver = this.receivers.remove(comm);
+                    }
+                    else
+                    {
+                        /* There is currently no receivers, try to get one */
+                        receiver = messageFactory.createReceiver(messCode, this);
+                    }
+
+                    /* Invoke the receiver */
+                    if (receiver != null)
+                    {
+                        receiver.receive(msg, comm);
+                    }
+                }
+                catch (IOException e)
+                {
+                    this.isRunning = false;
+                    e.printStackTrace();
+                }
+            }
+        }
+        finally
+        {
+            if (!socket.isClosed())
+            {
+                socket.close();
+            }
+            this.isRunning = false;
+        }
+    }
+
+    /**
+     * Remove a conversation receiver
+     *
+     * @param comm The id of this conversation
+     */
+    private synchronized void unregister(int comm)
+    {
+        Integer key = new Integer(comm);
+        receivers.remove(key);
+    }
+
+    /**
+     * Task that gets called by a separate thread if a timeout for a receiver occurs.
+     * When a reply arrives this task must be cancelled using the <code>cancel()</code>
+     * method inherited from <code>TimerTask</code>. In this case the caller is
+     * responsible for removing the task from the <code>tasks</code> map.
+     * */
+    class TimeoutTask extends TimerTask
+    {
+
+        private final int comm;
+        private final Receiver recv;
+
+        public TimeoutTask(int comm, Receiver recv)
+        {
+            this.comm = comm;
+            this.recv = recv;
+        }
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                unregister(comm);
+                recv.timeout(comm);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}
