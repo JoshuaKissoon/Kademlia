@@ -43,6 +43,28 @@ public class KadBucket implements Bucket
         }
     }
 
+    /**
+     * Checks if this bucket contain a node
+     *
+     * @param n The node to check for
+     *
+     * @return boolean
+     */
+    public boolean containNode(Node n)
+    {
+        return this.nodes.contains(n);
+    }
+
+    /**
+     * Remove a node from this bucket
+     *
+     * @param n The node to remove
+     */
+    public void removeNode(Node n)
+    {
+        this.nodes.remove(n);
+    }
+
     public int numNodes()
     {
         return this.nodes.size();

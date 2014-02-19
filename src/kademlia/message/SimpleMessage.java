@@ -13,7 +13,7 @@ public class SimpleMessage implements Message
 {
 
     /* Message constants */
-    public static final byte CODE = 0x01;
+    public static final byte CODE = 0x05;
 
     private String content;
 

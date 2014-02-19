@@ -64,8 +64,9 @@ public class ConnectOperation implements Operation, Receiver
                 throw new RoutingException("Bootstrap node did not respond: " + bootstrapNode);
             }
 
-            /* @todo Perform lookup for our own ID to get nodes close to us */
-            Operation lookup = new No
+            /* Perform lookup for our own ID to get nodes close to us */
+            Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId());
+            lookup.execute();
             
             /* @todo Refresh buckets to get a good routing table */
             return null;

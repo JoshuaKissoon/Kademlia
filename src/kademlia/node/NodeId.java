@@ -122,7 +122,6 @@ public class NodeId implements Streamable
     public int getFirstSetBitIndex()
     {
         int prefixLength = 0;
-        System.out.println("Bytes: ");
 
         for (byte b : this.keyBytes)
         {

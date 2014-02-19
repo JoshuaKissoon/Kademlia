@@ -17,7 +17,7 @@ public class NodeLookupMessage implements Message
     private Node origin;
     private NodeId lookupId;
 
-    public static final byte CODE = 0x13;
+    public static final byte CODE = 0x03;
 
     /**
      * A new NodeLookupMessage to find nodes

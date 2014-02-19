@@ -19,8 +19,10 @@ import java.util.TreeMap;
 import kademlia.core.Configuration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
+import kademlia.exceptions.UnknownMessageException;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
+import kademlia.message.NodeReplyMessage;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -149,7 +151,7 @@ public class NodeLookupOperation implements Operation, Receiver
             return false;
         }
 
-        /* Get unqueried nodes among the K closest seen */
+        /* Get unqueried nodes among the K closest seen that have not FAILED */
         ArrayList<Node> unasked = this.closestNodesNotFailed(UNASKED);
 
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
@@ -239,15 +241,57 @@ public class NodeLookupOperation implements Operation, Receiver
         return closestNodes;
     }
 
+    /**
+     * Receive and handle the incoming NodeReplyMessage
+     *
+     * @param comm
+     *
+     * @throws java.io.IOException
+     */
     @Override
-    public synchronized void receive(Message incoming, int comm)
+    public synchronized void receive(Message incoming, int comm) throws IOException
     {
-        // NodeRepl
+        /* We receive a NodeReplyMessage with a set of nodes, read this message */
+        NodeReplyMessage msg = (NodeReplyMessage) incoming;
+
+        /* Add the origin node to our routing table */
+        Node origin = msg.getOrigin();
+        this.localNode.getRoutingTable().insert(origin);
+
+        /* Set that we've completed ASKing the origin node */
+        this.nodes.put(origin, ASKED);
+
+        /* Remove this msg from messagesTransiting since it's completed now */
+        this.messagesTransiting.remove(new Integer(comm));
+
+        /* Add the received nodes to our nodes list to query */
+        this.addNodes(msg.getNodes());
+        this.askNodesorFinish();
     }
 
+    /**
+     * A node does not respond or a packet was lost, we set this node as failed
+     *
+     * @param comm
+     *
+     * @throws java.io.IOException
+     */
     @Override
-    public synchronized void timeout(int comm)
+    public synchronized void timeout(int comm) throws IOException
     {
+        /* Get the node associated with this communication */
+        Node n = this.messagesTransiting.get(new Integer(comm));
 
+        if (n == null)
+        {
+            throw new UnknownMessageException("Unknown comm: " + comm);
+        }
+
+        /* Mark this node as failed */
+        this.nodes.put(n, FAILED);
+        this.localNode.getRoutingTable().remove(n);
+        this.messagesTransiting.remove(new Integer(comm));
+
+        this.askNodesorFinish();
     }
 }

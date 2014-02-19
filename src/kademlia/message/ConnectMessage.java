@@ -14,7 +14,7 @@ public class ConnectMessage implements Message
 {
 
     private Node origin;
-    public static final byte CODE = 0x11;
+    public static final byte CODE = 0x02;
 
     public ConnectMessage(Node origin)
     {

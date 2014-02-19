@@ -14,7 +14,7 @@ public class AcknowledgeMessage implements Message
 {
 
     private Node origin;
-    public static final byte CODE = 0x10;
+    public static final byte CODE = 0x01;
 
     public AcknowledgeMessage(Node origin)
     {

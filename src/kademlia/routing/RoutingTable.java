@@ -32,17 +32,34 @@ public class RoutingTable
     }
 
     /**
-     * Adds a new contact to the routing table
+     * Adds a new node to the routing table
      *
      * @param n The contact to add
      */
     public void insert(Node n)
     {
-        /* Find the prefix length of how far this node is away from the contact node */
-        int prefixLength = this.node.getNodeId().xor(n.getNodeId()).getFirstSetBitIndex();
+        /* Find the first set bit: how far this node is away from the contact node */
+        int bucketId = this.node.getNodeId().xor(n.getNodeId()).getFirstSetBitIndex();
 
         /* Put this contact to the bucket that stores contacts prefixLength distance away */
-        this.buckets[prefixLength].insert(n);
+        this.buckets[bucketId].insert(n);
+    }
+
+    /**
+     * Remove a node from the routing table
+     *
+     * @param n The node to remove
+     */
+    public void remove(Node n)
+    {
+        /* Find the first set bit: how far this node is away from the contact node */
+        int bucketId = this.node.getNodeId().xor(n.getNodeId()).getFirstSetBitIndex();
+
+        /* If the bucket has the contact, remove it */
+        if (this.buckets[bucketId].containNode(n))
+        {
+            this.buckets[bucketId].removeNode(n);
+        }
     }
 
     /**

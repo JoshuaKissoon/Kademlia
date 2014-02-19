@@ -25,13 +25,20 @@ public class MessageFactory
     {
         switch (code)
         {
-            default:
             case SimpleMessage.CODE:
                 return new SimpleMessage(in);
             case ConnectMessage.CODE:
                 return new ConnectMessage(in);
             case AcknowledgeMessage.CODE:
                 return new AcknowledgeMessage(in);
+            case NodeReplyMessage.CODE:
+                return new NodeReplyMessage(in);
+            case NodeLookupMessage.CODE:
+                return new NodeLookupMessage(in);
+            default:
+                System.out.println("No Message handler found for message. Code: " + code);
+                return new SimpleMessage(in);
+
         }
     }
 
@@ -44,6 +51,8 @@ public class MessageFactory
                 return new SimpleReceiver();
             case ConnectMessage.CODE:
                 return new ConnectReceiver(server, this.localNode);
+            case NodeLookupMessage.CODE
+                    return new NodeLookupReceiver();
         }
     }
 }
