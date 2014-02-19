@@ -46,6 +46,7 @@ public class ConnectOperation implements Operation, Receiver
     {
         try
         {
+            System.out.println("Connect Operation executing.");
             /* Contact the bootstrap node */
             this.error = true;
             this.attempts = 0;
@@ -109,6 +110,7 @@ public class ConnectOperation implements Operation, Receiver
     @Override
     public synchronized void timeout(int comm) throws IOException
     {
+        System.out.println("Timeout function called");
         if (++this.attempts < MAX_CONNECT_ATTEMPTS)
         {
             this.server.sendMessage(this.bootstrapNode, new ConnectMessage(this.localNode), this);

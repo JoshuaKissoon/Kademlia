@@ -34,6 +34,7 @@ public class KadServer
     private boolean isRunning;
     private final HashMap<Integer, Receiver> receivers;
     private final Timer timer;      // Schedule future tasks
+    private final HashMap<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
 
     /* Factories */
     private final MessageFactory messageFactory;
@@ -41,14 +42,15 @@ public class KadServer
     
     {
         isRunning = true;
+        this.tasks = new HashMap<>();
+        this.receivers = new HashMap<>();
+        this.timer = new Timer(true);
     }
 
     public KadServer(int udpPort, MessageFactory mFactory) throws SocketException
     {
         this.udpPort = udpPort;
         this.socket = new DatagramSocket(udpPort);
-        this.receivers = new HashMap<>();
-        this.timer = new Timer(true);
 
         this.messageFactory = mFactory;
 
@@ -92,7 +94,9 @@ public class KadServer
 
         /* Setup the receiver to handle message response */
         receivers.put(comm, recv);
-        timer.schedule(new TimeoutTask(comm, recv), Configuration.RESPONSE_TIMEOUT);
+        TimerTask task = new TimeoutTask(comm, recv);
+        timer.schedule(task, Configuration.RESPONSE_TIMEOUT);
+        tasks.put(comm, task);
 
         /* Send the message */
         sendMessage(to, msg, comm);
@@ -167,7 +171,12 @@ public class KadServer
                     if (this.receivers.containsKey(comm))
                     {
                         /* If there is a reciever in the receivers to handle this */
-                        receiver = this.receivers.remove(comm);
+                        synchronized (this)
+                        {
+                            receiver = this.receivers.remove(comm);
+                            TimerTask task = (TimerTask) tasks.remove(comm);
+                            task.cancel();
+                        }
                     }
                     else
                     {
@@ -207,6 +216,7 @@ public class KadServer
     {
         Integer key = new Integer(comm);
         receivers.remove(key);
+        this.tasks.remove(key);
     }
 
     /**

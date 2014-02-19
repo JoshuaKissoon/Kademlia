@@ -27,6 +27,7 @@ public class NodeConnectionTest
 
             /* Connecting 2 to 1 */
             kad1.connect(kad2.getNode());
+            
             System.out.println("Kad 1 After: ");
             System.out.println(kad1.getNode().getRoutingTable());
             System.out.println("Kad 2 After: ");
