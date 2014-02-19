@@ -39,7 +39,7 @@ public class RoutingTable
     public void insert(Node n)
     {
         /* Find the prefix length of how far this node is away from the contact node */
-        int prefixLength = this.node.getNodeId().xor(n.getNodeId()).prefixLength();
+        int prefixLength = this.node.getNodeId().xor(n.getNodeId()).getFirstSetBitIndex();
 
         /* Put this contact to the bucket that stores contacts prefixLength distance away */
         this.buckets[prefixLength].insert(n);
@@ -58,10 +58,10 @@ public class RoutingTable
         ArrayList<Node> closest = new ArrayList<>(num);
 
         /* Get the bucket number to search for closest from */
-        int bucketNumber = this.node.getNodeId().xor(target).prefixLength();
+        int bucketNumber = this.node.getNodeId().xor(target).getFirstSetBitIndex();
 
         /* Add the contacts from this bucket to the return contacts */
-        for (Node c : this.buckets[bucketNumber].getContacts())
+        for (Node c : this.buckets[bucketNumber].getNodes())
         {
             if (closest.size() < num)
             {
@@ -84,7 +84,7 @@ public class RoutingTable
             /* Check the bucket on the left side */
             if (bucketNumber - i > 0)
             {
-                for (Node c : this.buckets[bucketNumber - i].getContacts())
+                for (Node c : this.buckets[bucketNumber - i].getNodes())
                 {
                     if (closest.size() < num)
                     {
@@ -100,7 +100,7 @@ public class RoutingTable
             /* Check the bucket on the right side */
             if (bucketNumber + i < NodeId.ID_LENGTH)
             {
-                for (Node c : this.buckets[bucketNumber + i].getContacts())
+                for (Node c : this.buckets[bucketNumber + i].getNodes())
                 {
                     if (closest.size() < num)
                     {
@@ -121,6 +121,18 @@ public class RoutingTable
         }
 
         return closest;
+    }
+
+    public ArrayList<Node> getAllNodes()
+    {
+        ArrayList<Node> nodes = new ArrayList<>();
+
+        for (KadBucket b : this.buckets)
+        {
+            nodes.addAll(b.getNodes());
+        }
+
+        return nodes;
     }
 
     @Override

@@ -119,7 +119,7 @@ public class NodeId implements Streamable
      *
      * @return int The number of leading 0's
      */
-    public int prefixLength()
+    public int getFirstSetBitIndex()
     {
         int prefixLength = 0;
         System.out.println("Bytes: ");

@@ -59,7 +59,7 @@ public class KadBucket implements Bucket
         this.nodes.remove(n);
     }
 
-    public ArrayList<Node> getContacts()
+    public ArrayList<Node> getNodes()
     {
         return this.nodes;
     }

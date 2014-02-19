@@ -65,6 +65,8 @@ public class ConnectOperation implements Operation, Receiver
             }
 
             /* @todo Perform lookup for our own ID to get nodes close to us */
+            Operation lookup = new No
+            
             /* @todo Refresh buckets to get a good routing table */
             return null;
 

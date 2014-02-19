@@ -8,9 +8,11 @@ package kademlia.node;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Comparator;
 import kademlia.message.Streamable;
 import kademlia.routing.RoutingTable;
 
@@ -114,5 +116,53 @@ public class Node implements Streamable
     public RoutingTable getRoutingTable()
     {
         return this.routingTable;
+    }
+
+    /**
+     * A DistanceComparator is used to compare Node objects based on their closeness
+     * */
+    public static class DistanceComparator implements Comparator
+    {
+
+        private final NodeId nodeId;
+
+        /**
+         * The NodeId relative to which the distance should be measured.
+         *
+         * @param nodeId
+         * */
+        public DistanceComparator(NodeId nodeId)
+        {
+            this.nodeId = nodeId;
+        }
+
+        /**
+         * Compare two objects which must both be of type <code>Node</code>
+         * and determine which is closest to the identifier specified in the
+         * constructor.
+         * */
+        @Override
+        public int compare(Object o1, Object o2)
+        {
+            Node n1 = (Node) o1;
+            Node n2 = (Node) o2;
+
+            int index1 = nodeId.xor(n1.getNodeId()).getFirstSetBitIndex();
+            int index2 = nodeId.xor(n2.getNodeId()).getFirstSetBitIndex();
+
+            /* If the first node is closer to the given node, return 1 */
+            if (index1 < index2)
+            {
+                return 1;
+            }
+            else if (index1 > index2)
+            {
+                return -1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }

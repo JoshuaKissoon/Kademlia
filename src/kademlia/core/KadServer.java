@@ -82,7 +82,7 @@ public class KadServer
      *
      * @throws IOException
      */
-    public void sendMessage(Node to, Message msg, Receiver recv) throws IOException
+    public synchronized int sendMessage(Node to, Message msg, Receiver recv) throws IOException
     {
         if (!isRunning)
         {
@@ -100,9 +100,10 @@ public class KadServer
 
         /* Send the message */
         sendMessage(to, msg, comm);
+        return comm;
     }
 
-    public void reply(Node to, Message msg, int comm) throws IOException
+    public synchronized void reply(Node to, Message msg, int comm) throws IOException
     {
         if (!isRunning)
         {
