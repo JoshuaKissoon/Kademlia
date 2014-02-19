@@ -18,20 +18,21 @@ public class NodeConnectionTest
         {
             /* Setting up 2 Kad networks */
             Kademlia kad1 = new Kademlia("Joshua", new NodeId("12345678901234567890"), 7574);
-            System.out.println("Kad 1 Before: ");
-            System.out.println(kad1.getNode().getRoutingTable());
-
             Kademlia kad2 = new Kademlia("Crystal", new NodeId("12345678901234567891"), 7572);
-            System.out.println("Kad 2 Before: ");
-            System.out.println(kad2.getNode().getRoutingTable());
 
             /* Connecting 2 to 1 */
             kad1.connect(kad2.getNode());
-            
-            System.out.println("Kad 1 After: ");
+
+            System.out.println("Kad 1: ");
             System.out.println(kad1.getNode().getRoutingTable());
-            System.out.println("Kad 2 After: ");
+            System.out.println("Kad 2: ");
             System.out.println(kad2.getNode().getRoutingTable());
+
+            /* Creating a new node 3 and connecting it to 1, hoping it'll get onto 2 also */
+            Kademlia kad3 = new Kademlia("Jessica", new NodeId("88888736882323647625"), 7783);
+            kad3.connect(kad1.getNode());
+            System.out.println("Kad 3: ");
+            System.out.println(kad3.getNode().getRoutingTable());
         }
         catch (IOException e)
         {

@@ -35,7 +35,7 @@ public class NodeId implements Streamable
      */
     public NodeId()
     {
-        keyBytes = new byte[ID_LENGTH];
+        keyBytes = new byte[ID_LENGTH / 8];
         new Random().nextBytes(keyBytes);
     }
 
@@ -104,7 +104,7 @@ public class NodeId implements Streamable
      */
     public NodeId xor(NodeId nid)
     {
-        byte[] result = new byte[ID_LENGTH];
+        byte[] result = new byte[ID_LENGTH / 8];
         byte[] nidBytes = nid.getBytes();
         for (int i = 0; i < ID_LENGTH / 8; i++)
         {
@@ -122,20 +122,39 @@ public class NodeId implements Streamable
     public int prefixLength()
     {
         int prefixLength = 0;
+        System.out.println("Bytes: ");
 
         for (byte b : this.keyBytes)
         {
             if (b == 0)
             {
-                prefixLength++;
+                prefixLength += 8;
             }
             else
             {
+                /* If the byte is not 0, we need to count how many MSBs are 0 */
+                int count = 0;
+                for (int i = 7; i >= 0; i--)
+                {
+                    boolean a = (b & (1 << i)) == 0;
+                    if (a)
+                    {
+                        count++;
+                    }
+                    else
+                    {
+                        break;   // Reset the count if we encounter a non-zero number
+                    }
+                }
+
+                /* Add the count of MSB 0s to the prefix length */
+                prefixLength += count;
+
+                /* Break here since we've now covered the MSB 0s */
                 break;
             }
         }
-
-        return prefixLength;
+        return ID_LENGTH - prefixLength;
     }
 
     @Override
