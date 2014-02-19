@@ -51,8 +51,8 @@ public class MessageFactory
                 return new SimpleReceiver();
             case ConnectMessage.CODE:
                 return new ConnectReceiver(server, this.localNode);
-            case NodeLookupMessage.CODE
-                    return new NodeLookupReceiver();
+            case NodeLookupMessage.CODE:
+                return new NodeLookupReceiver(server, this.localNode);
         }
     }
 }

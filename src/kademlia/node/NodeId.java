@@ -14,7 +14,7 @@ import kademlia.message.Streamable;
 
 public class NodeId implements Streamable
 {
-
+    
     public final static int ID_LENGTH = 160;
     private byte[] keyBytes;
 
@@ -38,7 +38,7 @@ public class NodeId implements Streamable
         keyBytes = new byte[ID_LENGTH / 8];
         new Random().nextBytes(keyBytes);
     }
-
+    
     public NodeId(byte[] bytes)
     {
         this.keyBytes = bytes;
@@ -55,7 +55,7 @@ public class NodeId implements Streamable
     {
         this.fromStream(in);
     }
-
+    
     public byte[] getBytes()
     {
         return this.keyBytes;
@@ -64,13 +64,26 @@ public class NodeId implements Streamable
     /**
      * Compares a NodeId to this NodeId
      *
-     * @param nid The NodeId to compare to this NodeId
+     * @param o The NodeId to compare to this NodeId
      *
      * @return boolean Whether the 2 NodeIds are equal
      */
-    public boolean equals(NodeId nid)
+    @Override
+    public boolean equals(Object o)
     {
-        return Arrays.equals(keyBytes, nid.getBytes());
+        
+        if (o instanceof NodeId)
+        {
+            NodeId nid = (NodeId) o;
+            return Arrays.equals(this.getBytes(), nid.getBytes());
+        }
+        return false;
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return Arrays.hashCode(this.getBytes());
     }
 
     /**
@@ -110,7 +123,7 @@ public class NodeId implements Streamable
         {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
         }
-
+        
         return new NodeId(result);
     }
 
@@ -122,7 +135,7 @@ public class NodeId implements Streamable
     public int getFirstSetBitIndex()
     {
         int prefixLength = 0;
-
+        
         for (byte b : this.keyBytes)
         {
             if (b == 0)
@@ -155,14 +168,14 @@ public class NodeId implements Streamable
         }
         return ID_LENGTH - prefixLength;
     }
-
+    
     @Override
     public void toStream(DataOutput out) throws IOException
     {
         /* Add the NodeId to the stream */
         out.write(this.getBytes());
     }
-
+    
     @Override
     public void fromStream(DataInput in) throws IOException
     {
@@ -170,14 +183,14 @@ public class NodeId implements Streamable
         in.readFully(input);
         this.keyBytes = input;
     }
-
+    
     @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder("NodeId: ");
         sb.append(new String(this.keyBytes));
-
+        
         return sb.toString();
     }
-
+    
 }

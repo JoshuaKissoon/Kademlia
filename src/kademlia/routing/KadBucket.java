@@ -6,17 +6,20 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import kademlia.node.Node;
+import kademlia.node.NodeId;
 
 public class KadBucket implements Bucket
 {
 
     private final int depth;
-    private final ArrayList<Node> nodes;
+    private final HashMap<NodeId, Node> nodes;
 
     
     {
-        nodes = new ArrayList<>();
+        nodes = new HashMap<>();
     }
 
     /**
@@ -32,14 +35,14 @@ public class KadBucket implements Bucket
     {
         /*@todo Check if the bucket is filled already and handle this */
         /* Check if the contact is already in the bucket */
-        if (this.nodes.contains(n))
+        if (this.nodes.containsKey(n.getNodeId()))
         {
             /* @todo If it is, then move it to the front */
             /* @todo Possibly use a doubly linked list instead of an ArrayList */
         }
         else
         {
-            nodes.add(n);
+            nodes.put(n.getNodeId(), n);
         }
     }
 
@@ -52,7 +55,7 @@ public class KadBucket implements Bucket
      */
     public boolean containNode(Node n)
     {
-        return this.nodes.contains(n);
+        return this.nodes.containsKey(n.getNodeId());
     }
 
     /**
@@ -62,7 +65,7 @@ public class KadBucket implements Bucket
      */
     public void removeNode(Node n)
     {
-        this.nodes.remove(n);
+        this.nodes.remove(n.getNodeId());
     }
 
     public int numNodes()
@@ -78,12 +81,12 @@ public class KadBucket implements Bucket
     @Override
     public void markDead(Node n)
     {
-        this.nodes.remove(n);
+        this.nodes.remove(n.getNodeId());
     }
 
     public ArrayList<Node> getNodes()
     {
-        return this.nodes;
+        return new ArrayList<>(this.nodes.values());
     }
 
     @Override
@@ -92,7 +95,7 @@ public class KadBucket implements Bucket
         StringBuilder sb = new StringBuilder("Printing bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
-        for (Node n : this.nodes)
+        for (Node n : this.nodes.values())
         {
             sb.append("Node: ");
             sb.append(n.getNodeId().toString());

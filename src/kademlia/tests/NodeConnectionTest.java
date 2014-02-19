@@ -17,8 +17,8 @@ public class NodeConnectionTest
         try
         {
             /* Setting up 2 Kad networks */
-            Kademlia kad1 = new Kademlia("Joshua", new NodeId("12345678901234567890"), 7574);
-            Kademlia kad2 = new Kademlia("Crystal", new NodeId("12345678901234567891"), 7572);
+            Kademlia kad1 = new Kademlia("Joshua", new NodeId("12345678947584567467"), 7574);
+            Kademlia kad2 = new Kademlia("Crystal", new NodeId("12345678999324567838"), 7572);
 
             /* Connecting 2 to 1 */
             kad1.connect(kad2.getNode());

@@ -164,6 +164,7 @@ public class RoutingTable
                 sb.append(b.getDepth());
                 sb.append(": ");
                 sb.append(b.numNodes());
+                sb.append(b.toString());
                 sb.append("\n");
             }
         }
