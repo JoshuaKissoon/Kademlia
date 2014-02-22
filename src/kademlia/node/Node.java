@@ -117,6 +117,28 @@ public class Node implements Streamable
         return this.routingTable;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (o instanceof Node)
+        {
+            return this.getNodeId().equals(((Node) o).getNodeId());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.getNodeId().hashCode();
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.getNodeId().toString();
+    }
+
     /**
      * A DistanceComparator is used to compare Node objects based on their closeness
      * */
@@ -145,23 +167,36 @@ public class Node implements Streamable
         {
             Node n1 = (Node) o1;
             Node n2 = (Node) o2;
-
-            int index1 = nodeId.xor(n1.getNodeId()).getFirstSetBitIndex();
-            int index2 = nodeId.xor(n2.getNodeId()).getFirstSetBitIndex();
-
-            /* If the first node is closer to the given node, return 1 */
-            if (index1 < index2)
-            {
-                return 1;
-            }
-            else if (index1 > index2)
-            {
-                return -1;
-            }
-            else
+            if(n1.getNodeId().equals(n2.getNodeId()))
             {
                 return 0;
             }
+
+            //System.out.println("\n **************** Compare Starting **************** ");
+            //System.out.println("Comparing to: " + this.nodeId);
+            int index1 = nodeId.xor(n1.getNodeId()).getFirstSetBitIndex();
+            //System.out.println("Node " + n1.getNodeId() + " distance: " + index1);
+            int index2 = nodeId.xor(n2.getNodeId()).getFirstSetBitIndex();
+            //System.out.println("Node " + n2.getNodeId() + " distance: " + index2);
+
+            /* If the first node is closer to the given node, return 1 */
+            int retval;
+            if (index1 < index2)
+            {
+                retval = 1;
+            }
+            else if (index1 > index2)
+            {
+                retval = -1;
+            }
+            else
+            {
+                retval = -1;
+            }
+
+            //System.out.println("Returned: " + retval);
+            //System.out.println("**************** Compare Ended ***************** \n");
+            return retval;
         }
     }
 }

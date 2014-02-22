@@ -16,7 +16,7 @@ public class Configuration
      * If no reply received from a node in this period (in milliseconds)
      * consider the node unresponsive.
      * */
-    public static long RESPONSE_TIMEOUT = 3000;
+    public static long RESPONSE_TIMEOUT = 1500;
 
     /**
      * Maximum number of milliseconds for performing an operation.
@@ -36,7 +36,7 @@ public class Configuration
     /**
      * Bucket size.
      * */
-    public static int K = 3;
+    public static int K = 5;
 
     /**
      * Size of replacement cache.

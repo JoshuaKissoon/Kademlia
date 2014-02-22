@@ -39,7 +39,7 @@ public class NodeLookupReceiver implements Receiver
 
         Node origin = msg.getOrigin();
 
-        System.out.println(this.localNode.getNodeId() + ": Received incoming NodeLookupMessage, sending NodeReplyMessage to: " + origin.getNodeId());
+        System.out.println(this.localNode.getNodeId() + ": Received NodeLookupMessage, sending NodeReplyMessage to: " + origin.getNodeId());
 
         /* Update the local space by inserting the origin node. */
         this.localNode.getRoutingTable().insert(origin);

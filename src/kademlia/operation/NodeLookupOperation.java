@@ -125,10 +125,19 @@ public class NodeLookupOperation implements Operation, Receiver
         for (Node o : list)
         {
             /* If this node is not in the list, add the node */
+            System.out.println("Trying to add node " + o.getNodeId() + " hash: " + o.hashCode());
+            System.out.println("Contains Key for this node: " + nodes.containsKey(o));
             if (!nodes.containsKey(o))
             {
+                System.out.println("Adding unasked node " + o.getNodeId());
                 nodes.put(o, UNASKED);
             }
+        }
+
+        System.out.println(this.localNode.getNodeId() + " Nodes List: ");
+        for (Node o : this.nodes.keySet())
+        {
+            System.out.println(o.getNodeId() + " hash: " + o.hashCode());
         }
     }
 
@@ -153,6 +162,11 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
         ArrayList<Node> unasked = this.closestNodesNotFailed(UNASKED);
+        System.out.println("Unasked nodes found: ");
+        for (Node nn : unasked)
+        {
+            System.out.println(nn.getNodeId());
+        }
 
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {
@@ -256,6 +270,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Add the origin node to our routing table */
         Node origin = msg.getOrigin();
+        System.out.println(this.localNode.getNodeId() + " Lookup Operation Response From: " + origin.getNodeId());
         this.localNode.getRoutingTable().insert(origin);
 
         /* Set that we've completed ASKing the origin node */

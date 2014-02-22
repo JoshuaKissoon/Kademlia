@@ -49,7 +49,7 @@ public class Kademlia
         this.name = name;
         this.localNode = new Node(defaultId, InetAddress.getLocalHost(), udpPort);
         this.messageFactory = new MessageFactory(localNode);
-        this.server = new KadServer(udpPort, this.messageFactory);
+        this.server = new KadServer(udpPort, this.messageFactory, this.localNode);
         this.timer = new Timer(true);
 
         /* Schedule Recurring RestoreOperation */

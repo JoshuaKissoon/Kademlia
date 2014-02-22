@@ -7,7 +7,6 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -42,7 +41,9 @@ public class KadBucket implements Bucket
         }
         else
         {
+            //System.out.println("Adding new node - " + n.getNodeId() + " to bucket depth: " + this.depth);
             nodes.put(n.getNodeId(), n);
+            //System.out.println(this);
         }
     }
 
@@ -92,7 +93,7 @@ public class KadBucket implements Bucket
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder("Printing bucket at depth: ");
+        StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
         for (Node n : this.nodes.values())

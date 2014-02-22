@@ -35,6 +35,8 @@ public class KadServer
     private final HashMap<Integer, Receiver> receivers;
     private final Timer timer;      // Schedule future tasks
     private final HashMap<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
+    
+    private final Node localNode;
 
     /* Factories */
     private final MessageFactory messageFactory;
@@ -47,10 +49,12 @@ public class KadServer
         this.timer = new Timer(true);
     }
 
-    public KadServer(int udpPort, MessageFactory mFactory) throws SocketException
+    public KadServer(int udpPort, MessageFactory mFactory, Node localNode) throws SocketException
     {
         this.udpPort = udpPort;
         this.socket = new DatagramSocket(udpPort);
+        
+        this.localNode = localNode;
 
         this.messageFactory = mFactory;
 
@@ -128,7 +132,7 @@ public class KadServer
 
         if (data.length > DATAGRAM_BUFFER_SIZE)
         {
-            throw new IOException("MEssage is too big");
+            throw new IOException("Message is too big");
         }
 
         /* Everything is good, now create the packet and send it */
@@ -163,9 +167,7 @@ public class KadServer
 
                     Message msg = messageFactory.createMessage(messCode, din);
                     din.close();
-                    System.out.println("Message Received: " + msg);
-
-                    System.out.println("Receivers: " + receivers);
+                    System.out.println(this.localNode.getNodeId() + " Message Received: " + msg);
 
                     /* Get a receiver for this message */
                     Receiver receiver;

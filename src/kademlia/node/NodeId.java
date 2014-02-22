@@ -8,13 +8,14 @@ package kademlia.node;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Random;
 import kademlia.message.Streamable;
 
 public class NodeId implements Streamable
 {
-    
+
     public final static int ID_LENGTH = 160;
     private byte[] keyBytes;
 
@@ -38,7 +39,7 @@ public class NodeId implements Streamable
         keyBytes = new byte[ID_LENGTH / 8];
         new Random().nextBytes(keyBytes);
     }
-    
+
     public NodeId(byte[] bytes)
     {
         this.keyBytes = bytes;
@@ -55,7 +56,7 @@ public class NodeId implements Streamable
     {
         this.fromStream(in);
     }
-    
+
     public byte[] getBytes()
     {
         return this.keyBytes;
@@ -71,7 +72,7 @@ public class NodeId implements Streamable
     @Override
     public boolean equals(Object o)
     {
-        
+
         if (o instanceof NodeId)
         {
             NodeId nid = (NodeId) o;
@@ -79,11 +80,13 @@ public class NodeId implements Streamable
         }
         return false;
     }
-    
+
     @Override
     public int hashCode()
     {
-        return Arrays.hashCode(this.getBytes());
+        int hash = 7;
+        hash = 83 * hash + Arrays.hashCode(this.keyBytes);
+        return hash;
     }
 
     /**
@@ -119,12 +122,17 @@ public class NodeId implements Streamable
     {
         byte[] result = new byte[ID_LENGTH / 8];
         byte[] nidBytes = nid.getBytes();
+
         for (int i = 0; i < ID_LENGTH / 8; i++)
         {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
+            //System.out.println("XOR Result: " + result[i]);
         }
-        
-        return new NodeId(result);
+
+        NodeId resNid = new NodeId(result);
+
+        //System.out.println("Resulting Nid: " + resNid + " First set bit: " + resNid.getFirstSetBitIndex());
+        return resNid;
     }
 
     /**
@@ -135,7 +143,7 @@ public class NodeId implements Streamable
     public int getFirstSetBitIndex()
     {
         int prefixLength = 0;
-        
+
         for (byte b : this.keyBytes)
         {
             if (b == 0)
@@ -168,14 +176,14 @@ public class NodeId implements Streamable
         }
         return ID_LENGTH - prefixLength;
     }
-    
+
     @Override
     public void toStream(DataOutput out) throws IOException
     {
         /* Add the NodeId to the stream */
         out.write(this.getBytes());
     }
-    
+
     @Override
     public void fromStream(DataInput in) throws IOException
     {
@@ -183,14 +191,16 @@ public class NodeId implements Streamable
         in.readFully(input);
         this.keyBytes = input;
     }
-    
+
     @Override
     public String toString()
     {
-        StringBuilder sb = new StringBuilder("NodeId: ");
-        sb.append(new String(this.keyBytes));
-        
-        return sb.toString();
+        // StringBuilder sb = new StringBuilder("NodeId: ");
+        BigInteger bi = new BigInteger(1, this.keyBytes);
+        return String.format("%0" + (this.keyBytes.length << 1) + "X", bi);
+        //sb.append(Hex.encodeBase64URLSafeString(this.keyBytes));
+
+        //return sb.toString();
     }
-    
+
 }
