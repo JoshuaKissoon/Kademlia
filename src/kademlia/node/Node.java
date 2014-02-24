@@ -1,8 +1,3 @@
-/**
- * @author Joshua
- * @created
- * @desc
- */
 package kademlia.node;
 
 import java.io.DataInput;
@@ -15,6 +10,13 @@ import java.util.Comparator;
 import kademlia.message.Streamable;
 import kademlia.routing.RoutingTable;
 
+/**
+ * A Node in the Kademlia network
+ *
+ * @author Joshua Kissoon
+ * @since 20140202
+ * @version 0.1
+ */
 public class Node implements Streamable
 {
 
@@ -167,7 +169,9 @@ public class Node implements Streamable
         {
             Node n1 = (Node) o1;
             Node n2 = (Node) o2;
-            if(n1.getNodeId().equals(n2.getNodeId()))
+
+            /* Check if they are equal and return 0 */
+            if (n1.getNodeId().equals(n2.getNodeId()))
             {
                 return 0;
             }
@@ -179,18 +183,20 @@ public class Node implements Streamable
             int index2 = nodeId.xor(n2.getNodeId()).getFirstSetBitIndex();
             //System.out.println("Node " + n2.getNodeId() + " distance: " + index2);
 
-            /* If the first node is closer to the given node, return 1 */
             int retval;
             if (index1 < index2)
             {
+                /* If the first node is closer to the given node, return 1 */
                 retval = 1;
-            }
-            else if (index1 > index2)
-            {
-                retval = -1;
             }
             else
             {
+                /**
+                 * If the first node is farther to the given node, return 1
+                 *
+                 * @note -1 will also be returned if both nodes are the same distance away
+                 * This really don't make a difference though, since they need to be sorted.
+                 */
                 retval = -1;
             }
 

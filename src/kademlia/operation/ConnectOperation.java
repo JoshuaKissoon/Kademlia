@@ -67,8 +67,12 @@ public class ConnectOperation implements Operation, Receiver
             /* Perform lookup for our own ID to get nodes close to us */
             Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId());
             lookup.execute();
-            
-            /* @todo Refresh buckets to get a good routing table */
+
+            /**
+             * @todo Refresh buckets to get a good routing table
+             * I think after the above lookup operation, K buckets will be filled
+             * Not sure if this operation is needed here
+             */
             return null;
 
         }

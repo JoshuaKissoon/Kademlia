@@ -26,7 +26,7 @@ public class Configuration
     /**
      * Maximum number of concurrent messages in transit.
      * */
-    public static int CONCURRENCY = 2;
+    public static int CONCURRENCY = 10;
 
     /**
      * Log base exponent.

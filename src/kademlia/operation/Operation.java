@@ -17,6 +17,8 @@ public interface Operation
      * @return The return value can differ per operation
      *
      * @throws kademlia.exceptions.RoutingException
+     * 
+     * @todo Remove the Object return type, those operations that return things should have a method to return the data
      */
     public Object execute() throws IOException, RoutingException;
 }
