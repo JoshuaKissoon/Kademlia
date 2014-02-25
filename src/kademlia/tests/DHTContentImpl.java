@@ -1,6 +1,6 @@
 package kademlia.tests;
 
-import kademlia.dht.DHTContent;
+import kademlia.dht.KadContent;
 import kademlia.node.NodeId;
 
 /**
@@ -9,7 +9,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140224
  */
-public class DHTContentImpl implements DHTContent
+public class DHTContentImpl implements KadContent
 {
 
     private final NodeId key;

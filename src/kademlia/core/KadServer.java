@@ -35,7 +35,7 @@ public class KadServer
     private final HashMap<Integer, Receiver> receivers;
     private final Timer timer;      // Schedule future tasks
     private final HashMap<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
-    
+
     private final Node localNode;
 
     /* Factories */
@@ -53,7 +53,7 @@ public class KadServer
     {
         this.udpPort = udpPort;
         this.socket = new DatagramSocket(udpPort);
-        
+
         this.localNode = localNode;
 
         this.messageFactory = mFactory;
@@ -118,6 +118,10 @@ public class KadServer
 
     private void sendMessage(Node to, Message msg, int comm) throws IOException
     {
+
+        final Class<?> clazz = msg.getClass();
+        System.out.println(clazz.getSimpleName());
+        System.out.println(clazz);
 
 
         /* Setup the message for transmission */

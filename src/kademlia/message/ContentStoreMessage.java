@@ -2,7 +2,7 @@ package kademlia.message;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import kademlia.dht.DHTContent;
+import kademlia.dht.KadContent;
 import kademlia.node.Node;
 
 /**
@@ -15,7 +15,7 @@ public class ContentStoreMessage implements Message
 {
 
     private final Node origin;
-    private final DHTContent content;
+    private final KadContent content;
 
     public final static byte CODE = 0x23;
 
@@ -23,7 +23,7 @@ public class ContentStoreMessage implements Message
      * @param origin  Where did this content come from - it'll always be the local node
      * @param content The Content to send
      */
-    public ContentStoreMessage(Node origin, DHTContent content)
+    public ContentStoreMessage(Node origin, KadContent content)
     {
         this.origin = origin;
         this.content = content;
@@ -52,7 +52,7 @@ public class ContentStoreMessage implements Message
         return this.origin;
     }
 
-    public DHTContent getContent()
+    public KadContent getContent()
     {
         return this.content;
     }

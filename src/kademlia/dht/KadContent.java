@@ -8,7 +8,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140224
  */
-public interface DHTContent
+public interface KadContent
 {
 
     /**

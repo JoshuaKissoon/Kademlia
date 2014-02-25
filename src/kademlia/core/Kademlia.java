@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.dht.DHTContent;
+import kademlia.dht.KadContent;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -125,7 +125,7 @@ public class Kademlia
      * @throws java.io.IOException
      *
      */
-    public int put(DHTContent content) throws IOException
+    public int put(KadContent content) throws IOException
     {
         return (int) new StoreOperation(server, localNode, content).execute();
     }
@@ -139,7 +139,7 @@ public class Kademlia
      *
      * @return DHTContent The content
      */
-    public DHTContent get(GetParameter param, Class c)
+    public KadContent get(GetParameter param, Class c)
     {
         return null;
     }

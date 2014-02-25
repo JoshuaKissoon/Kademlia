@@ -3,7 +3,7 @@ package kademlia.operation;
 import java.io.IOException;
 import java.util.ArrayList;
 import kademlia.core.KadServer;
-import kademlia.dht.DHTContent;
+import kademlia.dht.KadContent;
 import kademlia.node.Node;
 
 /**
@@ -17,14 +17,14 @@ public class StoreOperation implements Operation
 
     private final KadServer server;
     private final Node localNode;
-    private final DHTContent content;
+    private final KadContent content;
 
     /**
      * @param server
      * @param localNode
      * @param content   The content to be stored on the DHT
      */
-    public StoreOperation(KadServer server, Node localNode, DHTContent content)
+    public StoreOperation(KadServer server, Node localNode, KadContent content)
     {
         this.server = server;
         this.localNode = localNode;
@@ -36,6 +36,9 @@ public class StoreOperation implements Operation
     {
         /* Get the nodes on which we need to store the content */
         ArrayList<Node> nodes = new NodeLookupOperation(this.server, this.localNode, this.content.getKey()).execute();
+        
+                
+        
         System.out.println("Nodes to put content on: " + nodes);
 
         /* Return how many nodes the content was stored on */
