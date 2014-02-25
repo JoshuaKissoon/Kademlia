@@ -119,9 +119,9 @@ public class KadServer
     private void sendMessage(Node to, Message msg, int comm) throws IOException
     {
 
-        final Class<?> clazz = msg.getClass();
-        System.out.println(clazz.getSimpleName());
-        System.out.println(clazz);
+        Class c = msg.getClass();
+        System.out.println(c.getSimpleName());
+        System.out.println(c.getName());
 
 
         /* Setup the message for transmission */

@@ -39,10 +39,10 @@ public class RoutingTable
     public void insert(Node n)
     {
         /* Find the first set bit: how far this node is away from the contact node */
-        NodeId id = this.localNode.getNodeId().xor(n.getNodeId());        
+        NodeId id = this.localNode.getNodeId().xor(n.getNodeId());
         //System.out.println(" First Bit Set: " + id.getFirstSetBitIndex());
         int bucketId = id.getFirstSetBitIndex();
-        
+
         System.out.println(this.localNode.getNodeId() + " Adding Node " + n.getNodeId() + " to bucket at depth: " + bucketId);
 
         /* Put this contact to the bucket that stores contacts prefixLength distance away */
@@ -79,7 +79,7 @@ public class RoutingTable
         ArrayList<Node> closest = new ArrayList<>(num);
 
         /* Get the bucket number to search for closest from */
-        int bucketNumber = this.localNode.getNodeId().xor(target).getFirstSetBitIndex();
+        int bucketNumber = this.localNode.getNodeId().xor(target).getFirstSetBitIndex() - 1;
 
         /* Add the contacts from this bucket to the return contacts */
         for (Node c : this.buckets[bucketNumber].getNodes())
@@ -162,7 +162,7 @@ public class RoutingTable
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         for (KadBucket b : this.buckets)
         {
-           // System.out.println("Bucket: " + b);
+            // System.out.println("Bucket: " + b);
             if (b.numNodes() > 0)
             {
                 sb.append("# nodes in Bucket with depth ");
