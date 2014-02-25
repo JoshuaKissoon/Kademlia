@@ -29,6 +29,10 @@ public class NodeId implements Streamable
     public NodeId(String data)
     {
         keyBytes = data.getBytes();
+        if (keyBytes.length != ID_LENGTH / 8)
+        {
+            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
+        }
     }
 
     /**
@@ -42,6 +46,10 @@ public class NodeId implements Streamable
 
     public NodeId(byte[] bytes)
     {
+        if (bytes.length != ID_LENGTH / 8)
+        {
+            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
+        }
         this.keyBytes = bytes;
     }
 

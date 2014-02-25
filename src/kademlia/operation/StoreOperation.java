@@ -36,6 +36,9 @@ public class StoreOperation implements Operation
     {
         /* Get the nodes on which we need to store the content */
         ArrayList<Node> nodes = new NodeLookupOperation(this.server, this.localNode, this.content.getKey()).execute();
-        return null;
+        System.out.println("Nodes to put content on: " + nodes);
+
+        /* Return how many nodes the content was stored on */
+        return nodes.size();
     }
 }

@@ -32,7 +32,6 @@ public class ConnectReceiver implements Receiver
     @Override
     public void receive(Message incoming, int comm) throws IOException
     {
-        System.out.println("Received incoming connect message, sending acknowledgement message.");
         ConnectMessage mess = (ConnectMessage) incoming;
 
         /* Update the local space by inserting the origin node. */

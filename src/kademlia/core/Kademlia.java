@@ -12,12 +12,17 @@ import kademlia.node.NodeId;
 import kademlia.operation.ConnectOperation;
 import kademlia.operation.Operation;
 import kademlia.operation.RefreshOperation;
+import kademlia.operation.StoreOperation;
 
 /**
  * The main Kademlia network management class
  *
  * @author Joshua Kissoon
  * @since 20140215
+ *
+ * @todo When we receive a store message - if we have a newer version of the content, re-send this newer version to that node so as to update their version
+ * @todo Handle IPv6 Addresses
+ * @todo Handle compressing data
  */
 public class Kademlia
 {
@@ -115,22 +120,35 @@ public class Kademlia
      *
      * @param content The content to put onto the DHT
      *
+     * @return Integer How many nodes the content was stored on
+     *
+     * @throws java.io.IOException
+     *
      */
-    public boolean put(DHTContent content)
+    public int put(DHTContent content) throws IOException
     {
-        
-        return false;
+        return (int) new StoreOperation(server, localNode, content).execute();
     }
 
     /**
      * Get some content stored on the DHT
+     * The content returned is a JSON String in byte format; this string is parsed into a class
      *
-     * @param key The key of this content
+     * @param param The parameters used to search for the content
+     * @param c     The class to cast the returned object to
      *
      * @return DHTContent The content
      */
-    public DHTContent get(NodeId key)
+    public DHTContent get(GetParameter param, Class c)
     {
         return null;
+    }
+
+    /**
+     * @return String The ID of the owner of this local network
+     */
+    public String getOwnerId()
+    {
+        return this.ownerId;
     }
 }

@@ -22,11 +22,12 @@ public interface DHTContent
     public String getType();
 
     /**
-     * Each content will have an expiry date for when a user should delete it form his/her machine
+     * Each content will have an created date
+     * This allows systems to know when to delete a content form his/her machine
      *
-     * @return long The expiry date of this content
+     * @return long The create date of this content
      */
-    public long getExpiryDate();
+    public long getCreatedTimestamp();
 
     /**
      * @return The ID of the owner of this content

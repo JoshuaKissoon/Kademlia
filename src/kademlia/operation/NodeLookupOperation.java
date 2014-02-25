@@ -125,11 +125,9 @@ public class NodeLookupOperation implements Operation, Receiver
         for (Node o : list)
         {
             /* If this node is not in the list, add the node */
-            System.out.println("Trying to add node " + o.getNodeId() + " hash: " + o.hashCode());
-            System.out.println("Contains Key for this node: " + nodes.containsKey(o));
             if (!nodes.containsKey(o))
             {
-                System.out.println("Adding unasked node " + o.getNodeId());
+                System.out.println("Adding node " + o.getNodeId());
                 nodes.put(o, UNASKED);
             }
         }
@@ -162,7 +160,6 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
         ArrayList<Node> unasked = this.closestNodesNotFailed(UNASKED);
-        System.out.println("Unasked nodes found: ");
         for (Node nn : unasked)
         {
             System.out.println(nn.getNodeId());
@@ -218,7 +215,7 @@ public class NodeLookupOperation implements Operation, Receiver
                 }
             }
         }
-
+        
         return closestNodes;
     }
 

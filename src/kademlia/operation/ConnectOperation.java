@@ -46,7 +46,6 @@ public class ConnectOperation implements Operation, Receiver
     {
         try
         {
-            System.out.println("Connect Operation executing.");
             /* Contact the bootstrap node */
             this.error = true;
             this.attempts = 0;
