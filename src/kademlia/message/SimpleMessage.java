@@ -6,7 +6,9 @@
 package kademlia.message;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 public class SimpleMessage implements Message
@@ -22,7 +24,7 @@ public class SimpleMessage implements Message
         this.content = message;
     }
 
-    public SimpleMessage(DataInput in)
+    public SimpleMessage(DataInputStream in)
     {
         System.out.println("Creating message from input stream.");
         this.fromStream(in);
@@ -35,7 +37,7 @@ public class SimpleMessage implements Message
     }
 
     @Override
-    public void toStream(DataOutput out)
+    public void toStream(DataOutputStream out)
     {
         try
         {
@@ -49,7 +51,7 @@ public class SimpleMessage implements Message
     }
 
     @Override
-    public final void fromStream(DataInput in)
+    public final void fromStream(DataInputStream in)
     {
         try
         {

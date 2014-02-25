@@ -1,7 +1,9 @@
 package kademlia.message;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import kademlia.dht.KadContent;
 import kademlia.node.Node;
 
@@ -36,13 +38,13 @@ public class ContentStoreMessage implements Message
     }
 
     @Override
-    public void fromStream(DataInput in)
+    public void fromStream(DataInputStream in)
     {
 
     }
 
     @Override
-    public void toStream(DataOutput out)
+    public void toStream(DataOutputStream out)
     {
         /* @todo write the origin and the content to the stream */
     }

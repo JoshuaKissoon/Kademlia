@@ -6,7 +6,9 @@
 package kademlia.message;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import kademlia.node.Node;
@@ -24,13 +26,13 @@ public class NodeReplyMessage implements Message
         this.nodes = nodes;
     }
 
-    public NodeReplyMessage(DataInput in) throws IOException
+    public NodeReplyMessage(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
 
     @Override
-    public final void fromStream(DataInput in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         /* Read in the origin */
         this.origin = new Node(in);
@@ -47,7 +49,7 @@ public class NodeReplyMessage implements Message
     }
 
     @Override
-    public void toStream(DataOutput out) throws IOException
+    public void toStream(DataOutputStream out) throws IOException
     {
         /* Add the origin node to the stream */
         origin.toStream(out);

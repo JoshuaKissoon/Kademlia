@@ -1,16 +1,17 @@
-/**
- * @author Joshua
- * @created
- * @desc
- */
 package kademlia.message;
 
-import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.IOException;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
+/**
+ * Handles creating messages and receivers
+ *
+ * @author Joshua Kissoon
+ * @since 20140202
+ */
 public class MessageFactory
 {
 
@@ -21,7 +22,7 @@ public class MessageFactory
         this.localNode = local;
     }
 
-    public Message createMessage(byte code, DataInput in) throws IOException
+    public Message createMessage(byte code, DataInputStream in) throws IOException
     {
         switch (code)
         {
@@ -35,6 +36,8 @@ public class MessageFactory
                 return new NodeReplyMessage(in);
             case NodeLookupMessage.CODE:
                 return new NodeLookupMessage(in);
+            case StoreContentMessage.CODE:
+                return new StoreContentMessage(in);
             default:
                 System.out.println("No Message handler found for message. Code: " + code);
                 return new SimpleMessage(in);
@@ -53,6 +56,8 @@ public class MessageFactory
                 return new ConnectReceiver(server, this.localNode);
             case NodeLookupMessage.CODE:
                 return new NodeLookupReceiver(server, this.localNode);
+            case StoreContentMessage.CODE:
+                return new StoreContentReceiver(server, this.localNode);
         }
     }
 }

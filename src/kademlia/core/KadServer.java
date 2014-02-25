@@ -118,12 +118,6 @@ public class KadServer
 
     private void sendMessage(Node to, Message msg, int comm) throws IOException
     {
-
-        Class c = msg.getClass();
-        System.out.println(c.getSimpleName());
-        System.out.println(c.getName());
-
-
         /* Setup the message for transmission */
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
         DataOutputStream dout = new DataOutputStream(bout);

@@ -6,7 +6,9 @@
 package kademlia.node;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -60,7 +62,7 @@ public class NodeId implements Streamable
      *
      * @throws IOException
      */
-    public NodeId(DataInput in) throws IOException
+    public NodeId(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
@@ -186,14 +188,14 @@ public class NodeId implements Streamable
     }
 
     @Override
-    public void toStream(DataOutput out) throws IOException
+    public void toStream(DataOutputStream out) throws IOException
     {
         /* Add the NodeId to the stream */
         out.write(this.getBytes());
     }
 
     @Override
-    public void fromStream(DataInput in) throws IOException
+    public void fromStream(DataInputStream in) throws IOException
     {
         byte[] input = new byte[ID_LENGTH / 8];
         in.readFully(input);

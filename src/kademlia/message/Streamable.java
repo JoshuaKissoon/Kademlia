@@ -1,7 +1,7 @@
 package kademlia.message;
 
-import java.io.DataInput;
-import java.io.DataOutput;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
@@ -16,17 +16,27 @@ import java.io.IOException;
  * that classes implementing Streamble also provide a constructor of the form:
  * <p>
  * <code>Streamable(DataInput in) throws IOException;</code>
- **/
-public interface Streamable {
+ * */
+public interface Streamable
+{
+
     /**
      * Writes the internal state of the Streamable object to the output stream
      * in a format that can later be read by the same Streamble class using
      * the {@link #fromStream} method.
-     **/
-    public void toStream(DataOutput out) throws IOException;
+     *
+     * @param out
+     *
+     * @throws java.io.IOException
+     */
+    public void toStream(DataOutputStream out) throws IOException;
 
     /**
      * Reads the internal state of the Streamable object from the input stream.
-     **/
-    public void fromStream(DataInput out) throws IOException;
+     *
+     * @param out
+     *
+     * @throws java.io.IOException
+     */
+    public void fromStream(DataInputStream out) throws IOException;
 }

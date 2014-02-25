@@ -70,4 +70,9 @@ public class DHTContentImpl implements KadContent
     {
         return this.createTs;
     }
+
+    public String toString()
+    {
+        return "DHTContentImpl[data=" + this.data + "]";
+    }
 }

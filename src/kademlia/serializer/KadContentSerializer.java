@@ -1,5 +1,7 @@
 package kademlia.serializer;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,7 +26,7 @@ public interface KadContentSerializer
      *
      * @throws java.io.IOException
      */
-    public void write(KadContent content, OutputStream out) throws IOException;
+    public void write(KadContent content, DataOutputStream out) throws IOException;
 
     /**
      * Read a KadContent from a DataInput Stream
@@ -36,5 +38,5 @@ public interface KadContentSerializer
      * @throws java.io.IOException
      * @throws java.lang.ClassNotFoundException
      */
-    public KadContent read(InputStream in) throws IOException, ClassNotFoundException;
+    public KadContent read(DataInputStream in) throws IOException, ClassNotFoundException;
 }

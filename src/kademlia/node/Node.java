@@ -1,7 +1,9 @@
 package kademlia.node;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -45,7 +47,7 @@ public class Node implements Streamable
      *
      * @throws IOException
      */
-    public Node(DataInput in) throws IOException
+    public Node(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
@@ -79,7 +81,7 @@ public class Node implements Streamable
     }
 
     @Override
-    public void toStream(DataOutput out) throws IOException
+    public void toStream(DataOutputStream out) throws IOException
     {
         /* Add the NodeId to the stream */
         this.nodeId.toStream(out);
@@ -97,7 +99,7 @@ public class Node implements Streamable
     }
 
     @Override
-    public final void fromStream(DataInput in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         /* Load the NodeId */
         this.nodeId = new NodeId(in);

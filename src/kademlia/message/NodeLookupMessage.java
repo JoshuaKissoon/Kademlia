@@ -6,7 +6,9 @@
 package kademlia.message;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
@@ -31,20 +33,20 @@ public class NodeLookupMessage implements Message
         this.lookupId = lookup;
     }
 
-    public NodeLookupMessage(DataInput in) throws IOException
+    public NodeLookupMessage(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
 
     @Override
-    public final void fromStream(DataInput in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         this.origin = new Node(in);
         this.lookupId = new NodeId(in);
     }
 
     @Override
-    public void toStream(DataOutput out) throws IOException
+    public void toStream(DataOutputStream out) throws IOException
     {
         this.origin.toStream(out);
         this.lookupId.toStream(out);

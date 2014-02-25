@@ -6,7 +6,9 @@
 package kademlia.message;
 
 import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.DataOutput;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.node.Node;
 
@@ -21,19 +23,19 @@ public class AcknowledgeMessage implements Message
         this.origin = origin;
     }
 
-    public AcknowledgeMessage(DataInput in) throws IOException
+    public AcknowledgeMessage(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
 
     @Override
-    public final void fromStream(DataInput in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         this.origin = new Node(in);
     }
 
     @Override
-    public void toStream(DataOutput out) throws IOException
+    public void toStream(DataOutputStream out) throws IOException
     {
         origin.toStream(out);
     }

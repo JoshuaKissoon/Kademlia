@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.DataInputStream;
+import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,10 +30,9 @@ public class JsonSerializer implements KadContentSerializer
     }
 
     @Override
-    public void write(KadContent content, OutputStream out) throws IOException
+    public void write(KadContent content, DataOutputStream out) throws IOException
     {
-        try (DataOutputStream dout = new DataOutputStream(out);
-                JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
+        try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
             writer.beginArray();
 
@@ -48,7 +48,7 @@ public class JsonSerializer implements KadContentSerializer
     }
 
     @Override
-    public KadContent read(InputStream in) throws IOException, ClassNotFoundException
+    public KadContent read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))
