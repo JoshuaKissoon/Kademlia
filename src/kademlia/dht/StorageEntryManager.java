@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import kademlia.core.GetParameter;
 import kademlia.node.NodeId;
 
 /**
@@ -27,15 +29,16 @@ public class StorageEntryManager
     /**
      * Add a new entry to our storage
      *
-     * @param entry
+     * @param content The content to store a reference to
      */
-    public void put(StorageEntry entry)
+    public void put(KadContent content)
     {
+        StorageEntry entry = new StorageEntry(content);
         if (!this.entries.containsKey(entry.getKey()))
         {
             this.entries.put(entry.getKey(), new ArrayList<StorageEntry>());
         }
-        
+
         this.entries.get(entry.getKey()).add(entry);
     }
 
@@ -44,27 +47,65 @@ public class StorageEntryManager
      *
      * @todo Add searching for content by type and ownerID
      *
-     * @param key
+     * @param param The parameters used to search for a content
      *
      * @return boolean
      */
-    public boolean contains(NodeId key)
+    public boolean contains(GetParameter param)
     {
-        return this.entries.containsKey(key);
+        if (this.entries.containsKey(param.getKey()))
+        {
+            /* Content with this key exist, check if any match the rest of the search criteria */
+            for (StorageEntry e : this.entries.get(param.getKey()))
+            {
+                /* If any entry satisfies the given parameters, return true */
+                if (e.satisfiesParameters(param))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
      * Checks if our DHT has a Content for the given criteria
      *
-     * @todo Add finding for content by type and ownerID
+     * @param param The parameters used to search for a content
      *
-     * @param key
+     * @todo Add finding for content by type and ownerID
      *
      * @return List of content for the specific search parameters
      */
-    public List<StorageEntry> get(NodeId key)
+    public List<StorageEntry> get(GetParameter param) throws NoSuchElementException
     {
-        return this.entries.get(key);
+        if (this.entries.containsKey(param.getKey()))
+        {
+            /* Content with this key exist, check if any match the rest of the search criteria */
+            List<StorageEntry> results = new ArrayList<>();
+
+            for (StorageEntry e : this.entries.get(param.getKey()))
+            {
+                /* If any entry satisfies the given parameters, return true */
+                if (e.satisfiesParameters(param))
+                {
+                    results.add(e);
+                }
+            }
+
+            if (results.size() > 0)
+            {
+                return results;
+            }
+            else
+            {
+                throw new NoSuchElementException();
+            }
+        }
+        else
+        {
+            throw new NoSuchElementException("No content exist for the given parameters");
+        }
     }
 
 }

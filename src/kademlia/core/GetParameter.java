@@ -16,7 +16,7 @@ public class GetParameter
 {
 
     private NodeId key;
-    private String owner = null;
+    private String ownerId = null;
     private String type = null;
 
     public GetParameter(NodeId key)
@@ -27,7 +27,7 @@ public class GetParameter
     public GetParameter(NodeId key, String owner)
     {
         this(key);
-        this.owner = owner;
+        this.ownerId = owner;
     }
 
     public GetParameter(NodeId key, String owner, String type)
@@ -36,4 +36,18 @@ public class GetParameter
         this.type = type;
     }
 
+    public NodeId getKey()
+    {
+        return this.key;
+    }
+
+    public String getOwnerId()
+    {
+        return this.ownerId;
+    }
+
+    public String getType()
+    {
+        return this.type;
+    }
 }

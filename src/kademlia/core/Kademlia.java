@@ -2,6 +2,8 @@ package kademlia.core;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.dht.DHT;
@@ -24,6 +26,7 @@ import kademlia.operation.StoreOperation;
  * @todo When we receive a store message - if we have a newer version of the content, re-send this newer version to that node so as to update their version
  * @todo Handle IPv6 Addresses
  * @todo Handle compressing data
+ * @todo Allow optional storing of content locally using the put method
  */
 public class Kademlia
 {
@@ -138,13 +141,23 @@ public class Kademlia
      * The content returned is a JSON String in byte format; this string is parsed into a class
      *
      * @param param The parameters used to search for the content
-     * @param c     The class to cast the returned object to
      *
      * @return DHTContent The content
+     *
+     * @throws java.io.IOException
      */
-    public KadContent get(GetParameter param, Class c)
+    public List<KadContent> get(GetParameter param) throws NoSuchElementException, IOException
     {
-        return null;
+        if (this.dht.contains(param))
+        {
+            /* If the content exist in our own DHT, then return it. */
+            return this.dht.get(param);
+        }
+        else
+        {
+            /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+            return new DataLookupOperation().execute().getContent();
+        }
     }
 
     /**
