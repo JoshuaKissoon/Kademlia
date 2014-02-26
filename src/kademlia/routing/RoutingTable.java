@@ -6,6 +6,7 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
+import java.util.List;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -72,11 +73,11 @@ public class RoutingTable
      * @param target The NodeId to find contacts close to
      * @param num    The number of contacts to find
      *
-     * @return ArrayList<Contact> An ArrayList of num contacts closest to target
+     * @return List<Contact> A List of num contacts closest to target
      */
-    public ArrayList<Node> findClosest(NodeId target, int num)
+    public List<Node> findClosest(NodeId target, int num)
     {
-        ArrayList<Node> closest = new ArrayList<>(num);
+        List<Node> closest = new ArrayList<>(num);
 
         /* Get the bucket number to search for closest from */
         int bucketNumber = this.localNode.getNodeId().xor(target).getFirstSetBitIndex() - 1;
@@ -144,9 +145,9 @@ public class RoutingTable
         return closest;
     }
 
-    public ArrayList<Node> getAllNodes()
+    public List<Node> getAllNodes()
     {
-        ArrayList<Node> nodes = new ArrayList<>();
+        List<Node> nodes = new ArrayList<>();
 
         for (KadBucket b : this.buckets)
         {

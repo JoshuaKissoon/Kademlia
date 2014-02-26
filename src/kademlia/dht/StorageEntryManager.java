@@ -2,6 +2,8 @@ package kademlia.dht;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import kademlia.node.NodeId;
 
 /**
@@ -15,7 +17,7 @@ import kademlia.node.NodeId;
 public class StorageEntryManager
 {
 
-    private final HashMap<NodeId, ArrayList<StorageEntry>> entries;
+    private final Map<NodeId, List<StorageEntry>> entries;
 
     
     {
@@ -60,7 +62,7 @@ public class StorageEntryManager
      *
      * @return List of content for the specific search parameters
      */
-    public ArrayList<StorageEntry> get(NodeId key)
+    public List<StorageEntry> get(NodeId key)
     {
         return this.entries.get(key);
     }

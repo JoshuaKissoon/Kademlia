@@ -5,12 +5,11 @@
  */
 package kademlia.message;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import kademlia.node.Node;
 
 public class NodeReplyMessage implements Message
@@ -18,9 +17,9 @@ public class NodeReplyMessage implements Message
 
     private Node origin;
     public static final byte CODE = 0x04;
-    private ArrayList<Node> nodes;
+    private List<Node> nodes;
 
-    public NodeReplyMessage(Node origin, ArrayList<Node> nodes)
+    public NodeReplyMessage(Node origin, List<Node> nodes)
     {
         this.origin = origin;
         this.nodes = nodes;
@@ -80,7 +79,7 @@ public class NodeReplyMessage implements Message
         return CODE;
     }
 
-    public ArrayList<Node> getNodes()
+    public List<Node> getNodes()
     {
         return this.nodes;
     }

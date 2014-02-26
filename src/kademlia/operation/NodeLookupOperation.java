@@ -45,7 +45,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private final SortedMap<Node, Byte> nodes;
 
     /* Tracks messages in transit and awaiting reply */
-    private final HashMap<Integer, Node> messagesTransiting;
+    private final Map<Integer, Node> messagesTransiting;
 
     /* Used to sort nodes */
     private final Comparator comparator;
@@ -83,7 +83,7 @@ public class NodeLookupOperation implements Operation, Receiver
      * @throws kademlia.exceptions.RoutingException
      */
     @Override
-    public synchronized ArrayList<Node> execute() throws IOException, RoutingException
+    public synchronized List<Node> execute() throws IOException, RoutingException
     {
         try
         {
@@ -159,7 +159,7 @@ public class NodeLookupOperation implements Operation, Receiver
         }
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
-        ArrayList<Node> unasked = this.closestNodesNotFailed(UNASKED);
+        List<Node> unasked = this.closestNodesNotFailed(UNASKED);
         for (Node nn : unasked)
         {
             System.out.println(nn.getNodeId());
@@ -198,9 +198,9 @@ public class NodeLookupOperation implements Operation, Receiver
      *
      * @return The K closest nodes to the target lookupId given that have the specified status
      */
-    private ArrayList<Node> closestNodes(Byte status)
+    private List<Node> closestNodes(Byte status)
     {
-        ArrayList<Node> closestNodes = new ArrayList<>(Configuration.K);
+        List<Node> closestNodes = new ArrayList<>(Configuration.K);
         int remainingSpaces = Configuration.K;
 
         for (Map.Entry e : this.nodes.entrySet())
@@ -227,9 +227,9 @@ public class NodeLookupOperation implements Operation, Receiver
      *
      * @return A List of the closest nodes
      */
-    private ArrayList<Node> closestNodesNotFailed(Byte status)
+    private List<Node> closestNodesNotFailed(Byte status)
     {
-        ArrayList<Node> closestNodes = new ArrayList<>(Configuration.K);
+        List<Node> closestNodes = new ArrayList<>(Configuration.K);
         int remainingSpaces = Configuration.K;
 
         for (Map.Entry e : this.nodes.entrySet())

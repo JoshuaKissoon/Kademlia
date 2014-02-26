@@ -6,7 +6,7 @@
 package kademlia.message;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import kademlia.core.Configuration;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
@@ -45,7 +45,7 @@ public class NodeLookupReceiver implements Receiver
         this.localNode.getRoutingTable().insert(origin);
 
         /* Find nodes closest to the LookupId */
-        ArrayList<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), Configuration.K);
+        List<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), Configuration.K);
 
         System.out.println("\nClosest Nodes: ");
         for (Node n : nodes)

@@ -1,7 +1,7 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import kademlia.core.KadServer;
 import kademlia.dht.KadContent;
 import kademlia.message.Message;
@@ -37,7 +37,7 @@ public class StoreOperation implements Operation
     public synchronized Object execute() throws IOException
     {
         /* Get the nodes on which we need to store the content */
-        ArrayList<Node> nodes = new NodeLookupOperation(this.server, this.localNode, this.content.getKey()).execute();
+        List<Node> nodes = new NodeLookupOperation(this.server, this.localNode, this.content.getKey()).execute();
         System.out.println("Nodes to put content on: " + nodes);
 
         /* Create the message */

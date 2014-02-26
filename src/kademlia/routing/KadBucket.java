@@ -7,6 +7,8 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -14,7 +16,7 @@ public class KadBucket implements Bucket
 {
 
     private final int depth;
-    private final HashMap<NodeId, Node> nodes;
+    private final Map<NodeId, Node> nodes;
 
     
     {
@@ -85,7 +87,7 @@ public class KadBucket implements Bucket
         this.nodes.remove(n.getNodeId());
     }
 
-    public ArrayList<Node> getNodes()
+    public List<Node> getNodes()
     {
         return new ArrayList<>(this.nodes.values());
     }

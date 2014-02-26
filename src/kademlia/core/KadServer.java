@@ -14,6 +14,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -32,9 +33,9 @@ public class KadServer
     private final int udpPort;
     private final DatagramSocket socket;
     private boolean isRunning;
-    private final HashMap<Integer, Receiver> receivers;
+    private final Map<Integer, Receiver> receivers;
     private final Timer timer;      // Schedule future tasks
-    private final HashMap<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
+    private final Map<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
 
     private final Node localNode;
 
