@@ -41,13 +41,29 @@ public class GetParameter
         return this.key;
     }
 
+    public void setOwnerId(String ownerId)
+    {
+        this.ownerId = ownerId;
+    }
+
     public String getOwnerId()
     {
         return this.ownerId;
     }
 
+    public void setType(String type)
+    {
+        this.type = type;
+    }
+
     public String getType()
     {
         return this.type;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "GetParameter - [Key: " + key + "][Owner: " + this.ownerId + "][Type: " + this.type + "]";
     }
 }

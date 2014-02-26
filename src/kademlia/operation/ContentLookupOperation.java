@@ -105,12 +105,21 @@ public class ContentLookupOperation implements Operation, Receiver
             if (!this.askNodesorFinish())
             {
                 /* If we haven't finished as yet, wait a while */
+                /**
+                 * @todo Get rid of this wait here! 
+                 * We should run this until there are no nodes left to ask from the K closest nodes
+                 * and only pause for short intervals in between
+                 * 
+                 * @todo Do the same for the NodeLookupOperation
+                 */
                 wait(Configuration.OPERATION_TIMEOUT);
 
                 /* If we still haven't received any responses by then, do a routing timeout */
                 if (error)
                 {
-                    throw new RoutingException("Lookup Timeout.");
+                    /* Lets not throw any exception */
+                    
+                    //throw new RoutingException("Content Lookup Operation Timeout.");
                 }
             }
         }
@@ -132,15 +141,8 @@ public class ContentLookupOperation implements Operation, Receiver
             /* If this node is not in the list, add the node */
             if (!nodes.containsKey(o))
             {
-                System.out.println("Adding node " + o.getNodeId());
                 nodes.put(o, UNASKED);
             }
-        }
-
-        System.out.println(this.localNode.getNodeId() + " Nodes List: ");
-        for (Node o : this.nodes.keySet())
-        {
-            System.out.println(o.getNodeId() + " hash: " + o.hashCode());
         }
     }
 
@@ -230,6 +232,11 @@ public class ContentLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException, RoutingException
     {
+        if (!this.isRunning)
+        {
+            return;
+        }
+        
         if (incoming instanceof ContentMessage)
         {
             /* The reply received is a content message with the required content, take it in */
@@ -240,6 +247,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
             /* Get the Content and check if it satisfies the required parameters */
             KadContent content = msg.getContent();
+            System.out.println("Content Received: " + content);
 
             /*@todo Check if the content matches the given criteria */
             this.contentFound.add(content);
@@ -247,6 +255,8 @@ public class ContentLookupOperation implements Operation, Receiver
             if (this.contentFound.size() == this.numResultsReq)
             {
                 /* We've got all the content required, let's stop the loopup operation */
+                System.out.println("We good");
+                this.isRunning = false;
             }
         }
         else

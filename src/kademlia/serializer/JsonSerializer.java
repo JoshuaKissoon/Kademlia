@@ -4,22 +4,21 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import kademlia.dht.KadContent;
 
 /**
  * A KadContentSerializer that serializes content to JSON format
  *
+ * @param <T> The type of content to serialize
+ *
  * @author Joshua Kissoon
+ *
  * @since 20140225
  */
-public class JsonSerializer implements KadContentSerializer
+public class JsonSerializer<T> implements KadContentSerializer<T>
 {
 
     private final Gson gson;
@@ -30,17 +29,17 @@ public class JsonSerializer implements KadContentSerializer
     }
 
     @Override
-    public void write(KadContent content, DataOutputStream out) throws IOException
+    public void write(T data, DataOutputStream out) throws IOException
     {
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
             writer.beginArray();
 
             /* Store the content type */
-            gson.toJson(content.getClass().getName(), String.class, writer);
+            gson.toJson(data.getClass().getName(), String.class, writer);
 
             /* Now Store the content */
-            gson.toJson(content, content.getClass(), writer);
+            gson.toJson(data, data.getClass(), writer);
 
             writer.endArray();
         }
@@ -48,7 +47,7 @@ public class JsonSerializer implements KadContentSerializer
     }
 
     @Override
-    public KadContent read(DataInputStream in) throws IOException, ClassNotFoundException
+    public T read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))

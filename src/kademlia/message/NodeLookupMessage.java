@@ -5,9 +5,7 @@
  */
 package kademlia.message;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.node.Node;
@@ -19,7 +17,7 @@ public class NodeLookupMessage implements Message
     private Node origin;
     private NodeId lookupId;
 
-    public static final byte CODE = 0x03;
+    public static final byte CODE = 0x05;
 
     /**
      * A new NodeLookupMessage to find nodes

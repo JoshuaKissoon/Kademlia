@@ -5,9 +5,7 @@
  */
 package kademlia.message;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -15,7 +13,7 @@ public class SimpleMessage implements Message
 {
 
     /* Message constants */
-    public static final byte CODE = 0x05;
+    public static final byte CODE = 0x07;
 
     private String content;
 

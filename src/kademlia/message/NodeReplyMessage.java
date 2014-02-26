@@ -16,7 +16,7 @@ public class NodeReplyMessage implements Message
 {
 
     private Node origin;
-    public static final byte CODE = 0x04;
+    public static final byte CODE = 0x06;
     private List<Node> nodes;
 
     public NodeReplyMessage(Node origin, List<Node> nodes)

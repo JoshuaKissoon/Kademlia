@@ -21,7 +21,7 @@ public class Configuration
     /**
      * Maximum number of milliseconds for performing an operation.
      * */
-    public static long OPERATION_TIMEOUT = 10000;
+    public static long OPERATION_TIMEOUT = 3000;
 
     /**
      * Maximum number of concurrent messages in transit.

@@ -29,20 +29,24 @@ public class MessageFactory
     {
         switch (code)
         {
-            case SimpleMessage.CODE:
-                return new SimpleMessage(in);
-            case ConnectMessage.CODE:
-                return new ConnectMessage(in);
             case AcknowledgeMessage.CODE:
                 return new AcknowledgeMessage(in);
-            case NodeReplyMessage.CODE:
-                return new NodeReplyMessage(in);
+            case ConnectMessage.CODE:
+                return new ConnectMessage(in);
+            case ContentMessage.CODE:
+                return new ContentMessage(in);
+            case ContentLookupMessage.CODE:
+                return new ContentLookupMessage(in);
             case NodeLookupMessage.CODE:
                 return new NodeLookupMessage(in);
+            case NodeReplyMessage.CODE:
+                return new NodeReplyMessage(in);
+            case SimpleMessage.CODE:
+                return new SimpleMessage(in);
             case StoreContentMessage.CODE:
                 return new StoreContentMessage(in);
             default:
-                System.out.println("No Message handler found for message. Code: " + code);
+                System.out.println(this.localNode + " - No Message handler found for message. Code: " + code);
                 return new SimpleMessage(in);
 
         }
@@ -52,17 +56,19 @@ public class MessageFactory
     {
         switch (code)
         {
-            default:
-            case SimpleMessage.CODE:
-                return new SimpleReceiver();
             case ConnectMessage.CODE:
                 return new ConnectReceiver(server, this.localNode);
-            case NodeLookupMessage.CODE:
-                return new NodeLookupReceiver(server, this.localNode);
-            case StoreContentMessage.CODE:
-                return new StoreContentReceiver(server, this.localNode, this.dht);
             case ContentLookupMessage.CODE:
                 return new ContentLookupReceiver(server, localNode, dht);
+            case NodeLookupMessage.CODE:
+                return new NodeLookupReceiver(server, this.localNode);
+            case SimpleMessage.CODE:
+                return new SimpleReceiver();
+            case StoreContentMessage.CODE:
+                return new StoreContentReceiver(server, this.localNode, this.dht);
+            default:
+                System.out.println("No reveiver found for message. Code: " + code);
+                return new SimpleReceiver();
         }
     }
 }

@@ -2,6 +2,7 @@ package kademlia.core;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Timer;
@@ -153,18 +154,24 @@ public class Kademlia
      */
     public List<KadContent> get(GetParameter param, int numResultsReq) throws NoSuchElementException, IOException
     {
+        List contentFound;
         if (this.dht.contains(param))
         {
             /* If the content exist in our own DHT, then return it. */
-            return this.dht.get(param);
+            System.out.println("Found content locally");
+            contentFound = new ArrayList<>();
+            contentFound.add(this.dht.get(param));
         }
         else
         {
             /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+            System.out.println("Looking for content on foreign nodes");
             ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numResultsReq);
             clo.execute();
-            return clo.getContentFound();
+            contentFound = clo.getContentFound();
         }
+
+        return contentFound;
     }
 
     /**

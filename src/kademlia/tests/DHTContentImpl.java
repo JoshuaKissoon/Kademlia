@@ -17,7 +17,7 @@ public class DHTContentImpl implements KadContent
     private final String ownerId;
     private final long createTs;
 
-    private static final String type = "DHTContentImpl";
+    public static final String TYPE = "DHTContentImpl";
 
     
     {
@@ -56,7 +56,7 @@ public class DHTContentImpl implements KadContent
     @Override
     public String getType()
     {
-        return type;
+        return TYPE;
     }
 
     @Override

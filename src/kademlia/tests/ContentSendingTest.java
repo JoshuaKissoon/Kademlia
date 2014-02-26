@@ -1,7 +1,10 @@
 package kademlia.tests;
 
 import java.io.IOException;
+import java.util.List;
+import kademlia.core.GetParameter;
 import kademlia.core.Kademlia;
+import kademlia.dht.KadContent;
 import kademlia.node.NodeId;
 
 /**
@@ -29,6 +32,20 @@ public class ContentSendingTest
              */
             DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");
             kad2.put(c);
+            
+            /**
+             * Lets retrieve the content
+             */
+            System.out.println("Retrieving Content");
+            GetParameter gp = new GetParameter(c.getKey());
+            gp.setType(DHTContentImpl.TYPE);
+            gp.setOwnerId(c.getOwnerId());
+            System.out.println("Get Parameter: " + gp);
+            List<KadContent> conte = kad2.get(gp, 1);
+            for (KadContent cc : conte)
+            {
+                System.out.println("Content Found: " + cc);
+            }
 
         }
         catch (IOException e)

@@ -7,8 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import kademlia.core.Configuration;
 import kademlia.core.GetParameter;
@@ -25,10 +23,12 @@ public class DHT
 {
 
     private final StorageEntryManager entriesManager;
+    private final JsonSerializer<KadContent> contentSerializer;
 
     
     {
         entriesManager = new StorageEntryManager();
+        contentSerializer = new JsonSerializer<>();
     }
 
     /**
@@ -46,7 +46,7 @@ public class DHT
         /* Now we store the content locally in a file */
         String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
         DataOutputStream dout = new DataOutputStream(new FileOutputStream(contentStorageFolder + File.separator + content.hashCode() + ".kct"));
-        new JsonSerializer().write(content, dout);
+        contentSerializer.write(content, dout);
     }
 
     /**
@@ -61,7 +61,7 @@ public class DHT
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream in = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
-        return new JsonSerializer().read(in);
+        return contentSerializer.read(in);
     }
 
     /**
@@ -86,17 +86,14 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public List<KadContent> get(GetParameter param) throws NoSuchElementException, IOException
+    public KadContent get(GetParameter param) throws NoSuchElementException, IOException
     {
-        /* Load all KadContent for the entries if any exist */
-        List<KadContent> values = new ArrayList<>();
-
+        /* Load a KadContent if any exist for the given criteria */
         try
         {
-            for (StorageEntry e : this.entriesManager.get(param))
-            {
-                values.add(this.retrieve(e.getKey(), e.getContentHash()));
-            }
+            StorageEntry e = this.entriesManager.get(param);
+            return this.retrieve(e.getKey(), e.getContentHash());
+
         }
         catch (FileNotFoundException e)
         {
@@ -107,12 +104,8 @@ public class DHT
             System.err.println("The class for some content was not found.");
         }
 
-        if (values.isEmpty())
-        {
-            throw new NoSuchElementException();
-        }
-
-        return values;
+        /* If we got here, means we got no entries */
+        throw new NoSuchElementException();
     }
 
     /**

@@ -38,7 +38,6 @@ public class StorageEntryManager
         {
             this.entries.put(entry.getKey(), new ArrayList<StorageEntry>());
         }
-
         this.entries.get(entry.getKey()).add(entry);
     }
 
@@ -77,30 +76,22 @@ public class StorageEntryManager
      *
      * @return List of content for the specific search parameters
      */
-    public List<StorageEntry> get(GetParameter param) throws NoSuchElementException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException
     {
         if (this.entries.containsKey(param.getKey()))
         {
             /* Content with this key exist, check if any match the rest of the search criteria */
-            List<StorageEntry> results = new ArrayList<>();
-
             for (StorageEntry e : this.entries.get(param.getKey()))
             {
                 /* If any entry satisfies the given parameters, return true */
                 if (e.satisfiesParameters(param))
                 {
-                    results.add(e);
+                    return e;
                 }
             }
 
-            if (results.size() > 0)
-            {
-                return results;
-            }
-            else
-            {
-                throw new NoSuchElementException();
-            }
+            /* If we got here, means we didn't find any entry */
+            throw new NoSuchElementException();
         }
         else
         {

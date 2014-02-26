@@ -31,12 +31,14 @@ public class ContentLookupReceiver implements Receiver
     public void receive(Message incoming, int comm) throws IOException
     {
         ContentLookupMessage msg = (ContentLookupMessage) incoming;
+        this.localNode.getRoutingTable().insert(msg.getOrigin());
 
         /* Check if we can have this data */
         if (this.dht.contains(msg.getParameters()))
         {
             /* Return a ContentMessage with the required data */
             ContentMessage cMsg = new ContentMessage(localNode, this.dht.get(msg.getParameters()));
+            server.reply(msg.getOrigin(), cMsg, comm);
         }
         else
         {

@@ -128,16 +128,16 @@ public class NodeLookupOperation implements Operation, Receiver
             /* If this node is not in the list, add the node */
             if (!nodes.containsKey(o))
             {
-                System.out.println("Adding node " + o.getNodeId());
+                //System.out.println("Adding node " + o.getNodeId());
                 nodes.put(o, UNASKED);
             }
         }
 
-        System.out.println(this.localNode.getNodeId() + " Nodes List: ");
-        for (Node o : this.nodes.keySet())
-        {
-            System.out.println(o.getNodeId() + " hash: " + o.hashCode());
-        }
+//        System.out.println(this.localNode.getNodeId() + " Nodes List: ");
+//        for (Node o : this.nodes.keySet())
+//        {
+//            System.out.println(o.getNodeId() + " hash: " + o.hashCode());
+//        }
     }
 
     /**
@@ -161,10 +161,10 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
         List<Node> unasked = this.closestNodesNotFailed(UNASKED);
-        for (Node nn : unasked)
-        {
-            System.out.println(nn.getNodeId());
-        }
+//        for (Node nn : unasked)
+//        {
+//            System.out.println(nn.getNodeId());
+//        }
 
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {

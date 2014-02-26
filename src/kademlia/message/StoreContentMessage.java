@@ -16,7 +16,7 @@ import kademlia.serializer.JsonSerializer;
 public class StoreContentMessage implements Message
 {
 
-    public static final byte CODE = 0x55;
+    public static final byte CODE = 0x08;
 
     private KadContent content;
     private Node origin;
@@ -43,8 +43,7 @@ public class StoreContentMessage implements Message
         this.origin.toStream(out);
 
         /* Serialize the KadContent, then send it to the stream */
-        JsonSerializer serializer = new JsonSerializer();
-        serializer.write(content, out);
+        new JsonSerializer<KadContent>().write(content, out);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class StoreContentMessage implements Message
         this.origin = new Node(in);
         try
         {
-            this.content = new JsonSerializer().read(in);
+            this.content = new JsonSerializer<KadContent>().read(in);
         }
         catch (ClassNotFoundException e)
         {
@@ -80,6 +79,6 @@ public class StoreContentMessage implements Message
     @Override
     public String toString()
     {
-        return "StoreMessage[origin=" + origin + ",content=" + content + "]";
+        return "StoreContentMessage[origin=" + origin + ",content=" + content + "]";
     }
 }
