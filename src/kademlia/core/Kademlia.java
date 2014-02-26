@@ -13,6 +13,7 @@ import kademlia.message.MessageFactory;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 import kademlia.operation.ConnectOperation;
+import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
 import kademlia.operation.RefreshOperation;
 import kademlia.operation.StoreOperation;
@@ -27,6 +28,7 @@ import kademlia.operation.StoreOperation;
  * @todo Handle IPv6 Addresses
  * @todo Handle compressing data
  * @todo Allow optional storing of content locally using the put method
+ * @todo Instead of using a StoreContentMessage to send a store RPC and a ContentMessage to receive a FIND rpc, make them 1 message with different operation type
  */
 public class Kademlia
 {
@@ -133,20 +135,23 @@ public class Kademlia
      */
     public int put(KadContent content) throws IOException
     {
-        return (int) new StoreOperation(server, localNode, content).execute();
+        new StoreOperation(server, localNode, content).execute();
+        /*@todo Return how many nodes the content was stored on */
+        return 10;
     }
 
     /**
      * Get some content stored on the DHT
      * The content returned is a JSON String in byte format; this string is parsed into a class
      *
-     * @param param The parameters used to search for the content
+     * @param param         The parameters used to search for the content
+     * @param numResultsReq How many results are required from different nodes
      *
      * @return DHTContent The content
      *
      * @throws java.io.IOException
      */
-    public List<KadContent> get(GetParameter param) throws NoSuchElementException, IOException
+    public List<KadContent> get(GetParameter param, int numResultsReq) throws NoSuchElementException, IOException
     {
         if (this.dht.contains(param))
         {
@@ -156,7 +161,9 @@ public class Kademlia
         else
         {
             /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-            return new DataLookupOperation().execute().getContent();
+            ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numResultsReq);
+            clo.execute();
+            return clo.getContentFound();
         }
     }
 

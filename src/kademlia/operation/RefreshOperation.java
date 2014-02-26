@@ -24,7 +24,7 @@ public class RefreshOperation implements Operation
     }
 
     @Override
-    public synchronized Object execute() throws IOException
+    public synchronized void execute() throws IOException
     {
         /* @todo Do a Node Lookup operation to refresh K-Buckets */
         new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId()).execute();
@@ -38,6 +38,5 @@ public class RefreshOperation implements Operation
          * @todo Delete any content on this node that this node is not one of the K-Closest nodes to
          * @todo Delete any expired content
          */
-        return null;
     }
 }

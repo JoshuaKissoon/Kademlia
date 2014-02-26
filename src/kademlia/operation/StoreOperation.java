@@ -34,10 +34,13 @@ public class StoreOperation implements Operation
     }
 
     @Override
-    public synchronized Object execute() throws IOException
+    public synchronized void execute() throws IOException
     {
         /* Get the nodes on which we need to store the content */
-        List<Node> nodes = new NodeLookupOperation(this.server, this.localNode, this.content.getKey()).execute();
+        NodeLookupOperation ndlo = new NodeLookupOperation(this.server, this.localNode, this.content.getKey());
+        ndlo.execute();
+        List<Node> nodes = ndlo.getClosestNodes();
+
         System.out.println("Nodes to put content on: " + nodes);
 
         /* Create the message */
@@ -55,9 +58,5 @@ public class StoreOperation implements Operation
                 this.server.sendMessage(n, msg, null);
             }
         }
-
-
-        /* Return how many nodes the content was stored on */
-        return nodes.size();
     }
 }

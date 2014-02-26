@@ -42,7 +42,7 @@ public class ConnectOperation implements Operation, Receiver
      * @return null
      */
     @Override
-    public synchronized Object execute()
+    public synchronized void execute()
     {
         try
         {
@@ -72,15 +72,12 @@ public class ConnectOperation implements Operation, Receiver
              * I think after the above lookup operation, K buckets will be filled
              * Not sure if this operation is needed here
              */
-            return null;
 
         }
         catch (IOException | InterruptedException e)
         {
             e.printStackTrace();
         }
-
-        return null;
     }
 
     /**

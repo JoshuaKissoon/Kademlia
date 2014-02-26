@@ -1,10 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140219
- * @desc Finds the K closest nodes to a specified identifier
- * The algorithm terminates when it has gotten responses from the K closest nodes it has seen.
- * Nodes that fail to respond are removed from consideration
- */
 package kademlia.operation;
 
 import java.io.IOException;
@@ -26,6 +19,14 @@ import kademlia.message.NodeReplyMessage;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
+/**
+ * Finds the K closest nodes to a specified identifier
+ * The algorithm terminates when it has gotten responses from the K closest nodes it has seen.
+ * Nodes that fail to respond are removed from consideration
+ *
+ * @author Joshua Kissoon
+ * @created 20140219
+ */
 public class NodeLookupOperation implements Operation, Receiver
 {
 
@@ -77,13 +78,11 @@ public class NodeLookupOperation implements Operation, Receiver
     }
 
     /**
-     * @return A list containing the K closest nodes to the lookupId provided
-     *
      * @throws java.io.IOException
      * @throws kademlia.exceptions.RoutingException
      */
     @Override
-    public synchronized List<Node> execute() throws IOException, RoutingException
+    public synchronized void execute() throws IOException, RoutingException
     {
         try
         {
@@ -105,14 +104,16 @@ public class NodeLookupOperation implements Operation, Receiver
                     throw new RoutingException("Lookup Timeout.");
                 }
             }
-
-            /* So we have finished, lets return the closest nodes */
-            return this.closestNodes(ASKED);
         }
         catch (InterruptedException e)
         {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Node> getClosestNodes()
+    {
+        return this.closestNodes(ASKED);
     }
 
     /**
@@ -215,7 +216,7 @@ public class NodeLookupOperation implements Operation, Receiver
                 }
             }
         }
-        
+
         return closestNodes;
     }
 
