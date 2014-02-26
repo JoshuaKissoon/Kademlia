@@ -61,6 +61,8 @@ public class MessageFactory
                 return new NodeLookupReceiver(server, this.localNode);
             case StoreContentMessage.CODE:
                 return new StoreContentReceiver(server, this.localNode, this.dht);
+            case ContentLookupMessage.CODE:
+                return new ContentLookupReceiver(server, localNode, dht);
         }
     }
 }

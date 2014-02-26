@@ -15,7 +15,7 @@ import kademlia.node.Node;
 public class ContentLookupMessage implements Message
 {
 
-    private static final byte CODE = 0x47;
+    public static final byte CODE = 0x47;
 
     private Node origin;
     private GetParameter params;
