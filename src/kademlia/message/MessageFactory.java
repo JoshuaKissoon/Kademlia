@@ -3,6 +3,7 @@ package kademlia.message;
 import java.io.DataInputStream;
 import java.io.IOException;
 import kademlia.core.KadServer;
+import kademlia.dht.DHT;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
@@ -16,10 +17,12 @@ public class MessageFactory
 {
 
     private final Node localNode;
+    private final DHT dht;
 
-    public MessageFactory(Node local)
+    public MessageFactory(Node local, DHT dht)
     {
         this.localNode = local;
+        this.dht = dht;
     }
 
     public Message createMessage(byte code, DataInputStream in) throws IOException
@@ -57,7 +60,7 @@ public class MessageFactory
             case NodeLookupMessage.CODE:
                 return new NodeLookupReceiver(server, this.localNode);
             case StoreContentMessage.CODE:
-                return new StoreContentReceiver(server, this.localNode);
+                return new StoreContentReceiver(server, this.localNode, this.dht);
         }
     }
 }

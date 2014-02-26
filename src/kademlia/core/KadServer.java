@@ -96,11 +96,15 @@ public class KadServer
         /* Generate a random communication ID */
         int comm = new Integer(new Random().nextInt());
 
-        /* Setup the receiver to handle message response */
-        receivers.put(comm, recv);
-        TimerTask task = new TimeoutTask(comm, recv);
-        timer.schedule(task, Configuration.RESPONSE_TIMEOUT);
-        tasks.put(comm, task);
+        /* If we have a receiver */
+        if (recv != null)
+        {
+            /* Setup the receiver to handle message response */
+            receivers.put(comm, recv);
+            TimerTask task = new TimeoutTask(comm, recv);
+            timer.schedule(task, Configuration.RESPONSE_TIMEOUT);
+            tasks.put(comm, task);
+        }
 
         /* Send the message */
         sendMessage(to, msg, comm);

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
+import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
@@ -33,6 +34,7 @@ public class Kademlia
     /* Objects to be used */
     private final Node localNode;
     private final KadServer server;
+    private final DHT dht;
     private final Timer timer;
 
     /* Factories */
@@ -56,7 +58,8 @@ public class Kademlia
     {
         this.ownerId = ownerId;
         this.localNode = new Node(defaultId, InetAddress.getLocalHost(), udpPort);
-        this.messageFactory = new MessageFactory(localNode);
+        this.dht = new DHT();
+        this.messageFactory = new MessageFactory(localNode, this.dht);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode);
         this.timer = new Timer(true);
 

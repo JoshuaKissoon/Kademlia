@@ -5,9 +5,7 @@
  */
 package kademlia.node;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -25,8 +23,6 @@ public class NodeId implements Streamable
      * Construct the NodeId from some string
      *
      * @param data The user generated key string
-     *
-     * @todo Throw an exception if the key is too short or too long
      */
     public NodeId(String data)
     {
@@ -202,15 +198,17 @@ public class NodeId implements Streamable
         this.keyBytes = input;
     }
 
+    public String hexRepresentation()
+    {
+        /* Returns the hex format of this NodeId */
+        BigInteger bi = new BigInteger(1, this.keyBytes);
+        return String.format("%0" + (this.keyBytes.length << 1) + "X", bi);
+    }
+
     @Override
     public String toString()
     {
-        // StringBuilder sb = new StringBuilder("NodeId: ");
-        BigInteger bi = new BigInteger(1, this.keyBytes);
-        return String.format("%0" + (this.keyBytes.length << 1) + "X", bi);
-        //sb.append(Hex.encodeBase64URLSafeString(this.keyBytes));
-
-        //return sb.toString();
+        return this.hexRepresentation();
     }
 
 }

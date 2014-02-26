@@ -47,4 +47,9 @@ public class Configuration
      * Number of times a node can be marked as stale before it is actually removed.
      * */
     public static int STALE = 1;
+    
+    /**
+     * Local Storage location - Relative to the user's home folder (Cross-Platform)
+     */
+    public static String localFolder = "kademlia";
 }

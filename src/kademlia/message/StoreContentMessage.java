@@ -48,7 +48,7 @@ public class StoreContentMessage implements Message
     }
 
     @Override
-    public void fromStream(DataInputStream in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         this.origin = new Node(in);
         try
@@ -61,12 +61,23 @@ public class StoreContentMessage implements Message
         }
     }
 
+    public Node getOrigin()
+    {
+        return this.origin;
+    }
+
+    public KadContent getContent()
+    {
+        return this.content;
+    }
+
     @Override
     public byte code()
     {
         return CODE;
     }
 
+    @Override
     public String toString()
     {
         return "StoreMessage[origin=" + origin + ",content=" + content + "]";
