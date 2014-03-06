@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Random;
 import kademlia.message.Streamable;
 
@@ -126,14 +127,43 @@ public class NodeId implements Streamable
     /**
      * Generates a NodeId that is some distance away from this NodeId
      *
-     * @param distance
+     * @param distance in number of bits
      *
      * @return NodeId The newly generated NodeId
      */
     public NodeId generateNodeIdByDistance(int distance)
     {
         byte[] result = new byte[ID_LENGTH / 8];
-        int emptyBytes = distance / 8;
+
+        /* Since distance = ID_LENGTH - prefixLength, we need to fill that amount with 0's */
+        int numByteZeroes = (ID_LENGTH - distance) / 8;
+        int numBitZeroes = 8 - (distance % 8);
+
+        /* Filling byte zeroes */
+        for (int i = 0; i < numByteZeroes; i++)
+        {
+            result[i] = 0;
+        }
+
+        /* Filling bit zeroes */
+        BitSet bits = new BitSet(8);
+        bits.set(0, 8);
+
+        for (int i = 0; i < numBitZeroes; i++)
+        {
+            /* Shift 1 zero into the start of the value */
+            bits.clear(i);
+        }
+        bits.flip(0, 8);        // Flip the bits since they're in reverse order
+        result[numByteZeroes] = (byte) bits.toByteArray()[0];
+
+        /* Set the remaining bytes to Maximum value */
+        for (int i = numByteZeroes + 1; i < result.length; i++)
+        {
+            result[i] = Byte.MAX_VALUE;
+        }
+
+        return this.xor(new NodeId(result));
     }
 
     /**

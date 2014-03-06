@@ -170,13 +170,13 @@ public class KadServer
 
                     Message msg = messageFactory.createMessage(messCode, din);
                     din.close();
-                    System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
+                    //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
 
                     /* Get a receiver for this message */
                     Receiver receiver;
                     if (this.receivers.containsKey(comm))
                     {
-                        System.out.println("Receiver found");
+                        //System.out.println("Receiver found");
                         /* If there is a reciever in the receivers to handle this */
                         synchronized (this)
                         {

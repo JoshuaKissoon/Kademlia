@@ -1,7 +1,6 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import java.util.List;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
@@ -25,27 +24,28 @@ public class BucketRefreshOperation implements Operation
         this.localNode = localNode;
     }
 
+    /**
+     * Each bucket need to be refreshed at every time interval t.
+     * Find an identifier in each bucket's range, use it to look for nodes closest to this identifier
+     * allowing the bucket to be refreshed.
+     *
+     * Then Do a NodeLookupOperation for each of the generated NodeIds,
+     * This will find the K-Closest nodes to that ID, and update the necessary K-Bucket
+     *
+     * @throws java.io.IOException
+     */
     @Override
     public synchronized void execute() throws IOException
     {
-        System.out.println("Bucket Refresh Operation Started");
-        
-        /* Get a list of NodeIds for each distance from the LocalNode NodeId */
-        List<NodeId> refreshIds = this.localNode.getRoutingTable().getRefreshList();
-
-        /* Test whether each nodeId in this list is a different distance from our current NID */
-        for (NodeId nid : refreshIds)
+        for (int i = 1; i < NodeId.ID_LENGTH; i++)
         {
-            System.out.println(localNode.getNodeId().getDistance(nid));
+            /* Construct a NodeId that is i bits away from the current node Id */
+            NodeId current = this.localNode.getNodeId().generateNodeIdByDistance(i);
+
+            // System.out.println("Distance: " + localNode.getNodeId().getDistance(current) + " - ID: " + current);
+
+            /* Run the Node Lookup Operation */
+            new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId()).execute();
         }
-
-        /* @todo Do a Node Lookup operation to refresh K-Buckets */
-        new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId()).execute();
-
-        /**
-         * @todo Send data in DHT to closest Nodes if they don't have it
-         * This is better than asking closest nodes for data,
-         * since the data may not always come from the closest nodes
-         */
     }
 }
