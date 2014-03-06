@@ -2,6 +2,7 @@ package kademlia.operation;
 
 import java.io.IOException;
 import kademlia.core.KadServer;
+import kademlia.dht.DHT;
 import kademlia.node.Node;
 
 /**
@@ -15,11 +16,13 @@ public class KadRefreshOperation implements Operation
 
     private final KadServer server;
     private final Node localNode;
+    private final DHT dht;
 
-    public KadRefreshOperation(KadServer server, Node localNode)
+    public KadRefreshOperation(KadServer server, Node localNode, DHT dht)
     {
         this.server = server;
         this.localNode = localNode;
+        this.dht = dht;
     }
 
     @Override
@@ -27,7 +30,8 @@ public class KadRefreshOperation implements Operation
     {
         /* Run our BucketRefreshOperation to refresh buckets */
         new BucketRefreshOperation(server, localNode).execute();
-        
+
         /* After buckets have been refreshed, we refresh content */
+        new ContentRefreshOperation(server, localNode, dht).execute();
     }
 }

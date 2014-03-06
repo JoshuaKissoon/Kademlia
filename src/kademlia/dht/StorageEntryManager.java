@@ -99,4 +99,21 @@ public class StorageEntryManager
         }
     }
 
+    /**
+     * @return A list of all storage entries
+     */
+    public List<StorageEntry> getAllEntries()
+    {
+        List<StorageEntry> entriesRet = new ArrayList<>();
+
+        for (List<StorageEntry> entrySet : this.entries.values())
+        {
+            if (entrySet.size() > 0)
+            {
+                entriesRet.addAll(entrySet);
+            }
+        }
+
+        return entriesRet;
+    }
 }

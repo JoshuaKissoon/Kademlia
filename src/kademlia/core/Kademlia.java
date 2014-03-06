@@ -79,8 +79,8 @@ public class Kademlia
                     {
                         try
                         {
-                            /* Runs a RefreshOperation to refresh K-Buckets and stored content */
-                            new BucketRefreshOperation(server, localNode).execute();
+                            /* Runs a DHT RefreshOperation  */
+                            Kademlia.this.refresh();
                         }
                         catch (IOException e)
                         {
@@ -182,7 +182,7 @@ public class Kademlia
      */
     public void refresh() throws IOException
     {
-        new KadRefreshOperation(server, localNode).execute();
+        new KadRefreshOperation(this.server, this.localNode, this.dht).execute();
     }
 
     /**

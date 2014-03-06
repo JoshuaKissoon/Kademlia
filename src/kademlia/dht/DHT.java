@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.NoSuchElementException;
 import kademlia.core.Configuration;
 import kademlia.core.GetParameter;
@@ -77,12 +78,12 @@ public class DHT
     }
 
     /**
-     * Get the List<StorageEntry> for the content if any exist,
-     * retrieve the content from the storage system and return it
+     * Get the StorageEntry for the content if any exist,
+     * retrieve the KadContent from the storage system and return it
      *
      * @param param The parameters used to filter the content needed
      *
-     * @return List<KadContent> A list with the content found on the DHT satisfying the given criteria
+     * @return KadContent A KadContent found on the DHT satisfying the given criteria
      *
      * @throws java.io.IOException
      */
@@ -141,5 +142,13 @@ public class DHT
         }
 
         return mainStorageFolder + File.separator + folderName;
+    }
+
+    /**
+     * @return A List of all StorageEntries for this node
+     */
+    public List<StorageEntry> getStorageEntries()
+    {
+        return entriesManager.getAllEntries();
     }
 }
