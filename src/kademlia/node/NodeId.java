@@ -42,11 +42,16 @@ public class NodeId implements Streamable
         new Random().nextBytes(keyBytes);
     }
 
+    /**
+     * Generate the NodeId from a given byte[]
+     *
+     * @param bytes
+     */
     public NodeId(byte[] bytes)
     {
         if (bytes.length != ID_LENGTH / 8)
         {
-            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long.");
+            throw new IllegalArgumentException("Specified Data need to be " + (ID_LENGTH / 8) + " characters long. Data Given: '" + new String(bytes) + "'");
         }
         this.keyBytes = bytes;
     }

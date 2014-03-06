@@ -16,7 +16,8 @@ import kademlia.node.NodeId;
 import kademlia.operation.ConnectOperation;
 import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
-import kademlia.operation.RefreshOperation;
+import kademlia.operation.BucketRefreshOperation;
+import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 
 /**
@@ -79,7 +80,7 @@ public class Kademlia
                         try
                         {
                             /* Runs a RefreshOperation to refresh K-Buckets and stored content */
-                            new RefreshOperation(server, localNode).execute();
+                            new BucketRefreshOperation(server, localNode).execute();
                         }
                         catch (IOException e)
                         {
@@ -172,6 +173,16 @@ public class Kademlia
         }
 
         return contentFound;
+    }
+
+    /**
+     * Allow the user of the System to call refresh even out of the normal Kad refresh timing
+     *
+     * @throws java.io.IOException
+     */
+    public void refresh() throws IOException
+    {
+        new KadRefreshOperation(server, localNode).execute();
     }
 
     /**

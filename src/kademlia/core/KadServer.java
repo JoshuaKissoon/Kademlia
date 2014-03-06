@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140215
- * @desc This server handles sending and receiving messages
- */
 package kademlia.core;
 
 import java.io.ByteArrayInputStream;
@@ -23,6 +18,11 @@ import kademlia.message.MessageFactory;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
+/**
+ * @author Joshua Kissoon
+ * @created 20140215
+ * @desc This server handles sending and receiving messages
+ */
 public class KadServer
 {
 

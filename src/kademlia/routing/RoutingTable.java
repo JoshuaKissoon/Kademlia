@@ -6,6 +6,7 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
@@ -73,7 +74,7 @@ public class RoutingTable
      * @param target The NodeId to find contacts close to
      * @param num    The number of contacts to find
      *
-     * @return List<Contact> A List of num contacts closest to target
+     * @return List A List of contacts closest to target
      */
     public List<Node> findClosest(NodeId target, int num)
     {
@@ -145,7 +146,10 @@ public class RoutingTable
         return closest;
     }
 
-    public List<Node> getAllNodes()
+    /**
+     * @return List A List of all Nodes in this RoutingTable
+     */
+    public List getAllNodes()
     {
         List<Node> nodes = new ArrayList<>();
 
@@ -155,6 +159,53 @@ public class RoutingTable
         }
 
         return nodes;
+    }
+
+    /**
+     * Each bucket need to be refreshed at every time interval t.
+     * Here we return an identifier in each bucket's range;
+     * this identifier will then be used to look for nodes closest to this identifier
+     * allowing the bucket to be refreshed.
+     *
+     * The first bucket containing only the local node is skipped.
+     *
+     * @return List A list of NodeIds for each distance (1 - NodeId.ID_LENGTH) from the LocalNode NodeId
+     */
+    public List<NodeId> getRefreshList()
+    {
+        List<NodeId> refreshList = new ArrayList<>(NodeId.ID_LENGTH);
+
+        for (int i = 1; i < NodeId.ID_LENGTH; i++)
+        {
+            /* Construct a NodeId that is i bits away from the current node Id */
+            System.out.println("\nGenerating a new NodeId ");
+            BitSet temp = new BitSet(NodeId.ID_LENGTH);
+
+            /* Fill the first i parts with 1 */
+            for (int j = 0; j < i; j++)
+            {
+                System.out.println("Got here 1 - j: " + j);
+                temp.set(j);
+            }
+
+            /* Fill the last parts with 0 */
+            for (int j = i; j < NodeId.ID_LENGTH; j++)
+            {
+                System.out.println("Got here 2 - j: " + j);
+                temp.set(j, false);
+            }
+
+            /**
+             * LocalNode NodeId xor the Bits we generated will give a new NodeId
+             * i distance away from our LocalNode NodeId, we add this to our refreshList
+             */
+            System.out.println("Bits: " + temp);
+            NodeId nid = this.localNode.getNodeId().xor(new NodeId(temp.toByteArray()));
+            System.out.println("NodeId: " + nid);
+            refreshList.add(nid);
+        }
+
+        return refreshList;
     }
 
     @Override
