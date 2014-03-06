@@ -1,8 +1,6 @@
 package kademlia.node;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -180,13 +178,13 @@ public class Node implements Streamable
 
             //System.out.println("\n **************** Compare Starting **************** ");
             //System.out.println("Comparing to: " + this.nodeId);
-            int index1 = nodeId.xor(n1.getNodeId()).getFirstSetBitIndex();
+            int distance1 = nodeId.getDistance(n1.getNodeId());
             //System.out.println("Node " + n1.getNodeId() + " distance: " + index1);
-            int index2 = nodeId.xor(n2.getNodeId()).getFirstSetBitIndex();
+            int distance2 = nodeId.getDistance(n2.getNodeId());
             //System.out.println("Node " + n2.getNodeId() + " distance: " + index2);
 
             int retval;
-            if (index1 < index2)
+            if (distance1 < distance2)
             {
                 /* If the first node is closer to the given node, return 1 */
                 retval = 1;

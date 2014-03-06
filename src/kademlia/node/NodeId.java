@@ -83,7 +83,6 @@ public class NodeId implements Streamable
     @Override
     public boolean equals(Object o)
     {
-
         if (o instanceof NodeId)
         {
             NodeId nid = (NodeId) o;
@@ -98,28 +97,6 @@ public class NodeId implements Streamable
         int hash = 7;
         hash = 83 * hash + Arrays.hashCode(this.keyBytes);
         return hash;
-    }
-
-    /**
-     * Checks if a given NodeId is less than this NodeId
-     *
-     * @param nid The NodeId to compare to this NodeId
-     *
-     * @return boolean Whether the given NodeId is less than this NodeId
-     */
-    public boolean lessThan(NodeId nid)
-    {
-        byte[] nidBytes = nid.getBytes();
-        for (int i = 0; i < ID_LENGTH; i++)
-        {
-            if (this.keyBytes[i] != nidBytes[i])
-            {
-                return this.keyBytes[i] < nidBytes[i];
-            }
-        }
-
-        /* We got here means they're equal */
-        return false;
     }
 
     /**
@@ -147,9 +124,22 @@ public class NodeId implements Streamable
     }
 
     /**
-     * Checks the number of leading 0's in this NodeId
+     * Generates a NodeId that is some distance away from this NodeId
      *
-     * @return int The number of leading 0's
+     * @param distance
+     *
+     * @return NodeId The newly generated NodeId
+     */
+    public NodeId generateNodeIdByDistance(int distance)
+    {
+        byte[] result = new byte[ID_LENGTH / 8];
+        int emptyBytes = distance / 8;
+    }
+
+    /**
+     * Counts the number of leading 0's in this NodeId
+     *
+     * @return Integer The number of leading 0's
      */
     public int getFirstSetBitIndex()
     {
@@ -185,7 +175,24 @@ public class NodeId implements Streamable
                 break;
             }
         }
-        return ID_LENGTH - prefixLength;
+        return prefixLength;
+    }
+
+    /**
+     * Gets the distance from this NodeId to another NodeId
+     *
+     * @param to
+     *
+     * @return Integer The distance
+     */
+    public int getDistance(NodeId to)
+    {
+        /**
+         * Compute the xor of this and to
+         * Get the index i of the first set bit of the xor returned NodeId
+         * The distance between them is ID_LENGTH - i
+         */
+        return ID_LENGTH - this.xor(to).getFirstSetBitIndex();
     }
 
     @Override

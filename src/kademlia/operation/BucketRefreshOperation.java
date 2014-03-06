@@ -36,7 +36,7 @@ public class BucketRefreshOperation implements Operation
         /* Test whether each nodeId in this list is a different distance from our current NID */
         for (NodeId nid : refreshIds)
         {
-            System.out.println(nid.xor(localNode.getNodeId()).getFirstSetBitIndex());
+            System.out.println(localNode.getNodeId().getDistance(nid));
         }
 
         /* @todo Do a Node Lookup operation to refresh K-Buckets */

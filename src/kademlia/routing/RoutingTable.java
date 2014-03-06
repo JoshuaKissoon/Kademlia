@@ -40,10 +40,8 @@ public class RoutingTable
      */
     public void insert(Node n)
     {
-        /* Find the first set bit: how far this node is away from the contact node */
-        NodeId id = this.localNode.getNodeId().xor(n.getNodeId());
-        //System.out.println(" First Bit Set: " + id.getFirstSetBitIndex());
-        int bucketId = id.getFirstSetBitIndex();
+        /* bucketId is the distance between these nodes */
+        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId()) - 1;
 
         System.out.println(this.localNode.getNodeId() + " Adding Node " + n.getNodeId() + " to bucket at depth: " + bucketId);
 
@@ -59,7 +57,7 @@ public class RoutingTable
     public void remove(Node n)
     {
         /* Find the first set bit: how far this node is away from the contact node */
-        int bucketId = this.localNode.getNodeId().xor(n.getNodeId()).getFirstSetBitIndex();
+        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
 
         /* If the bucket has the contact, remove it */
         if (this.buckets[bucketId].containNode(n))
@@ -80,11 +78,11 @@ public class RoutingTable
     {
         List<Node> closest = new ArrayList<>(num);
 
-        /* Get the bucket number to search for closest from */
-        int bucketNumber = this.localNode.getNodeId().xor(target).getFirstSetBitIndex() - 1;
+        /* Get the bucket index to search for closest from */
+        int bucketIndex = this.localNode.getNodeId().getDistance(target) - 1;
 
         /* Add the contacts from this bucket to the return contacts */
-        for (Node c : this.buckets[bucketNumber].getNodes())
+        for (Node c : this.buckets[bucketIndex].getNodes())
         {
             if (closest.size() < num)
             {
@@ -102,12 +100,12 @@ public class RoutingTable
         }
 
         /* If we still need more nodes, we add from buckets on either side of the closest bucket */
-        for (int i = 1; ((bucketNumber - i) >= 0 || (bucketNumber + i) < NodeId.ID_LENGTH); i++)
+        for (int i = 1; ((bucketIndex - i) >= 0 || (bucketIndex + i) < NodeId.ID_LENGTH); i++)
         {
             /* Check the bucket on the left side */
-            if (bucketNumber - i > 0)
+            if (bucketIndex - i > 0)
             {
-                for (Node c : this.buckets[bucketNumber - i].getNodes())
+                for (Node c : this.buckets[bucketIndex - i].getNodes())
                 {
                     if (closest.size() < num)
                     {
@@ -121,9 +119,9 @@ public class RoutingTable
             }
 
             /* Check the bucket on the right side */
-            if (bucketNumber + i < NodeId.ID_LENGTH)
+            if (bucketIndex + i < NodeId.ID_LENGTH)
             {
-                for (Node c : this.buckets[bucketNumber + i].getNodes())
+                for (Node c : this.buckets[bucketIndex + i].getNodes())
                 {
                     if (closest.size() < num)
                     {
@@ -179,28 +177,28 @@ public class RoutingTable
         {
             /* Construct a NodeId that is i bits away from the current node Id */
             System.out.println("\nGenerating a new NodeId ");
-            BitSet temp = new BitSet(NodeId.ID_LENGTH);
+            BitSet bits = new BitSet(160);
 
             /* Fill the first i parts with 1 */
-            for (int j = 0; j < i; j++)
+            for (int j = 0; j < i + 10; j++)
             {
-                System.out.println("Got here 1 - j: " + j);
-                temp.set(j);
+                bits.set(j);
+                System.out.println("Got here 1 - j: " + j + "; bits: " + bits);
             }
 
             /* Fill the last parts with 0 */
             for (int j = i; j < NodeId.ID_LENGTH; j++)
             {
-                System.out.println("Got here 2 - j: " + j);
-                temp.set(j, false);
+                bits.clear(j);
+                System.out.println("Got here 2 - j: " + j + "; bits: " + bits);
             }
 
             /**
              * LocalNode NodeId xor the Bits we generated will give a new NodeId
              * i distance away from our LocalNode NodeId, we add this to our refreshList
              */
-            System.out.println("Bits: " + temp);
-            NodeId nid = this.localNode.getNodeId().xor(new NodeId(temp.toByteArray()));
+            System.out.println("Bits: " + bits.toByteArray());
+            NodeId nid = this.localNode.getNodeId().xor(new NodeId(bits.toByteArray()));
             System.out.println("NodeId: " + nid);
             refreshList.add(nid);
         }
