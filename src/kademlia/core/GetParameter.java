@@ -19,17 +19,35 @@ public class GetParameter
     private String ownerId = null;
     private String type = null;
 
+    /**
+     * Construct a GetParameter to search for data by NodeId
+     *
+     * @param key
+     */
     public GetParameter(NodeId key)
     {
         this.key = key;
     }
 
+    /**
+     * Construct a GetParameter to search for data by NodeId and owner
+     *
+     * @param key
+     * @param owner
+     */
     public GetParameter(NodeId key, String owner)
     {
         this(key);
         this.ownerId = owner;
     }
 
+    /**
+     * Construct a GetParameter to search for data by NodeId, owner, type
+     *
+     * @param key
+     * @param owner
+     * @param type
+     */
     public GetParameter(NodeId key, String owner, String type)
     {
         this(key, owner);

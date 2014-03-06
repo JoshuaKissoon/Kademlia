@@ -19,14 +19,15 @@ import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
 /**
+ * The server that handles sending and receiving messages between nodes on the Kad Network
+ *
  * @author Joshua Kissoon
  * @created 20140215
- * @desc This server handles sending and receiving messages
  */
 public class KadServer
 {
 
-    /* Constants */
+    /* Maximum size of a Datagram Packet */
     private static final int DATAGRAM_BUFFER_SIZE = 64 * 1024;      // 64KB
 
     /* Server Objects */
@@ -50,6 +51,15 @@ public class KadServer
         this.timer = new Timer(true);
     }
 
+    /**
+     * Initialize our KadServer
+     *
+     * @param udpPort   The port to listen on
+     * @param mFactory  Factory used to create messages
+     * @param localNode Local node on which this server runs on
+     *
+     * @throws java.net.SocketException
+     */
     public KadServer(int udpPort, MessageFactory mFactory, Node localNode) throws SocketException
     {
         this.udpPort = udpPort;
@@ -85,6 +95,8 @@ public class KadServer
      * @param to   The node to send the message to
      * @param recv The receiver to handle the response message
      *
+     * @return Integer The communication ID of this message
+     *
      * @throws IOException
      */
     public synchronized int sendMessage(Node to, Message msg, Receiver recv) throws IOException
@@ -95,7 +107,7 @@ public class KadServer
         }
 
         /* Generate a random communication ID */
-        int comm = new Integer(new Random().nextInt());
+        int comm = new Random().nextInt();
 
         /* If we have a receiver */
         if (recv != null)
@@ -109,9 +121,19 @@ public class KadServer
 
         /* Send the message */
         sendMessage(to, msg, comm);
+
         return comm;
     }
 
+    /**
+     * Method called to reply to a message received
+     *
+     * @param to   The Node to send the reply to
+     * @param msg  The reply message
+     * @param comm The communication ID - the one received
+     *
+     * @throws java.io.IOException
+     */
     public synchronized void reply(Node to, Message msg, int comm) throws IOException
     {
         if (!isRunning)
@@ -121,27 +143,32 @@ public class KadServer
         sendMessage(to, msg, comm);
     }
 
+    /**
+     * Internal sendMessage method called by the public sendMessage method after a communicationId is generated
+     */
     private void sendMessage(Node to, Message msg, int comm) throws IOException
     {
-        /* Setup the message for transmission */
-        ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        DataOutputStream dout = new DataOutputStream(bout);
-        dout.writeInt(comm);
-        dout.writeByte(msg.code());
-        msg.toStream(dout);
-        dout.close();
-
-        byte[] data = bout.toByteArray();
-
-        if (data.length > DATAGRAM_BUFFER_SIZE)
+        /* Use a try-with resource to auto-close streams after usage */
+        try (ByteArrayOutputStream bout = new ByteArrayOutputStream(); DataOutputStream dout = new DataOutputStream(bout);)
         {
-            throw new IOException("Message is too big");
-        }
+            /* Setup the message for transmission */
+            dout.writeInt(comm);
+            dout.writeByte(msg.code());
+            msg.toStream(dout);
+            dout.close();
 
-        /* Everything is good, now create the packet and send it */
-        DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
-        pkt.setSocketAddress(to.getSocketAddress());
-        socket.send(pkt);
+            byte[] data = bout.toByteArray();
+
+            if (data.length > DATAGRAM_BUFFER_SIZE)
+            {
+                throw new IOException("Message is too big");
+            }
+
+            /* Everything is good, now create the packet and send it */
+            DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
+            pkt.setSocketAddress(to.getSocketAddress());
+            socket.send(pkt);
+        }
     }
 
     /**
@@ -161,46 +188,48 @@ public class KadServer
                     socket.receive(packet);
 
                     /* We've received a packet, now handle it */
-                    ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());
-                    DataInputStream din = new DataInputStream(bin);
-
-                    /* Read in the conversation Id to know which handler to handle this response */
-                    int comm = din.readInt();
-                    byte messCode = din.readByte();
-
-                    Message msg = messageFactory.createMessage(messCode, din);
-                    din.close();
-                    //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
-
-                    /* Get a receiver for this message */
-                    Receiver receiver;
-                    if (this.receivers.containsKey(comm))
+                    try (ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());
+                            DataInputStream din = new DataInputStream(bin);)
                     {
-                        //System.out.println("Receiver found");
-                        /* If there is a reciever in the receivers to handle this */
-                        synchronized (this)
+
+                        /* Read in the conversation Id to know which handler to handle this response */
+                        int comm = din.readInt();
+                        byte messCode = din.readByte();
+
+                        Message msg = messageFactory.createMessage(messCode, din);
+                        din.close();
+
+                        //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
+
+                        /* Get a receiver for this message */
+                        Receiver receiver;
+                        if (this.receivers.containsKey(comm))
                         {
-                            receiver = this.receivers.remove(comm);
-                            TimerTask task = (TimerTask) tasks.remove(comm);
-                            task.cancel();
+                            /* If there is a reciever in the receivers to handle this */
+                            synchronized (this)
+                            {
+                                receiver = this.receivers.remove(comm);
+                                TimerTask task = (TimerTask) tasks.remove(comm);
+                                task.cancel();
+                            }
                         }
-                    }
-                    else
-                    {
-                        /* There is currently no receivers, try to get one */
-                        receiver = messageFactory.createReceiver(messCode, this);
-                    }
+                        else
+                        {
+                            /* There is currently no receivers, try to get one */
+                            receiver = messageFactory.createReceiver(messCode, this);
+                        }
 
-                    /* Invoke the receiver */
-                    if (receiver != null)
-                    {
-                        receiver.receive(msg, comm);
+                        /* Invoke the receiver */
+                        if (receiver != null)
+                        {
+                            receiver.receive(msg, comm);
+                        }
                     }
                 }
                 catch (IOException e)
                 {
                     this.isRunning = false;
-                    e.printStackTrace();
+                    System.out.println("Server ran into a problem in listener method. Message: " + e.getMessage());
                 }
             }
         }
@@ -221,7 +250,7 @@ public class KadServer
      */
     private synchronized void unregister(int comm)
     {
-        Integer key = new Integer(comm);
+        Integer key = comm;
         receivers.remove(key);
         this.tasks.remove(key);
     }
@@ -254,7 +283,7 @@ public class KadServer
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                System.out.println("Cannot unregister a receiver. Message: " + e.getMessage());
             }
         }
     }
