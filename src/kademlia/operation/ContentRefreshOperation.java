@@ -1,7 +1,6 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import kademlia.core.Configuration;
 import kademlia.core.KadServer;

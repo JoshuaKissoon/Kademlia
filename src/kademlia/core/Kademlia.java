@@ -30,6 +30,9 @@ import kademlia.operation.StoreOperation;
  * @todo Handle compressing data
  * @todo Allow optional storing of content locally using the put method
  * @todo Instead of using a StoreContentMessage to send a store RPC and a ContentMessage to receive a FIND rpc, make them 1 message with different operation type
+ * @todo If we're trying to send a message to this node, just cancel the sending process and handle the message right here
+ * @todo Keep this node in it's own routing table - it helps for ContentRefresh operation - easy to check whether this node is one of the k-nodes for a content
+ *
  */
 public class Kademlia
 {
