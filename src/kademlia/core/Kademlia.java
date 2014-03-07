@@ -16,7 +16,6 @@ import kademlia.node.NodeId;
 import kademlia.operation.ConnectOperation;
 import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
-import kademlia.operation.BucketRefreshOperation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 
@@ -137,9 +136,11 @@ public class Kademlia
      */
     public int put(KadContent content) throws IOException
     {
-        new StoreOperation(server, localNode, content).execute();
-        /*@todo Return how many nodes the content was stored on */
-        return 10;
+        StoreOperation sop = new StoreOperation(server, localNode, content);
+        sop.execute();
+
+        /* Return how many nodes the content was stored on */
+        return sop.numNodesStoredAt();
     }
 
     /**

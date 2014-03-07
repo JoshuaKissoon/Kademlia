@@ -78,6 +78,34 @@ public class DHT
     }
 
     /**
+     * Retrieve and create a KadContent object given the StorageEntry object
+     *
+     * @param entry The StorageEntry used to retrieve this content
+     *
+     * @return KadContent The content object
+     *
+     * @throws java.io.IOException
+     */
+    public KadContent get(StorageEntry entry) throws IOException, NoSuchElementException
+    {
+        try
+        {
+            return this.retrieve(entry.getKey(), entry.getContentHash());
+        }
+        catch (FileNotFoundException e)
+        {
+            System.err.println("Error while loading file for content. Message: " + e.getMessage());
+        }
+        catch (ClassNotFoundException e)
+        {
+            System.err.println("The class for some content was not found. Message: " + e.getMessage());
+        }
+
+        /* If we got here, means we got no entries */
+        throw new NoSuchElementException();
+    }
+
+    /**
      * Get the StorageEntry for the content if any exist,
      * retrieve the KadContent from the storage system and return it
      *
@@ -94,15 +122,14 @@ public class DHT
         {
             StorageEntry e = this.entriesManager.get(param);
             return this.retrieve(e.getKey(), e.getContentHash());
-
         }
         catch (FileNotFoundException e)
         {
-            System.err.println("Error while loading file for content.");
+            System.err.println("Error while loading file for content. Message: " + e.getMessage());
         }
         catch (ClassNotFoundException e)
         {
-            System.err.println("The class for some content was not found.");
+            System.err.println("The class for some content was not found. Message: " + e.getMessage());
         }
 
         /* If we got here, means we got no entries */

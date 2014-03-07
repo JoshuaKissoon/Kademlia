@@ -6,7 +6,6 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 import kademlia.node.Node;
 import kademlia.node.NodeId;

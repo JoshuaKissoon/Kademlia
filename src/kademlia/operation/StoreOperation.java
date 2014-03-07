@@ -51,12 +51,25 @@ public class StoreOperation implements Operation
         {
             if (n.equals(this.localNode))
             {
-                /* Store the content locally */
+                /* @todo Store the content locally */
             }
             else
             {
+                /**
+                 * @todo Create a receiver that recieves a store acknowledgement message to count how many nodes a content have been stored at
+                 */
                 this.server.sendMessage(n, msg, null);
             }
         }
+    }
+
+    /**
+     * @return The number of nodes that have stored this content
+     *
+     * @todo Implement this method
+     */
+    public int numNodesStoredAt()
+    {
+        return 1;
     }
 }
