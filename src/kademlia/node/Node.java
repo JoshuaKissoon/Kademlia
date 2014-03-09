@@ -24,7 +24,7 @@ public class Node implements Streamable
     private InetAddress inetAddress;
     private int port;
 
-    private final RoutingTable routingTable;
+    private transient final RoutingTable routingTable;
 
     
     {

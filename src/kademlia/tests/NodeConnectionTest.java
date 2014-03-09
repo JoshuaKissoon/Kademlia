@@ -1,14 +1,15 @@
-/**
- * @author Joshua Kissoon
- * @created 20140219
- * @desc Testing connecting 2 nodes
- */
 package kademlia.tests;
 
 import java.io.IOException;
 import kademlia.core.Kademlia;
 import kademlia.node.NodeId;
 
+/**
+ * Testing connecting 2 nodes
+ *
+ * @author Joshua Kissoon
+ * @created 20140219
+ */
 public class NodeConnectionTest
 {
 

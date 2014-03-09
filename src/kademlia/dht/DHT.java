@@ -24,7 +24,7 @@ public class DHT
 {
 
     private final StorageEntryManager entriesManager;
-    private final JsonSerializer<KadContent> contentSerializer;
+    private transient final JsonSerializer<KadContent> contentSerializer;
 
     
     {

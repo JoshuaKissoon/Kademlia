@@ -1,7 +1,9 @@
 package kademlia.core;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -70,12 +72,12 @@ public class Kademlia
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to connect to the network
      * */
-    public Kademlia(String ownerId, Node localNode, int udpPort) throws IOException
+    public Kademlia(String ownerId, Node localNode, int udpPort, DHT dht) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
         this.localNode = localNode;
-        this.dht = new DHT();
+        this.dht = dht;
         this.messageFactory = new MessageFactory(localNode, this.dht);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode);
         this.timer = new Timer(true);
@@ -105,18 +107,36 @@ public class Kademlia
 
     public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
     {
-        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort);
+        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, new DHT());
     }
 
     /**
+     * Load Stored state
+     *
+     * @param ownerId The ID of the owner for the stored state
+     *
      * @return A Kademlia instance loaded from a stored state in a file
+     *
+     * @throws java.io.FileNotFoundException
      *
      * @todo Boot up this Kademlia instance from a saved file state
      */
-//    public Kademlia loadFromFile(String ownerId)
-//    {
-//        
-//    }
+    public static void loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
+    {
+        /* Setup the file in which we store the state */
+        DataInputStream din = new DataInputStream(new FileInputStream(getStateStorageFolderName() + File.separator + ownerId + ".kns"));
+
+        /* Read the UDP Port that this app is running on */
+        Integer rPort = new JsonSerializer<Integer>().read(din);
+
+        /* Read the node state */
+        // Node rN = new JsonSerializer<Node>().read(din);
+
+        /* Read the DHT */
+        DHT rDht = new JsonSerializer<DHT>().read(din);
+
+        //return new Kademlia(ownerId, rN, rPort, rDht);
+    }
 
     /**
      * @return Node The local node for this system
@@ -225,8 +245,11 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      */
-    public void shutdown() throws FileNotFoundException, IOException
+    public void shutdown() throws FileNotFoundException, IOException, ClassNotFoundException
     {
+        /* Shut down the server */
+        this.server.shutdown();
+
         /* Save this Kademlia instance's state if required */
         if (Configuration.SAVE_STATE_ON_SHUTDOWN)
         {
@@ -235,8 +258,6 @@ public class Kademlia
 
         }
 
-        /* Shut down the server */
-        this.server.shutdown();
 
         /* Now we store the content locally in a file */
     }
@@ -246,19 +267,35 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      */
-    private void saveKadState() throws FileNotFoundException, IOException
+    private void saveKadState() throws FileNotFoundException, IOException, ClassNotFoundException
     {
         /* Setup the file in which we store the state */
-        DataOutputStream dout = new DataOutputStream(new FileOutputStream(this.getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
+        DataOutputStream dout;
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
 
+        System.out.println("Saving state");
         /* Save the UDP Port that this app is running on */
         new JsonSerializer<Integer>().write(this.udpPort, dout);
 
         /* Save the node state */
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
         new JsonSerializer<Node>().write(this.localNode, dout);
 
         /* Save the DHT */
-        new JsonSerializer<DHT>().write(this.dht, dout);
+       // dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
+        //new JsonSerializer<DHT>().write(this.dht, dout);
+        
+//        System.out.println(dht.getStorageEntries());
+//        
+//        DataInputStream din = new DataInputStream(new FileInputStream(getStateStorageFolderName() + File.separator + ownerId + ".kns"));
+//        DHT dddht = new JsonSerializer<DHT>().read(din);
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println();
+//        System.out.println(dddht);
+        System.out.println("FInished saving state");
+
     }
 
     /**
@@ -266,7 +303,7 @@ public class Kademlia
      *
      * @return String The name of the folder to store node states
      */
-    private String getStateStorageFolderName()
+    private static String getStateStorageFolderName()
     {
         String storagePath = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
         File mainStorageFolder = new File(storagePath);
@@ -286,5 +323,32 @@ public class Kademlia
         }
 
         return mainStorageFolder + File.separator + "nodes";
+    }
+
+    /**
+     * Creates a string containing all data about this Kademlia instance
+     *
+     * @return The string representation of this Kad instance
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("\n\nPrinting Kad State for instance with owner: ");
+        sb.append(this.ownerId);
+        sb.append("\n\n");
+
+        sb.append("\n");
+        sb.append("Local Node");
+        sb.append(this.localNode);
+        sb.append("\n");
+
+        sb.append("\n");
+        sb.append("Routing Table: ");
+        sb.append(this.localNode.getRoutingTable());
+        sb.append("\n");
+
+        sb.append("\n\n\n");
+
+        return sb.toString();
     }
 }
