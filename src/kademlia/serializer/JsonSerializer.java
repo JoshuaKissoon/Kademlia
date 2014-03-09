@@ -10,7 +10,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 /**
- * A KadContentSerializer that serializes content to JSON format
+ * A KadSerializer that serializes content to JSON format
  *
  * @param <T> The type of content to serialize
  *
@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter;
  *
  * @since 20140225
  */
-public class JsonSerializer<T> implements KadContentSerializer<T>
+public class JsonSerializer<T> implements KadSerializer<T>
 {
 
     private final Gson gson;

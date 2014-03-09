@@ -1,5 +1,9 @@
 package kademlia.core;
 
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -18,6 +22,7 @@ import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
+import kademlia.serializer.JsonSerializer;
 
 /**
  * The main Kademlia network management class
@@ -32,6 +37,7 @@ import kademlia.operation.StoreOperation;
  * @todo Instead of using a StoreContentMessage to send a store RPC and a ContentMessage to receive a FIND rpc, make them 1 message with different operation type
  * @todo If we're trying to send a message to this node, just cancel the sending process and handle the message right here
  * @todo Keep this node in it's own routing table - it helps for ContentRefresh operation - easy to check whether this node is one of the k-nodes for a content
+ * @todo Move DHT.getContentStorageFolderName to the Configuration class
  *
  */
 public class Kademlia
@@ -45,6 +51,7 @@ public class Kademlia
     private final KadServer server;
     private final DHT dht;
     private final Timer timer;
+    private final int udpPort;
 
     /* Factories */
     private final MessageFactory messageFactory;
@@ -56,17 +63,18 @@ public class Kademlia
      * address of a bootstrap node in the network.
      *
      * @param ownerId   The Name of this node used for storage
-     * @param defaultId Default id for the node
+     * @param localNode The Local Node for this Kad instance
      * @param udpPort   The UDP port to use for routing messages
      *
      * @throws IOException If an error occurred while reading id or local map
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to connect to the network
      * */
-    public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
+    public Kademlia(String ownerId, Node localNode, int udpPort) throws IOException
     {
         this.ownerId = ownerId;
-        this.localNode = new Node(defaultId, InetAddress.getLocalHost(), udpPort);
+        this.udpPort = udpPort;
+        this.localNode = localNode;
         this.dht = new DHT();
         this.messageFactory = new MessageFactory(localNode, this.dht);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode);
@@ -94,6 +102,21 @@ public class Kademlia
                 Configuration.RESTORE_INTERVAL, Configuration.RESTORE_INTERVAL
         );
     }
+
+    public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
+    {
+        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort);
+    }
+
+    /**
+     * @return A Kademlia instance loaded from a stored state in a file
+     *
+     * @todo Boot up this Kademlia instance from a saved file state
+     */
+//    public Kademlia loadFromFile(String ownerId)
+//    {
+//        
+//    }
 
     /**
      * @return Node The local node for this system
@@ -195,5 +218,73 @@ public class Kademlia
     public String getOwnerId()
     {
         return this.ownerId;
+    }
+
+    /**
+     * Here we handle properly shutting down the Kademlia instance
+     *
+     * @throws java.io.FileNotFoundException
+     */
+    public void shutdown() throws FileNotFoundException, IOException
+    {
+        /* Save this Kademlia instance's state if required */
+        if (Configuration.SAVE_STATE_ON_SHUTDOWN)
+        {
+            /* Save the system state */
+            this.saveKadState();
+
+        }
+
+        /* Shut down the server */
+        this.server.shutdown();
+
+        /* Now we store the content locally in a file */
+    }
+
+    /**
+     * Saves the node state to a text file
+     *
+     * @throws java.io.FileNotFoundException
+     */
+    private void saveKadState() throws FileNotFoundException, IOException
+    {
+        /* Setup the file in which we store the state */
+        DataOutputStream dout = new DataOutputStream(new FileOutputStream(this.getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
+
+        /* Save the UDP Port that this app is running on */
+        new JsonSerializer<Integer>().write(this.udpPort, dout);
+
+        /* Save the node state */
+        new JsonSerializer<Node>().write(this.localNode, dout);
+
+        /* Save the DHT */
+        new JsonSerializer<DHT>().write(this.dht, dout);
+    }
+
+    /**
+     * Get the name of the folder for which a content should be stored
+     *
+     * @return String The name of the folder to store node states
+     */
+    private String getStateStorageFolderName()
+    {
+        String storagePath = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
+        File mainStorageFolder = new File(storagePath);
+
+        /* Create the main storage folder if it doesn't exist */
+        if (!mainStorageFolder.isDirectory())
+        {
+            mainStorageFolder.mkdir();
+        }
+
+        File contentStorageFolder = new File(mainStorageFolder + File.separator + "nodes");
+
+        /* Create the content folder if it doesn't exist */
+        if (!contentStorageFolder.isDirectory())
+        {
+            contentStorageFolder.mkdir();
+        }
+
+        return mainStorageFolder + File.separator + "nodes";
     }
 }

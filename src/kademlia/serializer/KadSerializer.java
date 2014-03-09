@@ -14,7 +14,7 @@ import java.io.IOException;
  *
  * @since 20140225
  */
-public interface KadContentSerializer<T>
+public interface KadSerializer<T>
 {
 
     /**

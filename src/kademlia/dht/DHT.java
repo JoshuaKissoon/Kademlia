@@ -150,7 +150,7 @@ public class DHT
          *
          * The name of the file containing the content is the hash of this content
          */
-        String storagePath = System.getProperty("user.home") + File.separator + Configuration.localFolder;
+        String storagePath = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
         File mainStorageFolder = new File(storagePath);
 
         /* Create the main storage folder if it doesn't exist */

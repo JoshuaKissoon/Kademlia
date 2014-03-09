@@ -250,14 +250,23 @@ public class KadServer
      */
     private synchronized void unregister(int comm)
     {
-        Integer key = comm;
-        receivers.remove(key);
-        this.tasks.remove(key);
+        receivers.remove(comm);
+        this.tasks.remove(comm);
+    }
+
+    /**
+     * Stops listening and shuts down the server
+     */
+    public void shutdown()
+    {
+        this.isRunning = false;
+        this.socket.close();
+        timer.cancel();
     }
 
     /**
      * Task that gets called by a separate thread if a timeout for a receiver occurs.
-     * When a reply arrives this task must be cancelled using the <code>cancel()</code>
+     * When a reply arrives this task must be canceled using the <code>cancel()</code>
      * method inherited from <code>TimerTask</code>. In this case the caller is
      * responsible for removing the task from the <code>tasks</code> map.
      * */

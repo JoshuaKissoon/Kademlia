@@ -3,7 +3,7 @@ package kademlia.core;
 /**
  * A set of Kademlia configuration parameters. Default values are
  * supplied and can be changed by the application as necessary.
- * 
+ *
  */
 public class Configuration
 {
@@ -52,5 +52,10 @@ public class Configuration
     /**
      * Local Storage location - Relative to the user's home folder (Cross-Platform)
      */
-    public static String localFolder = "kademlia";
+    public static String LOCAL_FOLDER = "kademlia";
+
+    /**
+     * Should we save the node state when the node is shut down and reload it when the node is re-loaded
+     */
+    public static boolean SAVE_STATE_ON_SHUTDOWN = true;
 }
