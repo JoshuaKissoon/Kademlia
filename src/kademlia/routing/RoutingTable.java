@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140215
- * @desc Implementation of a Kademlia routing table
- */
 package kademlia.routing;
 
 import java.util.ArrayList;
@@ -10,26 +5,35 @@ import java.util.List;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
+/**
+ * Implementation of a Kademlia routing table
+ *
+ * @author Joshua Kissoon
+ * @created 20140215
+ *
+ * @todo Make the KadBucket represent the Bucket interface
+ * @todo Change the code to reflect the bucket interface and not the specific KadBucket implementation
+ */
 public class RoutingTable
 {
-    
+
     private final Node localNode;  // The current node
-    private final KadBucket[] buckets;
-    
+    private transient KadBucket[] buckets;
+
     
     {
         buckets = new KadBucket[NodeId.ID_LENGTH];  // 160 buckets; 1 for each level in the tree
     }
-    
+
     public RoutingTable(Node localNode)
     {
         this.localNode = localNode;
 
         /* Initialize all of the buckets to a specific depth */
-        for (int i = 0; i < NodeId.ID_LENGTH; i++)
-        {
-            buckets[i] = new KadBucket(i);
-        }
+        this.initializeBuckets();
+
+        /* @todo Insert the local node */
+        //this.insert(localNode);
     }
 
     /**
@@ -37,10 +41,10 @@ public class RoutingTable
      *
      * @param n The contact to add
      */
-    public void insert(Node n)
+    public final void insert(Node n)
     {
         /* bucketId is the distance between these nodes */
-        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId()) - 1;
+        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
 
         //System.out.println(this.localNode.getNodeId() + " Adding Node " + n.getNodeId() + " to bucket at depth: " + bucketId);
 
@@ -53,7 +57,7 @@ public class RoutingTable
      *
      * @param n The node to remove
      */
-    public void remove(Node n)
+    public final void remove(Node n)
     {
         /* Find the first set bit: how far this node is away from the contact node */
         int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
@@ -73,7 +77,7 @@ public class RoutingTable
      *
      * @return List A List of contacts closest to target
      */
-    public List<Node> findClosest(NodeId target, int num)
+    public final List<Node> findClosest(NodeId target, int num)
     {
         List<Node> closest = new ArrayList<>(num);
 
@@ -92,7 +96,7 @@ public class RoutingTable
                 break;
             }
         }
-        
+
         if (closest.size() >= num)
         {
             return closest;
@@ -139,27 +143,57 @@ public class RoutingTable
                 break;
             }
         }
-        
+
         return closest;
     }
 
     /**
      * @return List A List of all Nodes in this RoutingTable
      */
-    public List getAllNodes()
+    public final List getAllNodes()
     {
         List<Node> nodes = new ArrayList<>();
-        
+
         for (KadBucket b : this.buckets)
         {
             nodes.addAll(b.getNodes());
         }
-        
+
         return nodes;
     }
 
+    /**
+     * @return Bucket[] The buckets in this Kad Instance
+     */
+    public final KadBucket[] getBuckets()
+    {
+        return this.buckets;
+    }
+
+    /**
+     * Set the KadBuckets of this routing table, mainly used when retrieving saved state
+     *
+     * @param buckets
+     */
+    public final void setBuckets(KadBucket[] buckets)
+    {
+        this.buckets = buckets;
+    }
+
+    /**
+     * Initialize the kadBuckets to be empty
+     */
+    public final void initializeBuckets()
+    {
+        this.buckets = new KadBucket[NodeId.ID_LENGTH];
+        for (int i = 0; i < NodeId.ID_LENGTH; i++)
+        {
+            buckets[i] = new KadBucket(i);
+        }
+    }
+
     @Override
-    public String toString()
+    public final String toString()
     {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         for (KadBucket b : this.buckets)
@@ -177,8 +211,8 @@ public class RoutingTable
             }
         }
         sb.append("\nPrinting Routing Table Ended ******************** ");
-        
+
         return sb.toString();
     }
-    
+
 }

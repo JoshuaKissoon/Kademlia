@@ -17,7 +17,7 @@ import kademlia.message.Streamable;
 public class NodeId implements Streamable
 {
 
-    public final static int ID_LENGTH = 160;
+    public final transient static int ID_LENGTH = 160;
     private byte[] keyBytes;
 
     /**

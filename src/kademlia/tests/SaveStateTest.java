@@ -31,9 +31,9 @@ public class SaveStateTest
             System.out.println("\n\n\nShutting down Kad instance");
             kad1.shutdown();
 
-            //System.out.println("\n\n\nReloading down Kad instance from file");
-            //Kademlia.loadFromFile("JoshuaK");
-            //System.out.println(kad3);
+            System.out.println("\n\n\nReloading down Kad instance from file");
+            Kademlia kad3 = Kademlia.loadFromFile("JoshuaK");
+            System.out.println(kad3);
         }
         catch (Exception e)
         {

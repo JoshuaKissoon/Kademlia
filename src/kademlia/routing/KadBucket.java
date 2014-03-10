@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140215
- * @desc A bucket in the Kademlia routing table
- */
 package kademlia.routing;
 
 import java.util.ArrayList;
@@ -12,12 +7,17 @@ import java.util.Map;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
+/**
+ * A bucket in the Kademlia routing table
+ *
+ * @author Joshua Kissoon
+ * @created 20140215
+ */
 public class KadBucket implements Bucket
 {
 
     private final int depth;
     private final Map<NodeId, Node> nodes;
-
     
     {
         nodes = new HashMap<>();

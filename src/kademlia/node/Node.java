@@ -24,7 +24,7 @@ public class Node implements Streamable
     private InetAddress inetAddress;
     private int port;
 
-    private transient final RoutingTable routingTable;
+    private transient RoutingTable routingTable;
 
     
     {
@@ -117,6 +117,16 @@ public class Node implements Streamable
     public RoutingTable getRoutingTable()
     {
         return this.routingTable;
+    }
+
+    /**
+     * Sets a new routing table to this node, mainly used when we retrieve the node from a saved state
+     *
+     * @param tbl The routing table to use
+     */
+    public void setRoutingTable(RoutingTable tbl)
+    {
+        this.routingTable = tbl;
     }
 
     @Override

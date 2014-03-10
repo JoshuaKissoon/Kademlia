@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Timer;
@@ -26,6 +25,7 @@ import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 import kademlia.routing.RoutingTable;
+import kademlia.serializer.JsonRoutingTableSerializer;
 import kademlia.serializer.JsonSerializer;
 
 /**
@@ -69,6 +69,7 @@ public class Kademlia
      * @param ownerId   The Name of this node used for storage
      * @param localNode The Local Node for this Kad instance
      * @param udpPort   The UDP port to use for routing messages
+     * @param dht       The DHT for this instance
      *
      * @throws IOException If an error occurred while reading id or local map
      *                     from disk <i>or</i> a network error occurred while
@@ -120,24 +121,40 @@ public class Kademlia
      * @return A Kademlia instance loaded from a stored state in a file
      *
      * @throws java.io.FileNotFoundException
+     * @throws java.lang.ClassNotFoundException
      *
      * @todo Boot up this Kademlia instance from a saved file state
      */
-    public static void loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
+    public static Kademlia loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
     {
-        /* Setup the file in which we store the state */
-        DataInputStream din = new DataInputStream(new FileInputStream(getStateStorageFolderName() + File.separator + ownerId + ".kns"));
+        DataInputStream din;
 
-        /* Read the UDP Port that this app is running on */
-        Integer rPort = new JsonSerializer<Integer>().read(din);
+        /**
+         * @section Read Basic Kad data
+         */
+        din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "kad.kns"));
+        Kademlia ikad = new JsonSerializer<Kademlia>().read(din);
 
-        /* Read the node state */
-        // Node rN = new JsonSerializer<Node>().read(din);
+        /**
+         * @section Read the routing table
+         */
+        din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "routingtable.kns"));
+        RoutingTable irtbl = new JsonRoutingTableSerializer().read(din);
 
-        /* Read the DHT */
-        DHT rDht = new JsonSerializer<DHT>().read(din);
+        /**
+         * @section Read the node state
+         */
+        din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "node.kns"));
+        Node inode = new JsonSerializer<Node>().read(din);
+        inode.setRoutingTable(irtbl);
 
-        //return new Kademlia(ownerId, rN, rPort, rDht);
+        /**
+         * @section Read the DHT
+         */
+        din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "dht.kns"));
+        DHT idht = new JsonSerializer<DHT>().read(din);
+        System.out.println("Finished reading data.");
+        return new Kademlia(ownerId, inode, ikad.getPort(), idht);
     }
 
     /**
@@ -243,11 +260,19 @@ public class Kademlia
     }
 
     /**
+     * @return Integer The port on which this kad instance is running
+     */
+    public int getPort()
+    {
+        return this.udpPort;
+    }
+
+    /**
      * Here we handle properly shutting down the Kademlia instance
      *
      * @throws java.io.FileNotFoundException
      */
-    public void shutdown() throws FileNotFoundException, IOException, ClassNotFoundException
+    public void shutdown() throws FileNotFoundException, IOException
     {
         /* Shut down the server */
         this.server.shutdown();
@@ -257,11 +282,7 @@ public class Kademlia
         {
             /* Save the system state */
             this.saveKadState();
-
         }
-
-
-        /* Now we store the content locally in a file */
     }
 
     /**
@@ -292,7 +313,7 @@ public class Kademlia
          * This will cause a serialization recursion, and in turn a Stack Overflow
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "routingtable.kns"));
-        new JsonSerializer<RoutingTable>().write(this.localNode.getRoutingTable(), dout);
+        new JsonRoutingTableSerializer().write(this.localNode.getRoutingTable(), dout);
 
         /**
          * @section Save the DHT

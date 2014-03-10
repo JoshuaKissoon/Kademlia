@@ -58,7 +58,11 @@ public class JsonSerializer<T> implements KadSerializer<T>
             String className = gson.fromJson(reader, String.class);
 
             /* Read and return the Content*/
-            return gson.fromJson(reader, Class.forName(className));
+            T ret = gson.fromJson(reader, Class.forName(className));
+            
+            reader.endArray();
+            
+            return ret;
         }
     }
 }
