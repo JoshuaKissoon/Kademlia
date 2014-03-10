@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Timer;
@@ -24,6 +25,7 @@ import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
+import kademlia.routing.RoutingTable;
 import kademlia.serializer.JsonSerializer;
 
 /**
@@ -49,14 +51,14 @@ public class Kademlia
     private final String ownerId;
 
     /* Objects to be used */
-    private final Node localNode;
-    private final KadServer server;
-    private final DHT dht;
-    private final Timer timer;
+    private final transient Node localNode;
+    private final transient KadServer server;
+    private final transient DHT dht;
+    private final transient Timer timer;
     private final int udpPort;
 
     /* Factories */
-    private final MessageFactory messageFactory;
+    private final transient MessageFactory messageFactory;
 
     /**
      * Creates a Kademlia DistributedMap using the specified name as filename base.
@@ -267,33 +269,37 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      */
-    private void saveKadState() throws FileNotFoundException, IOException, ClassNotFoundException
+    private void saveKadState() throws FileNotFoundException, IOException
     {
-        /* Setup the file in which we store the state */
-        DataOutputStream dout;
-        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
-
         System.out.println("Saving state");
-        /* Save the UDP Port that this app is running on */
-        new JsonSerializer<Integer>().write(this.udpPort, dout);
+        DataOutputStream dout;
 
-        /* Save the node state */
-        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
+        /**
+         * @section Store Basic Kad data
+         */
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "kad.kns"));
+        new JsonSerializer<Kademlia>().write(this, dout);
+
+        /**
+         * @section Save the node state
+         */
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "node.kns"));
         new JsonSerializer<Node>().write(this.localNode, dout);
 
-        /* Save the DHT */
-       // dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName() + File.separator + this.ownerId + ".kns"));
-        //new JsonSerializer<DHT>().write(this.dht, dout);
-        
-//        System.out.println(dht.getStorageEntries());
-//        
-//        DataInputStream din = new DataInputStream(new FileInputStream(getStateStorageFolderName() + File.separator + ownerId + ".kns"));
-//        DHT dddht = new JsonSerializer<DHT>().read(din);
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println();
-//        System.out.println(dddht);
+        /**
+         * @section Save the routing table
+         * We need to save the routing table separate from the node since the routing table will contain the node and the node will contain the routing table
+         * This will cause a serialization recursion, and in turn a Stack Overflow
+         */
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "routingtable.kns"));
+        new JsonSerializer<RoutingTable>().write(this.localNode.getRoutingTable(), dout);
+
+        /**
+         * @section Save the DHT
+         */
+        dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "dht.kns"));
+        new JsonSerializer<DHT>().write(this.dht, dout);
+
         System.out.println("FInished saving state");
 
     }
@@ -303,26 +309,33 @@ public class Kademlia
      *
      * @return String The name of the folder to store node states
      */
-    private static String getStateStorageFolderName()
+    private static String getStateStorageFolderName(String ownerId)
     {
-        String storagePath = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
-        File mainStorageFolder = new File(storagePath);
+        String path = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
+        File folder = new File(path);
 
         /* Create the main storage folder if it doesn't exist */
-        if (!mainStorageFolder.isDirectory())
+        if (!folder.isDirectory())
         {
-            mainStorageFolder.mkdir();
+            folder.mkdir();
         }
 
-        File contentStorageFolder = new File(mainStorageFolder + File.separator + "nodes");
-
-        /* Create the content folder if it doesn't exist */
-        if (!contentStorageFolder.isDirectory())
+        /* Create the nodes storage folder if it doesn't exist */
+        path = folder + File.separator + "nodes";
+        folder = new File(path);
+        if (!folder.isDirectory())
         {
-            contentStorageFolder.mkdir();
+            folder.mkdir();
         }
 
-        return mainStorageFolder + File.separator + "nodes";
+        /* Create this Kad instance storage folder */
+        path += File.separator + ownerId;
+        folder = new File(path);
+        if (!folder.isDirectory())
+        {
+            folder.mkdir();
+        }
+        return folder.toString();
     }
 
     /**
