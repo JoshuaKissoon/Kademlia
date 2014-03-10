@@ -36,7 +36,7 @@ import kademlia.node.Node;
  *
  * @author Joshua Kissoon
  *
- * @since 20140225
+ * @since 20140310
  */
 public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
 {
@@ -85,7 +85,7 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
             {
             }.getType();
             List<Node> nodes = gson.fromJson(reader, collectionType);
-            tbl.initializeBuckets();
+            tbl.initialize();
 
             for (Node n : nodes)
             {

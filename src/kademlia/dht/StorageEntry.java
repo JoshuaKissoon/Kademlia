@@ -70,12 +70,7 @@ public class StorageEntry
         }
 
         /* Check that key matches */
-        if ((params.getKey() != null) && (!params.getKey().equals(this.key)))
-        {
-            return false;
-        }
-
-        return true;
+        return ((params.getKey() != null) && (!params.getKey().equals(this.key)));
     }
 
     @Override
@@ -97,5 +92,24 @@ public class StorageEntry
         hash = 23 * hash + Objects.hashCode(this.ownerId);
         hash = 23 * hash + Objects.hashCode(this.type);
         return hash;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("[StorageEntry: ");
+
+        sb.append("{Key: ");
+        sb.append(this.key);
+        sb.append("} ");
+        sb.append("{Owner: ");
+        sb.append(this.ownerId);
+        sb.append("} ");
+        sb.append("{Type: ");
+        sb.append(this.type);
+        sb.append("} ");
+        sb.append("]");
+        
+        return sb.toString();
     }
 }

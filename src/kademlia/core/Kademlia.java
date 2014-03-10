@@ -25,6 +25,7 @@ import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 import kademlia.routing.RoutingTable;
+import kademlia.serializer.JsonDHTSerializer;
 import kademlia.serializer.JsonRoutingTableSerializer;
 import kademlia.serializer.JsonSerializer;
 
@@ -42,6 +43,7 @@ import kademlia.serializer.JsonSerializer;
  * @todo If we're trying to send a message to this node, just cancel the sending process and handle the message right here
  * @todo Keep this node in it's own routing table - it helps for ContentRefresh operation - easy to check whether this node is one of the k-nodes for a content
  * @todo Move DHT.getContentStorageFolderName to the Configuration class
+ * @todo Implement Kademlia.ping() operation.
  *
  */
 public class Kademlia
@@ -152,7 +154,7 @@ public class Kademlia
          * @section Read the DHT
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "dht.kns"));
-        DHT idht = new JsonSerializer<DHT>().read(din);
+        DHT idht = new JsonDHTSerializer().read(din);
         System.out.println("Finished reading data.");
         return new Kademlia(ownerId, inode, ikad.getPort(), idht);
     }
@@ -319,7 +321,7 @@ public class Kademlia
          * @section Save the DHT
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "dht.kns"));
-        new JsonSerializer<DHT>().write(this.dht, dout);
+        new JsonDHTSerializer().write(this.dht, dout);
 
         System.out.println("FInished saving state");
 
@@ -379,6 +381,11 @@ public class Kademlia
         sb.append("\n");
         sb.append("Routing Table: ");
         sb.append(this.localNode.getRoutingTable());
+        sb.append("\n");
+
+        sb.append("\n");
+        sb.append("DHT: ");
+        sb.append(this.dht);
         sb.append("\n");
 
         sb.append("\n\n\n");

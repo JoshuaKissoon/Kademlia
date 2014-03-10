@@ -23,13 +23,25 @@ import kademlia.serializer.JsonSerializer;
 public class DHT
 {
 
-    private final StorageEntryManager entriesManager;
+    private transient StorageEntryManager entriesManager;
     private transient final JsonSerializer<KadContent> contentSerializer;
 
     
     {
-        entriesManager = new StorageEntryManager();
         contentSerializer = new JsonSerializer<>();
+    }
+
+    public DHT()
+    {
+        this.initialize();
+    }
+
+    /**
+     * Initialize this DHT to it's default state
+     */
+    public final void initialize()
+    {
+        entriesManager = new StorageEntryManager();
     }
 
     /**
@@ -177,5 +189,25 @@ public class DHT
     public List<StorageEntry> getStorageEntries()
     {
         return entriesManager.getAllEntries();
+    }
+
+    /**
+     * Used to add a list of storage entries for existing content to the DHT.
+     * Mainly used when retrieving StorageEntries from a saved state file.
+     *
+     * @param ientries The entries to add
+     */
+    public void putStorageEntries(List<StorageEntry> ientries)
+    {
+        for (StorageEntry e : ientries)
+        {
+            this.entriesManager.put(e);
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.entriesManager.toString();
     }
 }

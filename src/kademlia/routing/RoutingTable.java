@@ -30,10 +30,22 @@ public class RoutingTable
         this.localNode = localNode;
 
         /* Initialize all of the buckets to a specific depth */
-        this.initializeBuckets();
+        this.initialize();
 
         /* @todo Insert the local node */
         //this.insert(localNode);
+    }
+
+    /**
+     * Initialize the RoutingTable to it's default state
+     */
+    public final void initialize()
+    {
+        this.buckets = new KadBucket[NodeId.ID_LENGTH];
+        for (int i = 0; i < NodeId.ID_LENGTH; i++)
+        {
+            buckets[i] = new KadBucket(i);
+        }
     }
 
     /**
@@ -178,18 +190,6 @@ public class RoutingTable
     public final void setBuckets(KadBucket[] buckets)
     {
         this.buckets = buckets;
-    }
-
-    /**
-     * Initialize the kadBuckets to be empty
-     */
-    public final void initializeBuckets()
-    {
-        this.buckets = new KadBucket[NodeId.ID_LENGTH];
-        for (int i = 0; i < NodeId.ID_LENGTH; i++)
-        {
-            buckets[i] = new KadBucket(i);
-        }
     }
 
     @Override

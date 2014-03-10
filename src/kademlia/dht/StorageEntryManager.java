@@ -16,7 +16,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140226
  */
-public class StorageEntryManager
+class StorageEntryManager
 {
 
     private final Map<NodeId, List<StorageEntry>> entries;
@@ -34,6 +34,16 @@ public class StorageEntryManager
     public void put(KadContent content)
     {
         StorageEntry entry = new StorageEntry(content);
+        this.put(entry);
+    }
+
+    /**
+     * Add a new entry to our storage
+     *
+     * @param entry The StorageEntry to store
+     */
+    public void put(StorageEntry entry)
+    {
         if (!this.entries.containsKey(entry.getKey()))
         {
             this.entries.put(entry.getKey(), new ArrayList<StorageEntry>());
@@ -115,5 +125,27 @@ public class StorageEntryManager
         }
 
         return entriesRet;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("Stored Content: \n");
+        for (List<StorageEntry> es : this.entries.values())
+        {
+            if (entries.size() < 1)
+            {
+                continue;
+            }
+
+            for (StorageEntry e : es)
+            {
+                sb.append(e);
+                sb.append("\n");
+            }
+        }
+
+        sb.append("\n");
+        return sb.toString();
     }
 }
