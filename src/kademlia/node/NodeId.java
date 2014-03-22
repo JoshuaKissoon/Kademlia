@@ -75,6 +75,14 @@ public class NodeId implements Streamable
     }
 
     /**
+     * @return The BigInteger representation of the key
+     */
+    public BigInteger getInt()
+    {
+        return new BigInteger(1, this.getBytes());
+    }
+
+    /**
      * Compares a NodeId to this NodeId
      *
      * @param o The NodeId to compare to this NodeId
@@ -115,12 +123,10 @@ public class NodeId implements Streamable
         for (int i = 0; i < ID_LENGTH / 8; i++)
         {
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
-            //System.out.println("XOR Result: " + result[i]);
         }
 
         NodeId resNid = new NodeId(result);
 
-        //System.out.println("Resulting Nid: " + resNid + " First set bit: " + resNid.getFirstSetBitIndex());
         return resNid;
     }
 

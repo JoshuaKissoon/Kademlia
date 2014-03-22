@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import kademlia.core.Kademlia;
+import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -38,7 +39,7 @@ public class TreeMapTest
         Kademlia kad4 = new Kademlia("Lokesh", new NodeId("AS3RTKJsdjVHERJHGF94"), 8891);
         Kademlia kad5 = new Kademlia("Chandu", new NodeId("ASERT47kfeVHERJHGF15"), 8892);
 
-        this.comparator = new Node.DistanceComparator(kad1.getNode().getNodeId());
+        this.comparator = new KeyComparator(kad1.getNode().getNodeId());
         this.nodes = new TreeMap(this.comparator);
 
         /* Add all nodes as unasked */

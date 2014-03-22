@@ -15,6 +15,7 @@ import kademlia.exceptions.UnknownMessageException;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeReplyMessage;
+import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -72,9 +73,9 @@ public class NodeLookupOperation implements Operation, Receiver
          * We initialize a TreeMap to store nodes.
          * This map will be sorted by which nodes are closest to the lookupId
          */
-        this.comparator = new Node.DistanceComparator(lookupId);
-        //this.nodes = new TreeMap(this.comparator);
-        this.nodes = new HashMap<>();
+        this.comparator = new KeyComparator(lookupId);
+        this.nodes = new TreeMap(this.comparator);
+        //this.nodes = new HashMap<>();
     }
 
     /**

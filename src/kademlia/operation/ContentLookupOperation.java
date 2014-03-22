@@ -19,6 +19,7 @@ import kademlia.message.ContentLookupMessage;
 import kademlia.message.ContentMessage;
 import kademlia.message.Message;
 import kademlia.message.NodeReplyMessage;
+import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 
 /**
@@ -82,7 +83,7 @@ public class ContentLookupOperation implements Operation, Receiver
          * We initialize a TreeMap to store nodes.
          * This map will be sorted by which nodes are closest to the lookupId
          */
-        this.comparator = new Node.DistanceComparator(params.getKey());
+        this.comparator = new KeyComparator(params.getKey());
         this.nodes = new TreeMap(this.comparator);
     }
 
