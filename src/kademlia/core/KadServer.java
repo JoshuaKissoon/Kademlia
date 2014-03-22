@@ -209,7 +209,6 @@ public class KadServer
                             /* If there is a reciever in the receivers to handle this */
                             synchronized (this)
                             {
-                                this.printReceivers();
                                 receiver = this.receivers.remove(comm);
                                 TimerTask task = (TimerTask) tasks.remove(comm);
                                 task.cancel();

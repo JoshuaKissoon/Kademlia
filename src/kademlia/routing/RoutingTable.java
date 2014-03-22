@@ -49,34 +49,44 @@ public class RoutingTable
     }
 
     /**
-     * Adds a new node to the routing table
+     * Adds a new node to the routing table based on how far it is from the LocalNode.
      *
      * @param n The contact to add
      */
     public final void insert(Node n)
     {
-        /* bucketId is the distance between these nodes */
-        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
-
-        /* Put this contact to the bucket that stores contacts prefixLength distance away */
-        this.buckets[bucketId].insert(n);
+        this.buckets[this.getBucketId(n.getNodeId())].insert(n);
     }
 
     /**
-     * Remove a node from the routing table
+     * Remove a node from the routing table.
      *
      * @param n The node to remove
      */
     public final void remove(Node n)
     {
-        /* Find the first set bit: how far this node is away from the contact node */
-        int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
+        int bucketId = this.getBucketId(n.getNodeId());
 
         /* If the bucket has the contact, remove it */
         if (this.buckets[bucketId].containNode(n))
         {
             this.buckets[bucketId].removeNode(n);
         }
+    }
+
+    /**
+     * Compute the bucket ID in which a given node should be placed; the bucketId is computed based on how far the node is away from the Local Node.
+     *
+     * @param nid The NodeId for which we want to find which bucket it belong to
+     *
+     * @return Integer The bucket ID in which the given node should be placed.
+     */
+    public final int getBucketId(NodeId nid)
+    {
+        int bId = this.localNode.getNodeId().getDistance(nid) - 1;
+
+        /* If we are trying to insert a node into it's own routing table, then the bucket ID will be -1, so let's just keep it in bucket 0 */
+        return bId < 0 ? 0 : bId;
     }
 
     /**
@@ -92,7 +102,7 @@ public class RoutingTable
         List<Node> closest = new ArrayList<>(num);
 
         /* Get the bucket index to search for closest from */
-        int bucketIndex = this.localNode.getNodeId().getDistance(target) - 1;
+        int bucketIndex = this.getBucketId(target);
 
         /* Add the contacts from this bucket to the return contacts */
         for (Node c : this.buckets[bucketIndex].getNodes())
