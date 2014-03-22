@@ -10,10 +10,14 @@ Usage
 -----
 The Implementation is meant to be self contained and very easy to setup and use. There are several tests (https://github.com/JoshuaKissoon/Kademlia/tree/master/src/kademlia/tests) which demonstrates the usage of the protocol and DHT.
 
+
 **Configuration**
+
 There is a configuration file available in the kademlia.core package which have all settings used throughout the protocol, all of these settings are described in depth in the Configuration file.
 
-** Creating a Kad Instance **
+
+**Creating a Kad Instance**
+
 All of Kademlia's sub-components (DHT, Node, Routing Table, Server, etc) are wrapped within the Kademlia object to simplify the usage of the protocol. To create an instance, simply call:
 
 ```Java
@@ -26,12 +30,15 @@ Param 3: The port on which this Kademlia instance will run on.
 
 After this initialization phase, the 2 Kad instances will basically be 2 separate networks. Lets connect them so they'll be in the same network.
 
-** Connecting Nodes **
+
+**Connecting Nodes**
+
 ```Java
 kad2.bootstrap(kad1.getNode());   // Bootstrap kad2 by using kad1 as the main network node
 ```
 
-** Storing Content **
+
+**Storing Content**
 
 ```Java
 /* Working example at: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/ContentSendingTest.java */
@@ -40,7 +47,9 @@ kad2.put(c);    // Put the content on the network
 
 ```
 
-** Retrieving Content **
+
+**Retrieving Content**
+
 ```Java
 /* Create a GetParameter object with the parameters of the content to retrieve */
 GetParameter gp = new GetParameter(c.getKey());   // Lets look for content by key
@@ -51,7 +60,9 @@ gp.setOwnerId(c.getOwnerId());                    // And content from this owner
 List<KadContent> conte = kad2.get(gp, 1);
 ```
 
-** Saving and Retrieving a Node State **
+
+**Saving and Retrieving a Node State**
+
 You may want to save the Node state when your application is shut down and Retrieve the Node state on startup to remove the need of rebuilding the Node State (Routing Table, DHT Content Entries, etc). Lets look at how we do this.
 Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/SaveStateTest.java
 
@@ -71,6 +82,7 @@ kad1.shutdown();
 ```
 
 For more information on using Kademlia, check the tests at: https://github.com/JoshuaKissoon/Kademlia/tree/master/src/kademlia/tests
+
 
 Usage in a Real Project
 -----------------------
