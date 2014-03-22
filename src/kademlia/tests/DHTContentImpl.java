@@ -15,13 +15,13 @@ public class DHTContentImpl implements KadContent
     private final NodeId key;
     private String data;
     private final String ownerId;
-    private final long createTs;
+    private final long createTs, updateTs;
 
     public static final String TYPE = "DHTContentImpl";
 
     
     {
-        this.createTs = System.currentTimeMillis() / 1000L;
+        this.createTs = this.updateTs = System.currentTimeMillis() / 1000L;
     }
 
     public DHTContentImpl(String ownerId, String data)
@@ -71,6 +71,13 @@ public class DHTContentImpl implements KadContent
         return this.createTs;
     }
 
+    @Override
+    public long getLastUpdatedTimestamp()
+    {
+        return this.updateTs;
+    }
+
+    @Override
     public String toString()
     {
         return "DHTContentImpl[{data=" + this.data + "{ {key:" + this.key + "}]";

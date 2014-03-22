@@ -11,7 +11,7 @@ public class Configuration
     /**
      * Interval in milliseconds between execution of RestoreOperations.
      * */
-    public static long RESTORE_INTERVAL = 60 * 60 * 1000;
+    public static long RESTORE_INTERVAL = 60 * 1000;   // Default at 1 hour
 
     /**
      * If no reply received from a node in this period (in milliseconds)
@@ -37,7 +37,7 @@ public class Configuration
     /**
      * Bucket size.
      * */
-    public static int K = 5;
+    public static int K = 2;
 
     /**
      * Size of replacement cache.

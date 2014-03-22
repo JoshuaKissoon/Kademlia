@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import kademlia.core.GetParameter;
+import kademlia.exceptions.ContentExistException;
 import kademlia.node.NodeId;
 
 /**
@@ -31,10 +32,9 @@ class StorageEntryManager
      *
      * @param content The content to store a reference to
      */
-    public void put(KadContent content)
+    public StorageEntry put(KadContent content) throws ContentExistException
     {
-        StorageEntry entry = new StorageEntry(content);
-        this.put(entry);
+        return this.put(new StorageEntry(content));
     }
 
     /**
@@ -42,13 +42,24 @@ class StorageEntryManager
      *
      * @param entry The StorageEntry to store
      */
-    public void put(StorageEntry entry)
+    public StorageEntry put(StorageEntry entry) throws ContentExistException
     {
         if (!this.entries.containsKey(entry.getKey()))
         {
             this.entries.put(entry.getKey(), new ArrayList<StorageEntry>());
         }
-        this.entries.get(entry.getKey()).add(entry);
+
+        /* If this entry doesn't already exist, then we add it */
+        if (!this.contains(entry))
+        {
+            this.entries.get(entry.getKey()).add(entry);
+
+            return entry;
+        }
+        else
+        {
+            throw new ContentExistException("Content already exists on this DHT");
+        }
     }
 
     /**
@@ -74,6 +85,27 @@ class StorageEntryManager
                 }
             }
         }
+        return false;
+    }
+
+    /**
+     * Check if a content exist in the DHT
+     */
+    public boolean contains(KadContent content)
+    {
+        return this.contains(new StorageEntry(content));
+    }
+
+    /**
+     * Check if a StorageEntry exist on this DHT
+     */
+    private boolean contains(StorageEntry entry)
+    {
+        if (this.entries.containsKey(entry.getKey()))
+        {
+            return this.entries.get(entry.getKey()).contains(entry);
+        }
+
         return false;
     }
 

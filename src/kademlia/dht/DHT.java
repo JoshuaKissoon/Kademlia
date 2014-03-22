@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import kademlia.core.Configuration;
 import kademlia.core.GetParameter;
+import kademlia.exceptions.ContentExistException;
 import kademlia.node.NodeId;
 import kademlia.serializer.JsonSerializer;
 
@@ -54,12 +55,19 @@ public class DHT
     public void store(KadContent content) throws IOException
     {
         /* Keep track of this content in the entries manager */
-        this.entriesManager.put(content);
+        try
+        {
+            StorageEntry sEntry = this.entriesManager.put(content);
 
-        /* Now we store the content locally in a file */
-        String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
-        DataOutputStream dout = new DataOutputStream(new FileOutputStream(contentStorageFolder + File.separator + content.hashCode() + ".kct"));
-        contentSerializer.write(content, dout);
+            /* Now we store the content locally in a file */
+            String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
+            DataOutputStream dout = new DataOutputStream(new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct"));
+            contentSerializer.write(content, dout);
+        }
+        catch (ContentExistException e)
+        {
+            /* Content already exist on the DHT, no need to do anything here */
+        }
     }
 
     /**
@@ -102,7 +110,7 @@ public class DHT
     {
         try
         {
-            return this.retrieve(entry.getKey(), entry.getContentHash());
+            return this.retrieve(entry.getKey(), entry.hashCode());
         }
         catch (FileNotFoundException e)
         {
@@ -133,7 +141,7 @@ public class DHT
         try
         {
             StorageEntry e = this.entriesManager.get(param);
-            return this.retrieve(e.getKey(), e.getContentHash());
+            return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
         {
@@ -201,7 +209,14 @@ public class DHT
     {
         for (StorageEntry e : ientries)
         {
-            this.entriesManager.put(e);
+            try
+            {
+                this.entriesManager.put(e);
+            }
+            catch (ContentExistException ex)
+            {
+                /* Entry already exist, no need to store it again */
+            }
         }
     }
 

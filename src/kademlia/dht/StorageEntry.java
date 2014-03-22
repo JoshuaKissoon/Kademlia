@@ -18,6 +18,7 @@ public class StorageEntry
     private final String ownerId;
     private final String type;
     private final int contentHash;
+    private final long lastUpdated;
 
     public StorageEntry(KadContent content)
     {
@@ -25,6 +26,7 @@ public class StorageEntry
         this.ownerId = content.getOwnerId();
         this.type = content.getType();
         this.contentHash = content.hashCode();
+        this.lastUpdated = content.getLastUpdatedTimestamp();
     }
 
     public NodeId getKey()
@@ -109,7 +111,7 @@ public class StorageEntry
         sb.append(this.type);
         sb.append("} ");
         sb.append("]");
-        
+
         return sb.toString();
     }
 }

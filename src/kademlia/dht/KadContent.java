@@ -30,6 +30,14 @@ public interface KadContent
     public long getCreatedTimestamp();
 
     /**
+     * Each content will have an update timestamp
+     * This allows the DHT to keep only the latest version of a content
+     *
+     * @return long The timestamp of when this content was last updated
+     */
+    public long getLastUpdatedTimestamp();
+
+    /**
      * @return The ID of the owner of this content
      */
     public String getOwnerId();
