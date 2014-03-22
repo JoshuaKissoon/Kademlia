@@ -2,7 +2,7 @@ Kademlia
 ========
 
 This is an implementation of the Kademlia (http://en.wikipedia.org/wiki/Kademlia) routing protocol and DHT. 
-Kademlia origainal Publication: http://link.springer.com/chapter/10.1007/3-540-45748-8_5
+Kademlia original Publication: http://link.springer.com/chapter/10.1007/3-540-45748-8_5
 
 Note: This repository is a Netbeans project which you can simply download and import. 
 
