@@ -23,7 +23,7 @@ public class RefreshOperationTest
             /* Setting up 2 Kad networks */
             Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF45678947584567467"), 7574);
             Kademlia kad2 = new Kademlia("Crystal", new NodeId("ASERTKJDHGVHERJHGFLK"), 7572);
-            kad2.connect(kad1.getNode());
+            kad2.bootstrap(kad1.getNode());
 
             /* Lets create the content and share it */
             DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");

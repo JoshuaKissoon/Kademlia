@@ -210,7 +210,7 @@ public class RoutingTable
                 sb.append("\n");
             }
         }
-        sb.append("\nPrinting Routing Table Ended ******************** ");
+        sb.append("Printing Routing Table Ended ******************** ");
 
         return sb.toString();
     }

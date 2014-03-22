@@ -61,6 +61,8 @@ public class StoreOperation implements Operation
                 this.server.sendMessage(n, msg, null);
             }
         }
+        
+        System.out.println("\n\n\n\nSTORE CONTENT FINISHED");
     }
 
     /**

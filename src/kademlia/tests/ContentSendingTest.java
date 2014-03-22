@@ -25,7 +25,7 @@ public class ContentSendingTest
             System.out.println("Created Node Kad 1: " + kad1.getNode().getNodeId());
             Kademlia kad2 = new Kademlia("Crystal", new NodeId("ASERTKJDHGVHERJHGFLK"), 7572);
             System.out.println("Created Node Kad 2: " + kad2.getNode().getNodeId());
-            kad2.connect(kad1.getNode());
+            kad2.bootstrap(kad1.getNode());
 
             /**
              * Lets create the content and share it

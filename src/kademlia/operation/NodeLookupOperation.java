@@ -2,7 +2,6 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -31,10 +30,10 @@ public class NodeLookupOperation implements Operation, Receiver
 {
 
     /* Constants */
-    private static final Byte UNASKED = (byte) 0x00;
-    private static final Byte AWAITING = (byte) 0x01;
-    private static final Byte ASKED = (byte) 0x02;
-    private static final Byte FAILED = (byte) 0x03;
+    private static final String UNASKED = "UnAsked";
+    private static final String AWAITING = "Awaiting";
+    private static final String ASKED = "Asked";
+    private static final String FAILED = "Failed";
 
     private final KadServer server;
     private final Node localNode;
@@ -43,7 +42,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private boolean error;
 
     private final Message lookupMessage;        // Message sent to each peer
-    private final SortedMap<Node, Byte> nodes;
+    private final Map<Node, String> nodes;
 
     /* Tracks messages in transit and awaiting reply */
     private final Map<Integer, Node> messagesTransiting;
@@ -74,7 +73,8 @@ public class NodeLookupOperation implements Operation, Receiver
          * This map will be sorted by which nodes are closest to the lookupId
          */
         this.comparator = new Node.DistanceComparator(lookupId);
-        this.nodes = new TreeMap(this.comparator);
+        //this.nodes = new TreeMap(this.comparator);
+        this.nodes = new HashMap<>();
     }
 
     /**
@@ -126,9 +126,24 @@ public class NodeLookupOperation implements Operation, Receiver
         for (Node o : list)
         {
             /* If this node is not in the list, add the node */
-            if (!nodes.containsKey(o))
+            System.out.println("Current Nodes & Their Status: ");
+            for (Node e : this.nodes.keySet())
             {
-                //System.out.println("Adding node " + o.getNodeId());
+                System.out.println(e + ": " + this.nodes.get(e));
+            }
+
+            System.out.println("Nodes Received to add: ");
+            for (Node e : list)
+            {
+                System.out.println(e);
+            }
+
+            /**
+             * @note We add the extra check since for some reason, treemap returns that it doesn't contain the localNode even though it does
+             */
+            if (!nodes.containsKey(o) /*&& !o.equals(this.localNode)*/)
+            {
+                System.out.println(localNode + ": Adding node " + o.getNodeId() + " Equal to local: " + o.equals(this.localNode));
                 nodes.put(o, UNASKED);
             }
         }
@@ -161,10 +176,12 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
         List<Node> unasked = this.closestNodesNotFailed(UNASKED);
-//        for (Node nn : unasked)
-//        {
-//            System.out.println(nn.getNodeId());
-//        }
+        System.out.println("Getting closest unasked Nodes not failed. Nodes ");
+        for (Node nn : unasked)
+        {
+            System.out.println(nn.getNodeId());
+        }
+        System.out.println("Unasked printing finished");
 
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {
@@ -174,8 +191,7 @@ public class NodeLookupOperation implements Operation, Receiver
         }
 
         /* Sort nodes according to criteria */
-        Collections.sort(unasked, this.comparator);
-
+        //Collections.sort(unasked, this.comparator);        
         /**
          * Send messages to nodes in the list;
          * making sure than no more than CONCURRENCY messsages are in transit
@@ -186,7 +202,15 @@ public class NodeLookupOperation implements Operation, Receiver
 
             int comm = server.sendMessage(n, lookupMessage, this);
 
+            System.out.println(this.localNode + "\n\n\n ************** Sent lookup message to: " + n + "; Comm: " + comm);
             this.nodes.put(n, AWAITING);
+            System.out.println("Awaiting: " + AWAITING);
+            System.out.println("Node: " + n + " status: " + this.nodes.get(n));
+            System.out.println("\n\nPrinting entries: ");
+            for (Map.Entry e : this.nodes.entrySet())
+            {
+                System.out.println("Node: " + e.getKey() + "; Value: " + e.getValue());
+            }
             this.messagesTransiting.put(comm, n);
         }
 
@@ -199,7 +223,7 @@ public class NodeLookupOperation implements Operation, Receiver
      *
      * @return The K closest nodes to the target lookupId given that have the specified status
      */
-    private List<Node> closestNodes(Byte status)
+    private List<Node> closestNodes(String status)
     {
         List<Node> closestNodes = new ArrayList<>(Configuration.K);
         int remainingSpaces = Configuration.K;
@@ -228,19 +252,22 @@ public class NodeLookupOperation implements Operation, Receiver
      *
      * @return A List of the closest nodes
      */
-    private List<Node> closestNodesNotFailed(Byte status)
+    private List<Node> closestNodesNotFailed(String status)
     {
+
+        System.out.println(this.localNode + " - closestNodesNotFailed called, Status looking for: " + status);
         List<Node> closestNodes = new ArrayList<>(Configuration.K);
         int remainingSpaces = Configuration.K;
 
-        for (Map.Entry e : this.nodes.entrySet())
+        for (Map.Entry<Node, String> e : this.nodes.entrySet())
         {
             if (!FAILED.equals(e.getValue()))
             {
                 if (status.equals(e.getValue()))
                 {
                     /* We got one with the required status, now add it */
-                    closestNodes.add((Node) e.getKey());
+                    System.out.println("Adding " + e.getKey() + "; status: " + e.getValue());
+                    closestNodes.add(e.getKey());
                 }
 
                 if (--remainingSpaces == 0)
@@ -272,6 +299,7 @@ public class NodeLookupOperation implements Operation, Receiver
         this.localNode.getRoutingTable().insert(origin);
 
         /* Set that we've completed ASKing the origin node */
+        System.out.println("Setting " + origin + " as " + ASKED);
         this.nodes.put(origin, ASKED);
 
         /* Remove this msg from messagesTransiting since it's completed now */

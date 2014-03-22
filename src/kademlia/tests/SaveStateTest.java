@@ -1,5 +1,7 @@
 package kademlia.tests;
 
+import java.io.IOException;
+import kademlia.core.Configuration;
 import kademlia.core.Kademlia;
 import kademlia.node.NodeId;
 
@@ -17,34 +19,75 @@ public class SaveStateTest
         try
         {
             /* Setting up 2 Kad networks */
-            Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF45678947584567467"), 7529);
-            Kademlia kad2 = new Kademlia("Crystal", new NodeId("ASERTKJDHGVHERJHGFLK"), 7532);
-
+            Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF45678947584567467"), 12049);
+            Kademlia kad2 = new Kademlia("Crystal", new NodeId("AfERTKdvHGVHERJHGFdh"), 4585);
+            Kademlia kad3 = new Kademlia("Shameer", new NodeId("ASERTKyrHGVHERfHGFsy"), 8104);
+            Kademlia kad4 = new Kademlia("Lokesh", new NodeId("AS3RTKJsdjVHERJHGF94"), 8335);
+            Kademlia kad5 = new Kademlia("Chandu", new NodeId("ASERT47kfeVHERJHGF15"), 13345);
+            
             /* Connecting 2 to 1 */
-            System.out.println("Connecting Kad 1 and Kad 2");
-            kad1.connect(kad2.getNode());
-
+            System.out.println("Connecting Nodes 1 & 2");
+            kad2.bootstrap(kad1.getNode());            
+            System.out.println(kad1);
+            System.out.println(kad2);
+            
+            kad3.bootstrap(kad2.getNode());            
+            System.out.println(kad1);
+            System.out.println(kad2);
+            System.out.println(kad3);            
+            
+            kad4.bootstrap(kad2.getNode());            
+            System.out.println(kad1);
+            System.out.println(kad2);
+            System.out.println(kad3);
+            System.out.println(kad4);
+            
+            kad5.bootstrap(kad4.getNode());
+            
+            System.out.println(kad1);
+            System.out.println(kad2);
+            System.out.println(kad3);
+            System.out.println(kad4);
+            System.out.println(kad5);
+            
             synchronized (this)
             {
+                System.out.println("\n\n\n\nSTORING CONTENT 1\n\n\n\n");
                 DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");
                 System.out.println(c);
-                kad2.put(c);
+                kad2.put(c);                
+            }
+                        
+            synchronized (this)
+            {
+                System.out.println("\n\n\n\nSTORING CONTENT 2\n\n\n\n");
+                DHTContentImpl c2 = new DHTContentImpl(kad2.getOwnerId(), "Some other Data");
+                System.out.println(c2);
+                kad4.put(c2);              
             }
 
             System.out.println(kad1);
             System.out.println(kad2);
-
+            System.out.println(kad3);
+            System.out.println(kad4);
+            System.out.println(kad5);
+            
             /* Shutting down kad1 and restarting it */
             System.out.println("\n\n\nShutting down Kad instance");
+            System.out.println(kad2);
             kad1.shutdown();
 
-            System.out.println("\n\n\nReloading down Kad instance from file");
-            Kademlia kad3 = Kademlia.loadFromFile("JoshuaK");
-            System.out.println(kad3);
-        }
+            System.out.println("\n\n\nReloading Kad instance from file");
+            Kademlia kadR2 = Kademlia.loadFromFile("JoshuaK");
+            System.out.println(kadR2);
+        }        
+//        catch(RoutingException e)
+//        {
+//            System.err.println("Routing Exception");
+//        }
         catch (Exception e)
         {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
     }
 

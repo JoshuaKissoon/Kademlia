@@ -29,7 +29,7 @@ public class NodeConnectionTest
 
             /* Connecting 2 to 1 */
             System.out.println("Connecting Kad 1 and Kad 2");
-            kad1.connect(kad2.getNode());
+            kad1.bootstrap(kad2.getNode());
 
 //            System.out.println("Kad 1: ");
 //            System.out.println(kad1.getNode().getRoutingTable());
@@ -41,7 +41,7 @@ public class NodeConnectionTest
             System.out.println("\n\n\n\n\n\nCreated Node Kad 3: " + kad3.getNode().getNodeId());
 
             System.out.println("Connecting Kad 3 and Kad 2");
-            kad3.connect(kad2.getNode());
+            kad3.bootstrap(kad2.getNode());
 
 //            NodeId diff32 = kad3.getNode().getNodeId().xor(kad2.getNode().getNodeId());
 //            NodeId diff31 = kad1.getNode().getNodeId().xor(kad3.getNode().getNodeId());
@@ -51,7 +51,7 @@ public class NodeConnectionTest
             System.out.println("\n\n\n\n\n\nCreated Node Kad 4: " + kad4.getNode().getNodeId());
 
             System.out.println("Connecting Kad 4 and Kad 2");
-            kad4.connect(kad2.getNode());
+            kad4.bootstrap(kad2.getNode());
 
             System.out.println("\n\nKad 1: " + kad1.getNode().getNodeId() + " Routing Table: ");
             System.out.println(kad1.getNode().getRoutingTable());

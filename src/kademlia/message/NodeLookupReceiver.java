@@ -39,22 +39,21 @@ public class NodeLookupReceiver implements Receiver
 
         Node origin = msg.getOrigin();
 
-        System.out.println(this.localNode.getNodeId() + ": Received NodeLookupMessage, sending NodeReplyMessage to: " + origin.getNodeId());
-
         /* Update the local space by inserting the origin node. */
         this.localNode.getRoutingTable().insert(origin);
 
         /* Find nodes closest to the LookupId */
         List<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), Configuration.K);
 
-        System.out.println("\nClosest Nodes: ");
-        for (Node n : nodes)
-        {
-            System.out.println(n.getNodeId());
-        }
-        System.out.println();
+//        System.out.println("\n" + this.localNode + " Closest Nodes: ");
+//        for (Node n : nodes)
+//        {
+//            System.out.println(n.getNodeId());
+//        }
+//        System.out.println();
 
         /* Respond to the NodeLookupMessage */
+        System.out.println(this.localNode + " Sending NodeReplyMessage to " + origin);
         Message reply = new NodeReplyMessage(this.localNode, nodes);
 
         /* Let the Server send the reply */

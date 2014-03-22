@@ -75,7 +75,7 @@ public class Kademlia
      *
      * @throws IOException If an error occurred while reading id or local map
      *                     from disk <i>or</i> a network error occurred while
-     *                     attempting to connect to the network
+                     attempting to bootstrap to the network
      * */
     public Kademlia(String ownerId, Node localNode, int udpPort, DHT dht) throws IOException
     {
@@ -184,7 +184,7 @@ public class Kademlia
      * @throws IOException           If a network error occurred
      * @throws IllegalStateException If this object is closed
      * */
-    public final void connect(Node n) throws IOException, RoutingException
+    public synchronized final void bootstrap(Node n) throws IOException, RoutingException
     {
         Operation op = new ConnectOperation(this.server, this.localNode, n);
         op.execute();
@@ -201,7 +201,7 @@ public class Kademlia
      * @throws java.io.IOException
      *
      */
-    public int put(KadContent content) throws IOException
+    public synchronized int put(KadContent content) throws IOException
     {
         StoreOperation sop = new StoreOperation(server, localNode, content);
         sop.execute();

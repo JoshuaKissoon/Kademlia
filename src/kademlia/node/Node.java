@@ -23,6 +23,7 @@ public class Node implements Streamable
     private NodeId nodeId;
     private InetAddress inetAddress;
     private int port;
+    private String strRep;
 
     private transient RoutingTable routingTable;
 
@@ -36,6 +37,7 @@ public class Node implements Streamable
         this.nodeId = nid;
         this.inetAddress = ip;
         this.port = port;
+        this.strRep = this.nodeId.toString();
     }
 
     /**
@@ -48,6 +50,7 @@ public class Node implements Streamable
     public Node(DataInputStream in) throws IOException
     {
         this.fromStream(in);
+        this.strRep = this.nodeId.toString();
     }
 
     /**
@@ -134,6 +137,11 @@ public class Node implements Streamable
     {
         if (o instanceof Node)
         {
+            Node n = (Node) o;
+            if (o == this)
+            {
+                return true;
+            }
             return this.getNodeId().equals(((Node) o).getNodeId());
         }
         return false;
@@ -157,16 +165,16 @@ public class Node implements Streamable
     public static class DistanceComparator implements Comparator
     {
 
-        private final NodeId nodeId;
+        private final NodeId nid;
 
         /**
          * The NodeId relative to which the distance should be measured.
          *
-         * @param nodeId
+         * @param nid
          * */
-        public DistanceComparator(NodeId nodeId)
+        public DistanceComparator(NodeId nid)
         {
-            this.nodeId = nodeId;
+            this.nid = nid;
         }
 
         /**
@@ -179,27 +187,26 @@ public class Node implements Streamable
         {
             Node n1 = (Node) o1;
             Node n2 = (Node) o2;
+//            System.out.println("\nDistance Comparator: " + nodeId);
+//            System.out.println("Distance Comparator: " + n1.getNodeId());
+//            System.out.println("Distance Comparator: " + n2.getNodeId());
 
             /* Check if they are equal and return 0 */
-            if (n1.getNodeId().equals(n2.getNodeId()))
-            {
-                return 0;
-            }
-
+//            if (n1.equals(n2))
+//            {
+//                //System.out.println("Distance Comparator: Return 0");
+//                return 0;
+//            }
             //System.out.println("\n **************** Compare Starting **************** ");
             //System.out.println("Comparing to: " + this.nodeId);
-            int distance1 = nodeId.getDistance(n1.getNodeId());
+            int distance1 = nid.getDistance(n1.getNodeId());
             //System.out.println("Node " + n1.getNodeId() + " distance: " + index1);
-            int distance2 = nodeId.getDistance(n2.getNodeId());
+            int distance2 = nid.getDistance(n2.getNodeId());
             //System.out.println("Node " + n2.getNodeId() + " distance: " + index2);
 
             int retval;
-            if (distance1 < distance2)
-            {
-                /* If the first node is closer to the given node, return 1 */
-                retval = 1;
-            }
-            else
+
+            if ((distance1 == distance2) && n1.equals(n2))
             {
                 /**
                  * If the first node is farther to the given node, return 1
@@ -207,7 +214,18 @@ public class Node implements Streamable
                  * @note -1 will also be returned if both nodes are the same distance away
                  * This really don't make a difference though, since they need to be sorted.
                  */
-                retval = -1;
+                //System.out.println("Distance Comparator: Return -1");
+                retval = 0;
+            }
+            else if (distance1 < distance2)
+            {
+                /* If the first node is closer to the given node, return 1 */
+                //System.out.println("Distance Comparator: Return 1");
+                retval = 1;
+            }
+            else
+            {
+                return -1;
             }
 
             //System.out.println("Returned: " + retval);

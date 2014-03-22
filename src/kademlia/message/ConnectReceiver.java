@@ -38,6 +38,7 @@ public class ConnectReceiver implements Receiver
         this.localNode.getRoutingTable().insert(mess.getOrigin());
 
         /* Respond to the connect request */
+        System.out.println(this.localNode + " Connect message received, sending an AcknowledgementMessage to " + mess.getOrigin());
         AcknowledgeMessage msg = new AcknowledgeMessage(this.localNode);
 
         /* Reply to the connect message with an Acknowledgement */

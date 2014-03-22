@@ -38,9 +38,6 @@ public class ConnectOperation implements Operation, Receiver
         this.bootstrapNode = bootstrap;
     }
 
-    /**
-     * @return null
-     */
     @Override
     public synchronized void execute()
     {
@@ -64,6 +61,7 @@ public class ConnectOperation implements Operation, Receiver
             }
 
             /* Perform lookup for our own ID to get nodes close to us */
+            System.out.println("Looking up for nodes with our own ID");
             Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId());
             lookup.execute();
 
