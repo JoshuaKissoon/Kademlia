@@ -26,17 +26,13 @@ public class Node implements Streamable
 
     private transient RoutingTable routingTable;
 
-    
-    {
-        this.routingTable = new RoutingTable(this);
-    }
-
     public Node(NodeId nid, InetAddress ip, int port)
     {
         this.nodeId = nid;
         this.inetAddress = ip;
         this.port = port;
         this.strRep = this.nodeId.toString();
+        this.routingTable = new RoutingTable(this);
     }
 
     /**

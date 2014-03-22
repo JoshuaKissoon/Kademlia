@@ -32,8 +32,8 @@ public class RoutingTable
         /* Initialize all of the buckets to a specific depth */
         this.initialize();
 
-        /* @todo Insert the local node */
-        //this.insert(localNode);
+        /* Insert the local node */
+        this.insert(localNode);
     }
 
     /**
