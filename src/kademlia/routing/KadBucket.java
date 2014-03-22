@@ -55,6 +55,7 @@ public class KadBucket implements Bucket
      *
      * @return boolean
      */
+    @Override
     public boolean containNode(Node n)
     {
         return this.nodes.containsKey(n.getNodeId());
@@ -65,27 +66,25 @@ public class KadBucket implements Bucket
      *
      * @param n The node to remove
      */
+    @Override
     public void removeNode(Node n)
     {
         this.nodes.remove(n.getNodeId());
     }
 
+    @Override
     public int numNodes()
     {
         return this.nodes.size();
     }
 
+    @Override
     public int getDepth()
     {
         return this.depth;
     }
 
     @Override
-    public void markDead(Node n)
-    {
-        this.nodes.remove(n.getNodeId());
-    }
-
     public List<Node> getNodes()
     {
         return new ArrayList<>(this.nodes.values());

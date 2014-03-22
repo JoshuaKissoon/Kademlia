@@ -10,20 +10,12 @@ import kademlia.node.NodeId;
  *
  * @author Joshua Kissoon
  * @created 20140215
- *
- * @todo Make the KadBucket represent the Bucket interface
- * @todo Change the code to reflect the bucket interface and not the specific KadBucket implementation
  */
 public class RoutingTable
 {
 
     private final Node localNode;  // The current node
-    private transient KadBucket[] buckets;
-
-    
-    {
-        buckets = new KadBucket[NodeId.ID_LENGTH];  // 160 buckets; 1 for each level in the tree
-    }
+    private transient Bucket[] buckets;
 
     public RoutingTable(Node localNode)
     {
@@ -41,7 +33,7 @@ public class RoutingTable
      */
     public final void initialize()
     {
-        this.buckets = new KadBucket[NodeId.ID_LENGTH];
+        this.buckets = new Bucket[NodeId.ID_LENGTH];
         for (int i = 0; i < NodeId.ID_LENGTH; i++)
         {
             buckets[i] = new KadBucket(i);
@@ -174,7 +166,7 @@ public class RoutingTable
     {
         List<Node> nodes = new ArrayList<>();
 
-        for (KadBucket b : this.buckets)
+        for (Bucket b : this.buckets)
         {
             nodes.addAll(b.getNodes());
         }
@@ -185,7 +177,7 @@ public class RoutingTable
     /**
      * @return Bucket[] The buckets in this Kad Instance
      */
-    public final KadBucket[] getBuckets()
+    public final Bucket[] getBuckets()
     {
         return this.buckets;
     }
@@ -195,7 +187,7 @@ public class RoutingTable
      *
      * @param buckets
      */
-    public final void setBuckets(KadBucket[] buckets)
+    public final void setBuckets(Bucket[] buckets)
     {
         this.buckets = buckets;
     }
@@ -204,7 +196,7 @@ public class RoutingTable
     public final String toString()
     {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
-        for (KadBucket b : this.buckets)
+        for (Bucket b : this.buckets)
         {
             if (b.numNodes() > 0)
             {
