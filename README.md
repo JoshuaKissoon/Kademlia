@@ -33,6 +33,7 @@ After this initialization phase, the 2 Kad instances will basically be 2 separat
 
 **Connecting Nodes**
 
+Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/NodeConnectionTest.java
 ```Java
 kad2.bootstrap(kad1.getNode());   // Bootstrap kad2 by using kad1 as the main network node
 ```
@@ -40,6 +41,7 @@ kad2.bootstrap(kad1.getNode());   // Bootstrap kad2 by using kad1 as the main ne
 
 **Storing Content**
 
+Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/ContentSendingTest.java
 ```Java
 /* Working example at: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/ContentSendingTest.java */
 DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");  // Create a content
@@ -50,6 +52,7 @@ kad2.put(c);    // Put the content on the network
 
 **Retrieving Content**
 
+Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/ContentSendingTest.java
 ```Java
 /* Create a GetParameter object with the parameters of the content to retrieve */
 GetParameter gp = new GetParameter(c.getKey());   // Lets look for content by key
@@ -63,8 +66,8 @@ List<KadContent> conte = kad2.get(gp, 1);
 
 **Saving and Retrieving a Node State**
 
-You may want to save the Node state when your application is shut down and Retrieve the Node state on startup to remove the need of rebuilding the Node State (Routing Table, DHT Content Entries, etc). Lets look at how we do this.
 Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/SaveStateTest.java
+You may want to save the Node state when your application is shut down and Retrieve the Node state on startup to remove the need of rebuilding the Node State (Routing Table, DHT Content Entries, etc). Lets look at how we do this.
 
 ```Java
 /** 
