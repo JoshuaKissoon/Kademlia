@@ -3,6 +3,7 @@ package kademlia.operation;
 import java.io.IOException;
 import java.util.List;
 import kademlia.core.KadServer;
+import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
@@ -20,17 +21,20 @@ public class StoreOperation implements Operation
     private final KadServer server;
     private final Node localNode;
     private final KadContent content;
+    private final DHT localDht;
 
     /**
      * @param server
      * @param localNode
      * @param content   The content to be stored on the DHT
+     * @param localDht  The local DHT
      */
-    public StoreOperation(KadServer server, Node localNode, KadContent content)
+    public StoreOperation(KadServer server, Node localNode, KadContent content, DHT localDht)
     {
         this.server = server;
         this.localNode = localNode;
         this.content = content;
+        this.localDht = localDht;
     }
 
     @Override
@@ -49,12 +53,13 @@ public class StoreOperation implements Operation
         {
             if (n.equals(this.localNode))
             {
-                /* @todo Store the content locally */
+                /* Store the content locally */
+                this.localDht.store(content);
             }
             else
             {
                 /**
-                 * @todo Create a receiver that recieves a store acknowledgement message to count how many nodes a content have been stored at
+                 * @todo Create a receiver that receives a store acknowledgement message to count how many nodes a content have been stored at
                  */
                 this.server.sendMessage(n, msg, null);
             }

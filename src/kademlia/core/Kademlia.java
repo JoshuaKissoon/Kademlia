@@ -75,7 +75,7 @@ public class Kademlia
      *
      * @throws IOException If an error occurred while reading id or local map
      *                     from disk <i>or</i> a network error occurred while
-                     attempting to bootstrap to the network
+     *                     attempting to bootstrap to the network
      * */
     public Kademlia(String ownerId, Node localNode, int udpPort, DHT dht) throws IOException
     {
@@ -155,7 +155,7 @@ public class Kademlia
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "dht.kns"));
         DHT idht = new JsonDHTSerializer().read(din);
-        
+
         return new Kademlia(ownerId, inode, ikad.getPort(), idht);
     }
 
@@ -203,11 +203,23 @@ public class Kademlia
      */
     public synchronized int put(KadContent content) throws IOException
     {
-        StoreOperation sop = new StoreOperation(server, localNode, content);
+        StoreOperation sop = new StoreOperation(this.server, this.localNode, content, this.dht);
         sop.execute();
 
         /* Return how many nodes the content was stored on */
         return sop.numNodesStoredAt();
+    }
+
+    /**
+     * Store a content on the local node's DHT
+     *
+     * @param content The content to put on the DHT
+     *
+     * @throws java.io.IOException
+     */
+    public synchronized void putLocally(KadContent content) throws IOException
+    {
+        this.dht.store(content);
     }
 
     /**
