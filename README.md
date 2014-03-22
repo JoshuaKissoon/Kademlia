@@ -67,6 +67,7 @@ List<KadContent> conte = kad2.get(gp, 1);
 **Saving and Retrieving a Node State**
 
 Test: https://github.com/JoshuaKissoon/Kademlia/blob/master/src/kademlia/tests/SaveStateTest.java
+
 You may want to save the Node state when your application is shut down and Retrieve the Node state on startup to remove the need of rebuilding the Node State (Routing Table, DHT Content Entries, etc). Lets look at how we do this.
 
 ```Java
