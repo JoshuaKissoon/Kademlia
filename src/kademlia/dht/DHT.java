@@ -12,6 +12,7 @@ import java.util.NoSuchElementException;
 import kademlia.core.Configuration;
 import kademlia.core.GetParameter;
 import kademlia.exceptions.ContentExistException;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
 import kademlia.serializer.JsonSerializer;
 
@@ -154,6 +155,36 @@ public class DHT
 
         /* If we got here, means we got no entries */
         throw new NoSuchElementException();
+    }
+
+    /**
+     * Delete a content from local storage
+     *
+     * @param content The Content to Remove
+     *
+     *
+     * @throws kademlia.exceptions.ContentNotFoundException
+     */
+    public void remove(KadContent content) throws ContentNotFoundException
+    {
+        this.remove(new StorageEntry(content));
+    }
+
+    public void remove(StorageEntry entry) throws ContentNotFoundException
+    {
+        String folder = this.getContentStorageFolderName(entry.getKey());
+        File file = new File(folder + File.separator + entry.hashCode() + ".kct");
+
+        entriesManager.remove(entry);
+
+        if (file.exists())
+        {
+            file.delete();
+        }
+        else
+        {
+            throw new ContentNotFoundException();
+        }
     }
 
     /**

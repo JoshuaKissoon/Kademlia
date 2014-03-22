@@ -6,6 +6,7 @@ import kademlia.core.Configuration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
@@ -69,9 +70,19 @@ public class ContentRefreshOperation implements Operation
                 }
             }
 
-            /**
-             * @todo Delete any content on this node that this node is not one of the K-Closest nodes to
-             */
+            /* Delete any content on this node that this node is not one of the K-Closest nodes to */
+            try
+            {
+                if (!closestNodes.contains(this.localNode))
+                {
+                    this.dht.remove(e);
+                }
+            }
+            catch (ContentNotFoundException cnfe)
+            {
+                /* It would be weird if the content is not found here */
+                System.err.println("ContentRefreshOperation: Removing content from local node, content not found... Message: " + cnfe.getMessage());
+            }
         }
 
     }

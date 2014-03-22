@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import kademlia.core.GetParameter;
 import kademlia.exceptions.ContentExistException;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
 
 /**
@@ -157,6 +158,23 @@ class StorageEntryManager
         }
 
         return entriesRet;
+    }
+
+    public void remove(KadContent content) throws ContentNotFoundException
+    {
+        this.remove(new StorageEntry(content));
+    }
+
+    public void remove(StorageEntry entry) throws ContentNotFoundException
+    {
+        if (contains(entry))
+        {
+            this.entries.get(entry.getKey()).remove(entry);
+        }
+        else
+        {
+            throw new ContentNotFoundException("This content does not exist in the Storage Entries");
+        }
     }
 
     @Override
