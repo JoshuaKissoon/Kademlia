@@ -61,7 +61,6 @@ public class ConnectOperation implements Operation, Receiver
             }
 
             /* Perform lookup for our own ID to get nodes close to us */
-            System.out.println("Looking up for nodes with our own ID");
             Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId());
             lookup.execute();
 
@@ -70,7 +69,6 @@ public class ConnectOperation implements Operation, Receiver
              * I think after the above lookup operation, K buckets will be filled
              * Not sure if this operation is needed here
              */
-
         }
         catch (IOException | InterruptedException e)
         {
@@ -88,7 +86,6 @@ public class ConnectOperation implements Operation, Receiver
     {
         /* The incoming message will be an acknowledgement message */
         AcknowledgeMessage msg = (AcknowledgeMessage) incoming;
-        System.out.println("ConnectOperation now handling Acknowledgement Message: " + msg);
 
         /* The bootstrap node has responded, insert it into our space */
         this.localNode.getRoutingTable().insert(this.bootstrapNode);
@@ -111,7 +108,6 @@ public class ConnectOperation implements Operation, Receiver
     @Override
     public synchronized void timeout(int comm) throws IOException
     {
-        System.out.println("Timeout function called");
         if (++this.attempts < MAX_CONNECT_ATTEMPTS)
         {
             this.server.sendMessage(this.bootstrapNode, new ConnectMessage(this.localNode), this);

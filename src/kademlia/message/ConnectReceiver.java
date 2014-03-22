@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140219
- * @desc Receives a ConnectMessage and sends an AcknowledgeMessage as reply
- */
 package kademlia.message;
 
 import java.io.IOException;
@@ -10,6 +5,12 @@ import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
+/**
+ * Receives a ConnectMessage and sends an AcknowledgeMessage as reply.
+ *
+ * @author Joshua Kissoon
+ * @created 20140219
+ */
 public class ConnectReceiver implements Receiver
 {
 
@@ -38,7 +39,6 @@ public class ConnectReceiver implements Receiver
         this.localNode.getRoutingTable().insert(mess.getOrigin());
 
         /* Respond to the connect request */
-        System.out.println(this.localNode + " Connect message received, sending an AcknowledgementMessage to " + mess.getOrigin());
         AcknowledgeMessage msg = new AcknowledgeMessage(this.localNode);
 
         /* Reply to the connect message with an Acknowledgement */

@@ -1,13 +1,14 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc A receiver waits for incoming messages and perform some action when the message is received
- */
 package kademlia.operation;
 
 import java.io.IOException;
 import kademlia.message.Message;
 
+/**
+ * A receiver waits for incoming messages and perform some action when the message is received
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public interface Receiver
 {
 
@@ -16,6 +17,8 @@ public interface Receiver
      *
      * @param conversationId The ID of this conversation, used for further conversations
      * @param incoming       The incoming
+     *
+     * @throws java.io.IOException
      */
     public void receive(Message incoming, int conversationId) throws IOException;
 

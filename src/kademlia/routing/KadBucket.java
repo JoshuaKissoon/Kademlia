@@ -18,6 +18,7 @@ public class KadBucket implements Bucket
 
     private final int depth;
     private final Map<NodeId, Node> nodes;
+
     
     {
         nodes = new HashMap<>();
@@ -34,7 +35,7 @@ public class KadBucket implements Bucket
     @Override
     public void insert(Node n)
     {
-        /*@todo Check if the bucket is filled already and handle this */
+        /* @todo Check if the bucket is filled already and handle the situation */
         /* Check if the contact is already in the bucket */
         if (this.nodes.containsKey(n.getNodeId()))
         {
@@ -43,9 +44,7 @@ public class KadBucket implements Bucket
         }
         else
         {
-            //System.out.println("Adding new node - " + n.getNodeId() + " to bucket depth: " + this.depth);
             nodes.put(n.getNodeId(), n);
-            //System.out.println(this);
         }
     }
 

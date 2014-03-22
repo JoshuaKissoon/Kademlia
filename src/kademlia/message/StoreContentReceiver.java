@@ -35,9 +35,6 @@ public class StoreContentReceiver implements Receiver
         /* Insert the message sender into this node's routing table */
         this.localNode.getRoutingTable().insert(msg.getOrigin());
 
-        System.out.println(this.localNode + " - Received a store content message");
-        System.out.println(msg);
-
         try
         {
             /* Store this Content into the DHT */

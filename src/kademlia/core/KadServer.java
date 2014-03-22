@@ -113,7 +113,7 @@ public class KadServer
         if (recv != null)
         {
             /* Setup the receiver to handle message response */
-            System.out.println(this.localNode + " Putting Receiver for comm: " + comm + " Receiver: " + recv);
+            //System.out.println(this.localNode + " Putting Receiver for comm: " + comm + " Receiver: " + recv);
             receivers.put(comm, recv);
             TimerTask task = new TimeoutTask(comm, recv);
             timer.schedule(task, Configuration.RESPONSE_TIMEOUT);
@@ -200,18 +200,15 @@ public class KadServer
                         Message msg = messageFactory.createMessage(messCode, din);
                         din.close();
 
-                        System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
+                        //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
 
                         /* Get a receiver for this message */
                         Receiver receiver;
                         if (this.receivers.containsKey(comm))
                         {
-                            System.out.println("Receiver found: " + this.receivers.get(comm));
                             /* If there is a reciever in the receivers to handle this */
                             synchronized (this)
                             {
-                                System.out.println("Sync Block Receiver found: " + this.receivers.get(comm));
-                                System.out.println(this.localNode + " Receivers: ");
                                 this.printReceivers();
                                 receiver = this.receivers.remove(comm);
                                 TimerTask task = (TimerTask) tasks.remove(comm);
@@ -234,7 +231,7 @@ public class KadServer
                 catch (IOException e)
                 {
                     this.isRunning = false;
-                    System.out.println("Server ran into a problem in listener method. Message: " + e.getMessage());
+                    System.err.println("Server ran into a problem in listener method. Message: " + e.getMessage());
                 }
             }
         }
@@ -297,14 +294,14 @@ public class KadServer
             }
             catch (IOException e)
             {
-                System.out.println("Cannot unregister a receiver. Message: " + e.getMessage());
+                System.err.println("Cannot unregister a receiver. Message: " + e.getMessage());
             }
         }
     }
-    
+
     public void printReceivers()
     {
-        for(Integer r : this.receivers.keySet())
+        for (Integer r : this.receivers.keySet())
         {
             System.out.println("Receiver for comm: " + r + "; Receiver: " + this.receivers.get(r));
         }

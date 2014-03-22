@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140219
- * @desc Receives a ConnectMessage and sends an AcknowledgeMessage as reply
- */
 package kademlia.message;
 
 import java.io.IOException;
@@ -12,6 +7,12 @@ import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
 
+/**
+ * Receives a NodeLookupMessage and sends a NodeReplyMessage as reply with the K-Closest nodes to the ID sent.
+ *
+ * @author Joshua Kissoon
+ * @created 20140219
+ */
 public class NodeLookupReceiver implements Receiver
 {
 
@@ -45,15 +46,7 @@ public class NodeLookupReceiver implements Receiver
         /* Find nodes closest to the LookupId */
         List<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), Configuration.K);
 
-//        System.out.println("\n" + this.localNode + " Closest Nodes: ");
-//        for (Node n : nodes)
-//        {
-//            System.out.println(n.getNodeId());
-//        }
-//        System.out.println();
-
         /* Respond to the NodeLookupMessage */
-        System.out.println(this.localNode + " Sending NodeReplyMessage to " + origin);
         Message reply = new NodeReplyMessage(this.localNode, nodes);
 
         /* Let the Server send the reply */

@@ -58,8 +58,6 @@ public class RoutingTable
         /* bucketId is the distance between these nodes */
         int bucketId = this.localNode.getNodeId().getDistance(n.getNodeId());
 
-        //System.out.println(this.localNode.getNodeId() + " Adding Node " + n.getNodeId() + " to bucket at depth: " + bucketId);
-
         /* Put this contact to the bucket that stores contacts prefixLength distance away */
         this.buckets[bucketId].insert(n);
     }
@@ -198,7 +196,6 @@ public class RoutingTable
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         for (KadBucket b : this.buckets)
         {
-            // System.out.println("Bucket: " + b);
             if (b.numNodes() > 0)
             {
                 sb.append("# nodes in Bucket with depth ");

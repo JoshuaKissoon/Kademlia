@@ -155,7 +155,7 @@ public class Kademlia
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId) + File.separator + "dht.kns"));
         DHT idht = new JsonDHTSerializer().read(din);
-        System.out.println("Finished reading data.");
+        
         return new Kademlia(ownerId, inode, ikad.getPort(), idht);
     }
 
@@ -227,14 +227,12 @@ public class Kademlia
         if (this.dht.contains(param))
         {
             /* If the content exist in our own DHT, then return it. */
-            System.out.println("Found content locally");
             contentFound = new ArrayList<>();
             contentFound.add(this.dht.get(param));
         }
         else
         {
             /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-            System.out.println("Looking for content on foreign nodes");
             ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numResultsReq);
             clo.execute();
             contentFound = clo.getContentFound();
@@ -294,7 +292,6 @@ public class Kademlia
      */
     private void saveKadState() throws FileNotFoundException, IOException
     {
-        System.out.println("Saving state");
         DataOutputStream dout;
 
         /**
@@ -322,8 +319,6 @@ public class Kademlia
          */
         dout = new DataOutputStream(new FileOutputStream(getStateStorageFolderName(this.ownerId) + File.separator + "dht.kns"));
         new JsonDHTSerializer().write(this.dht, dout);
-
-        System.out.println("FInished saving state");
 
     }
 

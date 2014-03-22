@@ -1,16 +1,14 @@
 package kademlia.message;
 
-import com.google.gson.JsonSerializationContext;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.core.GetParameter;
-import kademlia.dht.KadContent;
 import kademlia.node.Node;
 import kademlia.serializer.JsonSerializer;
 
 /**
- * Messages used to send to another node requesting content
+ * Messages used to send to another node requesting content.
  *
  * @author Joshua Kissoon
  * @since 20140226

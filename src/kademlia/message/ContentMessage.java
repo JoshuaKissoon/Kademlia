@@ -50,7 +50,7 @@ public class ContentMessage implements Message
     public final void fromStream(DataInputStream in) throws IOException
     {
         this.origin = new Node(in);
-        
+
         try
         {
             this.content = new JsonSerializer<KadContent>().read(in);

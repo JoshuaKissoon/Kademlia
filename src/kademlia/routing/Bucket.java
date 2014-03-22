@@ -1,12 +1,15 @@
-/**
- * @author Joshua Kissoon
- * @created 20140215
- * @desc A bucket for the DHT Protocol
- */
 package kademlia.routing;
 
 import kademlia.node.Node;
 
+/**
+ * A bucket used to store Nodes in the routing table.
+ *
+ * @todo Update this interface and use this as parameter type, etc... instead of the KadBucket implementation used throughout the application
+ *
+ * @author Joshua Kissoon
+ * @created 20140215
+ */
 public interface Bucket
 {
 

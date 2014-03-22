@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc Testing a simple send message
- */
 package kademlia.tests;
 
 import java.io.IOException;
@@ -11,6 +6,12 @@ import kademlia.message.SimpleMessage;
 import kademlia.node.NodeId;
 import kademlia.message.SimpleReceiver;
 
+/**
+ * Test 1: Try sending a simple message between nodes
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public class SimpleMessageTest
 {
 

@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.Comparator;
 import kademlia.message.Streamable;
 import kademlia.routing.RoutingTable;
 
@@ -23,7 +22,7 @@ public class Node implements Streamable
     private NodeId nodeId;
     private InetAddress inetAddress;
     private int port;
-    private String strRep;
+    private final String strRep;
 
     private transient RoutingTable routingTable;
 

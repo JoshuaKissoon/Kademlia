@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc A message used to connect nodes
- */
 package kademlia.message;
 
 import java.io.DataInputStream;
@@ -10,6 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.node.Node;
 
+/**
+ * A message sent to another node requesting to connect to them.
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public class ConnectMessage implements Message
 {
 

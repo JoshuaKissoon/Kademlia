@@ -1,14 +1,15 @@
-/**
- * @author Joshua Kissoon
- * @created 20140217
- * @desc A simple message used for testing the system
- */
 package kademlia.message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/**
+ * A simple message used for testing the system; Default message constructed if the message type sent is not available
+ *
+ * @author Joshua Kissoon
+ * @created 20140217
+ */
 public class SimpleMessage implements Message
 {
 
@@ -24,7 +25,6 @@ public class SimpleMessage implements Message
 
     public SimpleMessage(DataInputStream in)
     {
-        System.out.println("Creating message from input stream.");
         this.fromStream(in);
     }
 

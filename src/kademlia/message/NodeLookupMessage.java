@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc A message used to connect nodes
- */
 package kademlia.message;
 
 import java.io.DataInputStream;
@@ -11,6 +6,12 @@ import java.io.IOException;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
+/**
+ * A message sent to other nodes requesting the K-Closest nodes to a key sent in this message.
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public class NodeLookupMessage implements Message
 {
 

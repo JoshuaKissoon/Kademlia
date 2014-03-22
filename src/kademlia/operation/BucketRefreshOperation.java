@@ -50,7 +50,6 @@ public class BucketRefreshOperation implements Operation
                 {
                     try
                     {
-                        //System.out.println("Distance: " + localNode.getNodeId().getDistance(current) + " - ID: " + current);
                         new NodeLookupOperation(server, localNode, localNode.getNodeId()).execute();
                     }
                     catch (IOException e)

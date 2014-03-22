@@ -5,7 +5,7 @@ import kademlia.core.Kademlia;
 import kademlia.node.NodeId;
 
 /**
- * Testing connecting 2 nodes
+ * Testing connecting 2 nodes to each other
  *
  * @author Joshua Kissoon
  * @created 20140219

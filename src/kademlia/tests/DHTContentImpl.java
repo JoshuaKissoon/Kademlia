@@ -73,6 +73,6 @@ public class DHTContentImpl implements KadContent
 
     public String toString()
     {
-        return "DHTContentImpl[{data=" + this.data + "{ {key:"+this.key + "}]";
+        return "DHTContentImpl[{data=" + this.data + "{ {key:" + this.key + "}]";
     }
 }

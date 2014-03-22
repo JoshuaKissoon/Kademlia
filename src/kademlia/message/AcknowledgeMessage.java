@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc A message used to acknowledge a request from a node
- */
 package kademlia.message;
 
 import java.io.DataInputStream;
@@ -10,6 +5,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.node.Node;
 
+/**
+ * A message used to acknowledge a request from a node; can be used in many situations.
+ * - Mainly used to acknowledge a connect message
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public class AcknowledgeMessage implements Message
 {
 

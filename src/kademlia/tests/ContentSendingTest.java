@@ -32,7 +32,7 @@ public class ContentSendingTest
              */
             DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");
             kad2.put(c);
-            
+
             /**
              * Lets retrieve the content
              */

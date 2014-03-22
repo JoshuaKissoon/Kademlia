@@ -239,7 +239,7 @@ public class NodeId implements Streamable
     }
 
     @Override
-    public void fromStream(DataInputStream in) throws IOException
+    public final void fromStream(DataInputStream in) throws IOException
     {
         byte[] input = new byte[ID_LENGTH / 8];
         in.readFully(input);

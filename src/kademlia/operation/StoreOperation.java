@@ -41,8 +41,6 @@ public class StoreOperation implements Operation
         ndlo.execute();
         List<Node> nodes = ndlo.getClosestNodes();
 
-        System.out.println("Nodes to put content on: " + nodes);
-
         /* Create the message */
         Message msg = new StoreContentMessage(this.localNode, this.content);
 
@@ -61,8 +59,6 @@ public class StoreOperation implements Operation
                 this.server.sendMessage(n, msg, null);
             }
         }
-        
-        System.out.println("\n\n\n\nSTORE CONTENT FINISHED");
     }
 
     /**

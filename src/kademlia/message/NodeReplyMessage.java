@@ -1,8 +1,3 @@
-/**
- * @author Joshua Kissoon
- * @created 20140218
- * @desc A message used to connect nodes
- */
 package kademlia.message;
 
 import java.io.DataInputStream;
@@ -12,6 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 import kademlia.node.Node;
 
+/**
+ * A message used to connect nodes.
+ * When a NodeLookup Request comes in, we respond with a NodeReplyMessage.
+ *
+ * @author Joshua Kissoon
+ * @created 20140218
+ */
 public class NodeReplyMessage implements Message
 {
 
