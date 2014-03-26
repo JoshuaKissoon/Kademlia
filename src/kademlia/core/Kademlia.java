@@ -282,15 +282,17 @@ public class Kademlia
     /**
      * Here we handle properly shutting down the Kademlia instance
      *
+     * @param saveState Whether to save the application state or not
+     *
      * @throws java.io.FileNotFoundException
      */
-    public void shutdown() throws FileNotFoundException, IOException
+    public void shutdown(final boolean saveState) throws IOException
     {
         /* Shut down the server */
         this.server.shutdown();
 
         /* Save this Kademlia instance's state if required */
-        if (Configuration.SAVE_STATE_ON_SHUTDOWN)
+        if (saveState)
         {
             /* Save the system state */
             this.saveKadState();
@@ -302,7 +304,7 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      */
-    private void saveKadState() throws FileNotFoundException, IOException
+    private void saveKadState() throws IOException
     {
         DataOutputStream dout;
 

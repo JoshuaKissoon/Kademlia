@@ -53,9 +53,4 @@ public class Configuration
      * Local Storage location - Relative to the user's home folder (Cross-Platform)
      */
     public static String LOCAL_FOLDER = "kademlia";
-
-    /**
-     * Should we save the node state when the node is shut down and reload it when the node is re-loaded
-     */
-    public static boolean SAVE_STATE_ON_SHUTDOWN = true;
 }

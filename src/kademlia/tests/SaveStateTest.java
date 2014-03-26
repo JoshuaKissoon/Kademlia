@@ -73,7 +73,7 @@ public class SaveStateTest
             /* Shutting down kad1 and restarting it */
             System.out.println("\n\n\nShutting down Kad instance");
             System.out.println(kad2);
-            kad1.shutdown();
+            kad1.shutdown(true);
 
             System.out.println("\n\n\nReloading Kad instance from file");
             Kademlia kadR2 = Kademlia.loadFromFile("JoshuaK");
