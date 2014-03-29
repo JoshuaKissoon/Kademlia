@@ -84,14 +84,14 @@ public class RoutingTable
     /**
      * Find the closest set of contacts to a given NodeId
      *
-     * @param target The NodeId to find contacts close to
-     * @param num    The number of contacts to find
+     * @param target           The NodeId to find contacts close to
+     * @param numNodesRequired The number of contacts to find
      *
      * @return List A List of contacts closest to target
      */
-    public final List<Node> findClosest(NodeId target, int num)
+    public final List<Node> findClosest(NodeId target, int numNodesRequired)
     {
-        List<Node> closest = new ArrayList<>(num);
+        List<Node> closest = new ArrayList<>(numNodesRequired);
 
         /* Get the bucket index to search for closest from */
         int bucketIndex = this.getBucketId(target);
@@ -99,7 +99,7 @@ public class RoutingTable
         /* Add the contacts from this bucket to the return contacts */
         for (Node c : this.buckets[bucketIndex].getNodes())
         {
-            if (closest.size() < num)
+            if (closest.size() < numNodesRequired)
             {
                 closest.add(c);
             }
@@ -109,48 +109,60 @@ public class RoutingTable
             }
         }
 
-        if (closest.size() >= num)
+        if (closest.size() >= numNodesRequired)
         {
             return closest;
         }
 
-        /* If we still need more nodes, we add from buckets on either side of the closest bucket */
-        for (int i = 1; ((bucketIndex - i) >= 0 || (bucketIndex + i) < NodeId.ID_LENGTH); i++)
+        /**
+         * We still need more nodes
+         * Lets add from nodes closer to localNode since they are the ones that will be closer to the given nid
+         */
+        for (int i = 1; (bucketIndex - i) >= 0; i++)
         {
-            /* Check the bucket on the left side */
-            if (bucketIndex - i > 0)
+            for (Node c : this.buckets[bucketIndex - i].getNodes())
             {
-                for (Node c : this.buckets[bucketIndex - i].getNodes())
+                if (closest.size() < numNodesRequired)
                 {
-                    if (closest.size() < num)
-                    {
-                        closest.add(c);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    closest.add(c);
                 }
-            }
-
-            /* Check the bucket on the right side */
-            if (bucketIndex + i < NodeId.ID_LENGTH)
-            {
-                for (Node c : this.buckets[bucketIndex + i].getNodes())
+                else
                 {
-                    if (closest.size() < num)
-                    {
-                        closest.add(c);
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
             /* If we have enough contacts, then stop adding */
-            if (closest.size() >= num)
+            if (closest.size() >= numNodesRequired)
+            {
+                break;
+            }
+        }
+
+        if (closest.size() >= numNodesRequired)
+        {
+            return closest;
+        }
+
+        /**
+         * We still need more nodes, add from nodes farther to localNode
+         */
+        for (int i = 1; (bucketIndex + i) < NodeId.ID_LENGTH; i++)
+        {
+            for (Node c : this.buckets[bucketIndex + i].getNodes())
+            {
+                if (closest.size() < numNodesRequired)
+                {
+                    closest.add(c);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            /* If we have enough contacts, then stop adding */
+            if (closest.size() >= numNodesRequired)
             {
                 break;
             }
