@@ -1,6 +1,5 @@
 package kademlia.tests;
 
-import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.core.Configuration;

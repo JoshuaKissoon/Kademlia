@@ -1,5 +1,7 @@
 package kademlia.core;
 
+import java.io.File;
+
 /**
  * A set of Kademlia configuration parameters. Default values are
  * supplied and can be changed by the application as necessary.
@@ -53,4 +55,32 @@ public class Configuration
      * Local Storage location - Relative to the user's home folder (Cross-Platform)
      */
     public static String LOCAL_FOLDER = "kademlia";
+
+    /**
+     * Creates the folder in which this node data is to be stored
+     *
+     * @param ownerId
+     *
+     * @return The folder path
+     */
+    public static String getNodeDataFolder(String ownerId)
+    {
+        /* Setup the main storage folder if it doesn't exist */
+        String path = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
+        File folder = new File(path);
+        if (!folder.isDirectory())
+        {
+            folder.mkdir();
+        }
+
+        /* Setup subfolder for this owner if it doesn't exist */
+        File ownerFolder = new File(folder + File.separator + ownerId);
+        if (!ownerFolder.isDirectory())
+        {
+            ownerFolder.mkdir();
+        }
+
+        /* Return the path */
+        return ownerFolder.toString();
+    }
 }

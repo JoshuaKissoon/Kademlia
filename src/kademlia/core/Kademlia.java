@@ -42,7 +42,6 @@ import kademlia.serializer.JsonSerializer;
  * @todo Instead of using a StoreContentMessage to send a store RPC and a ContentMessage to receive a FIND rpc, make them 1 message with different operation type
  * @todo If we're trying to send a message to this node, just cancel the sending process and handle the message right here
  * @todo Keep this node in it's own routing table - it helps for ContentRefresh operation - easy to check whether this node is one of the k-nodes for a content
- * @todo Move DHT.getContentStorageFolderName to the Configuration class
  * @todo Implement Kademlia.ping() operation.
  *
  */
@@ -112,7 +111,7 @@ public class Kademlia
 
     public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
     {
-        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, new DHT());
+        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, new DHT(ownerId));
     }
 
     /**
@@ -173,6 +172,14 @@ public class Kademlia
     public KadServer getServer()
     {
         return this.server;
+    }
+
+    /**
+     * @return The DHT for this kad instance
+     */
+    public DHT getDHT()
+    {
+        return this.dht;
     }
 
     /**
@@ -343,31 +350,14 @@ public class Kademlia
      */
     private static String getStateStorageFolderName(String ownerId)
     {
-        String path = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
-        File folder = new File(path);
-
-        /* Create the main storage folder if it doesn't exist */
-        if (!folder.isDirectory())
+        /* Setup the nodes storage folder if it doesn't exist */
+        String path = Configuration.getNodeDataFolder(ownerId) + File.separator + "nodeState";
+        File nodeStateFolder = new File(path);
+        if (!nodeStateFolder.isDirectory())
         {
-            folder.mkdir();
+            nodeStateFolder.mkdir();
         }
-
-        /* Create the nodes storage folder if it doesn't exist */
-        path = folder + File.separator + "nodes";
-        folder = new File(path);
-        if (!folder.isDirectory())
-        {
-            folder.mkdir();
-        }
-
-        /* Create this Kad instance storage folder */
-        path += File.separator + ownerId;
-        folder = new File(path);
-        if (!folder.isDirectory())
-        {
-            folder.mkdir();
-        }
-        return folder.toString();
+        return nodeStateFolder.toString();
     }
 
     /**

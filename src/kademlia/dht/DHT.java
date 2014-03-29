@@ -28,13 +28,16 @@ public class DHT
     private transient StorageEntryManager entriesManager;
     private transient final JsonSerializer<KadContent> contentSerializer;
 
+    private final String ownerId;
+
     
     {
         contentSerializer = new JsonSerializer<>();
     }
 
-    public DHT()
+    public DHT(String ownerId)
     {
+        this.ownerId = ownerId;
         this.initialize();
     }
 
@@ -201,17 +204,8 @@ public class DHT
          *
          * The name of the file containing the content is the hash of this content
          */
-        String storagePath = System.getProperty("user.home") + File.separator + Configuration.LOCAL_FOLDER;
-        File mainStorageFolder = new File(storagePath);
-
-        /* Create the main storage folder if it doesn't exist */
-        if (!mainStorageFolder.isDirectory())
-        {
-            mainStorageFolder.mkdir();
-        }
-
         String folderName = key.hexRepresentation().substring(0, 10);
-        File contentStorageFolder = new File(mainStorageFolder + File.separator + folderName);
+        File contentStorageFolder = new File(Configuration.getNodeDataFolder(ownerId) + File.separator + folderName);
 
         /* Create the content folder if it doesn't exist */
         if (!contentStorageFolder.isDirectory())
@@ -219,7 +213,7 @@ public class DHT
             contentStorageFolder.mkdir();
         }
 
-        return mainStorageFolder + File.separator + folderName;
+        return contentStorageFolder.toString();
     }
 
     /**
