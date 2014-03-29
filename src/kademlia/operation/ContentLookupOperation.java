@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import kademlia.core.Configuration;
+import kademlia.core.DefaultConfiguration;
 import kademlia.core.GetParameter;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.KadContent;
 import kademlia.exceptions.RoutingException;
@@ -44,6 +45,7 @@ public class ContentLookupOperation implements Operation, Receiver
     private final GetParameter params;
     private final List<KadContent> contentFound;
     private final int numResultsReq;
+    private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
 
@@ -68,8 +70,9 @@ public class ContentLookupOperation implements Operation, Receiver
      * @param localNode
      * @param params        The parameters to search for the content which we need to find
      * @param numResultsReq The number of results for this content from different nodes required
+     * @param config
      */
-    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numResultsReq)
+    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numResultsReq, KadConfiguration config)
     {
         /* Construct our lookup message */
         this.lookupMessage = new ContentLookupMessage(localNode, params);
@@ -78,6 +81,7 @@ public class ContentLookupOperation implements Operation, Receiver
         this.localNode = localNode;
         this.params = params;
         this.numResultsReq = numResultsReq;
+        this.config = config;
 
         /**
          * We initialize a TreeMap to store nodes.
@@ -107,19 +111,19 @@ public class ContentLookupOperation implements Operation, Receiver
             {
                 /* If we haven't finished as yet, wait a while */
                 /**
-                 * @todo Get rid of this wait here! 
+                 * @todo Get rid of this wait here!
                  * We should run this until there are no nodes left to ask from the K closest nodes
                  * and only pause for short intervals in between
-                 * 
+                 *
                  * @todo Do the same for the NodeLookupOperation
                  */
-                wait(Configuration.OPERATION_TIMEOUT);
+                wait(this.config.operationTimeout());
 
                 /* If we still haven't received any responses by then, do a routing timeout */
                 if (error)
                 {
                     /* Lets not throw any exception */
-                    
+
                     //throw new RoutingException("Content Lookup Operation Timeout.");
                 }
             }
@@ -149,7 +153,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     /**
      * Asks some of the K closest nodes seen but not yet queried.
-     * Assures that no more than Configuration.CONCURRENCY messages are in transit at a time
+     * Assures that no more than DefaultConfiguration.CONCURRENCY messages are in transit at a time
      *
      * This method should be called every time a reply is received or a timeout occurs.
      *
@@ -161,7 +165,7 @@ public class ContentLookupOperation implements Operation, Receiver
     private boolean askNodesorFinish() throws IOException
     {
         /* If >= CONCURRENCY nodes are in transit, don't do anything */
-        if (Configuration.CONCURRENCY <= this.messagesTransiting.size())
+        if (this.config.maxConcurrentMessagesTransiting() <= this.messagesTransiting.size())
         {
             return false;
         }
@@ -183,7 +187,7 @@ public class ContentLookupOperation implements Operation, Receiver
          * Send messages to nodes in the list;
          * making sure than no more than CONCURRENCY messsages are in transit
          */
-        for (int i = 0; (this.messagesTransiting.size() < Configuration.CONCURRENCY) && (i < unasked.size()); i++)
+        for (int i = 0; (this.messagesTransiting.size() < this.config.maxConcurrentMessagesTransiting()) && (i < unasked.size()); i++)
         {
             Node n = (Node) unasked.get(i);
 
@@ -207,8 +211,8 @@ public class ContentLookupOperation implements Operation, Receiver
      */
     private List<Node> closestNodesNotFailed(Byte status)
     {
-        List<Node> closestNodes = new ArrayList<>(Configuration.K);
-        int remainingSpaces = Configuration.K;
+        List<Node> closestNodes = new ArrayList<>(this.config.k());
+        int remainingSpaces = this.config.k();
 
         for (Map.Entry e : this.nodes.entrySet())
         {
@@ -237,7 +241,7 @@ public class ContentLookupOperation implements Operation, Receiver
         {
             return;
         }
-        
+
         if (incoming instanceof ContentMessage)
         {
             /* The reply received is a content message with the required content, take it in */

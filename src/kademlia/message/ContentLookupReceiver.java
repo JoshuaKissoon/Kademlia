@@ -1,6 +1,7 @@
 package kademlia.message;
 
 import java.io.IOException;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.node.Node;
@@ -19,12 +20,14 @@ public class ContentLookupReceiver implements Receiver
     private final KadServer server;
     private final Node localNode;
     private final DHT dht;
+    private final KadConfiguration config;
 
-    public ContentLookupReceiver(KadServer server, Node localNode, DHT dht)
+    public ContentLookupReceiver(KadServer server, Node localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
         this.dht = dht;
+        this.config = config;
     }
 
     @Override
@@ -47,7 +50,7 @@ public class ContentLookupReceiver implements Receiver
              * We create a NodeLookupReceiver and let this receiver handle this operation
              */
             NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
-            new NodeLookupReceiver(server, localNode).receive(lkpMsg, comm);
+            new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
         }
     }
 

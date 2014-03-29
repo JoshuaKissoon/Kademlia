@@ -9,8 +9,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import kademlia.core.Configuration;
+import kademlia.core.DefaultConfiguration;
 import kademlia.core.GetParameter;
+import kademlia.core.KadConfiguration;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
@@ -27,6 +28,7 @@ public class DHT
 
     private transient StorageEntryManager entriesManager;
     private transient final JsonSerializer<KadContent> contentSerializer;
+    private final KadConfiguration config;
 
     private final String ownerId;
 
@@ -35,9 +37,10 @@ public class DHT
         contentSerializer = new JsonSerializer<>();
     }
 
-    public DHT(String ownerId)
+    public DHT(String ownerId, KadConfiguration config)
     {
         this.ownerId = ownerId;
+        this.config = config;
         this.initialize();
     }
 
@@ -205,7 +208,7 @@ public class DHT
          * The name of the file containing the content is the hash of this content
          */
         String folderName = key.hexRepresentation().substring(0, 10);
-        File contentStorageFolder = new File(Configuration.getNodeDataFolder(ownerId) + File.separator + folderName);
+        File contentStorageFolder = new File(this.config.getNodeDataFolder(ownerId) + File.separator + folderName);
 
         /* Create the content folder if it doesn't exist */
         if (!contentStorageFolder.isDirectory())

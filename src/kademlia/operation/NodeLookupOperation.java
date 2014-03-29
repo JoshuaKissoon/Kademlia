@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import kademlia.core.Configuration;
+import kademlia.core.DefaultConfiguration;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
@@ -38,6 +39,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private final KadServer server;
     private final Node localNode;
     private final NodeId lookupId;
+    private final KadConfiguration config;
 
     private boolean error;
 
@@ -59,12 +61,14 @@ public class NodeLookupOperation implements Operation, Receiver
      * @param server    KadServer used for communication
      * @param localNode The local node making the communication
      * @param lookupId  The ID for which to find nodes close to
+     * @param config
      */
-    public NodeLookupOperation(KadServer server, Node localNode, NodeId lookupId)
+    public NodeLookupOperation(KadServer server, Node localNode, NodeId lookupId, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
         this.lookupId = lookupId;
+        this.config = config;
 
         this.lookupMessage = new NodeLookupMessage(localNode, lookupId);
 
@@ -96,7 +100,7 @@ public class NodeLookupOperation implements Operation, Receiver
             if (!this.askNodesorFinish())
             {
                 /* If we haven't finished as yet, wait a while */
-                wait(Configuration.OPERATION_TIMEOUT);
+                wait(this.config.operationTimeout());
 
                 /* If we still haven't received any responses by then, do a routing timeout */
                 if (error)
@@ -135,7 +139,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
     /**
      * Asks some of the K closest nodes seen but not yet queried.
-     * Assures that no more than Configuration.CONCURRENCY messages are in transit at a time
+     * Assures that no more than DefaultConfiguration.CONCURRENCY messages are in transit at a time
      *
      * This method should be called every time a reply is received or a timeout occurs.
      *
@@ -147,7 +151,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private boolean askNodesorFinish() throws IOException
     {
         /* If >= CONCURRENCY nodes are in transit, don't do anything */
-        if (Configuration.CONCURRENCY <= this.messagesTransiting.size())
+        if (this.config.maxConcurrentMessagesTransiting() <= this.messagesTransiting.size())
         {
             return false;
         }
@@ -166,7 +170,7 @@ public class NodeLookupOperation implements Operation, Receiver
          * Send messages to nodes in the list;
          * making sure than no more than CONCURRENCY messsages are in transit
          */
-        for (int i = 0; (this.messagesTransiting.size() < Configuration.CONCURRENCY) && (i < unasked.size()); i++)
+        for (int i = 0; (this.messagesTransiting.size() < this.config.maxConcurrentMessagesTransiting()) && (i < unasked.size()); i++)
         {
             Node n = (Node) unasked.get(i);
 
@@ -187,8 +191,8 @@ public class NodeLookupOperation implements Operation, Receiver
      */
     private List<Node> closestNodes(String status)
     {
-        List<Node> closestNodes = new ArrayList<>(Configuration.K);
-        int remainingSpaces = Configuration.K;
+        List<Node> closestNodes = new ArrayList<>(this.config.k());
+        int remainingSpaces = this.config.k();
 
         for (Map.Entry e : this.nodes.entrySet())
         {
@@ -216,8 +220,8 @@ public class NodeLookupOperation implements Operation, Receiver
      */
     private List<Node> closestNodesNotFailed(String status)
     {
-        List<Node> closestNodes = new ArrayList<>(Configuration.K);
-        int remainingSpaces = Configuration.K;
+        List<Node> closestNodes = new ArrayList<>(this.config.k());
+        int remainingSpaces = this.config.k();
 
         for (Map.Entry<Node, String> e : this.nodes.entrySet())
         {

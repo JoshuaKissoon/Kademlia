@@ -1,6 +1,6 @@
 package kademlia.tests;
 
-import kademlia.core.Kademlia;
+import kademlia.Kademlia;
 import kademlia.node.NodeId;
 
 /**

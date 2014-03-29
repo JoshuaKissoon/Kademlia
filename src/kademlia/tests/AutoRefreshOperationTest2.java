@@ -2,8 +2,9 @@ package kademlia.tests;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.core.Configuration;
-import kademlia.core.Kademlia;
+import kademlia.core.DefaultConfiguration;
+import kademlia.Kademlia;
+import kademlia.core.KadConfiguration;
 import kademlia.node.NodeId;
 
 /**
@@ -32,8 +33,7 @@ public class AutoRefreshOperationTest2
             DHTContentImpl c = new DHTContentImpl(new NodeId("AS84k678947584567465"), kad1.getOwnerId());
             c.setData("Setting the data");
             kad1.putLocally(c);
-            
-            
+
             System.out.println("\n Content ID: " + c.getKey());
             System.out.println(kad1.getNode() + " Distance from content: " + kad1.getNode().getNodeId().getDistance(c.getKey()));
             System.out.println(kad2.getNode() + " Distance from content: " + kad2.getNode().getNodeId().getDistance(c.getKey()));
@@ -45,6 +45,7 @@ public class AutoRefreshOperationTest2
             System.out.println(kad3);
 
             /* Print the node states every few minutes */
+            KadConfiguration config = new DefaultConfiguration();
             Timer timer = new Timer(true);
             timer.schedule(
                     new TimerTask()
@@ -58,7 +59,7 @@ public class AutoRefreshOperationTest2
                         }
                     },
                     // Delay                        // Interval
-                    Configuration.RESTORE_INTERVAL, Configuration.RESTORE_INTERVAL
+                    config.restoreInterval(), config.restoreInterval()
             );
         }
 

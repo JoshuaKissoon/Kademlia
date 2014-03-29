@@ -2,7 +2,7 @@ package kademlia.message;
 
 import java.io.IOException;
 import java.util.List;
-import kademlia.core.Configuration;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.operation.Receiver;
@@ -18,11 +18,13 @@ public class NodeLookupReceiver implements Receiver
 
     private final KadServer server;
     private final Node localNode;
+    private final KadConfiguration config;
 
-    public NodeLookupReceiver(KadServer server, Node local)
+    public NodeLookupReceiver(KadServer server, Node local, KadConfiguration config)
     {
         this.server = server;
         this.localNode = local;
+        this.config = config;
     }
 
     /**
@@ -44,7 +46,7 @@ public class NodeLookupReceiver implements Receiver
         this.localNode.getRoutingTable().insert(origin);
 
         /* Find nodes closest to the LookupId */
-        List<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), Configuration.K);
+        List<Node> nodes = this.localNode.getRoutingTable().findClosest(msg.getLookupId(), this.config.k());
 
         /* Respond to the NodeLookupMessage */
         Message reply = new NodeReplyMessage(this.localNode, nodes);

@@ -6,7 +6,8 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import kademlia.core.Configuration;
+import kademlia.core.DefaultConfiguration;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.AcknowledgeMessage;
@@ -22,6 +23,7 @@ public class ConnectOperation implements Operation, Receiver
     private final KadServer server;
     private final Node localNode;
     private final Node bootstrapNode;
+    private final KadConfiguration config;
 
     private boolean error;
     private int attempts;
@@ -30,12 +32,14 @@ public class ConnectOperation implements Operation, Receiver
      * @param server    The message server used to send/receive messages
      * @param local     The local node
      * @param bootstrap Node to use to bootstrap the local node onto the network
+     * @param config
      */
-    public ConnectOperation(KadServer server, Node local, Node bootstrap)
+    public ConnectOperation(KadServer server, Node local, Node bootstrap, KadConfiguration config)
     {
         this.server = server;
         this.localNode = local;
         this.bootstrapNode = bootstrap;
+        this.config = config;
     }
 
     @Override
@@ -52,7 +56,7 @@ public class ConnectOperation implements Operation, Receiver
             server.sendMessage(this.bootstrapNode, m, this);
 
             /* Wait for a while */
-            wait(Configuration.OPERATION_TIMEOUT);
+            wait(config.operationTimeout());
 
             if (error)
             {
@@ -61,7 +65,7 @@ public class ConnectOperation implements Operation, Receiver
             }
 
             /* Perform lookup for our own ID to get nodes close to us */
-            Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId());
+            Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId(), this.config);
             lookup.execute();
 
             /**

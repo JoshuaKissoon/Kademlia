@@ -2,8 +2,9 @@ package kademlia.tests;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.core.Configuration;
-import kademlia.core.Kademlia;
+import kademlia.core.DefaultConfiguration;
+import kademlia.Kademlia;
+import kademlia.core.KadConfiguration;
 import kademlia.node.NodeId;
 
 /**
@@ -53,6 +54,7 @@ public class AutoRefreshOperationTest
             System.out.println(kad5);
 
             /* Print the node states every few minutes */
+            KadConfiguration config = new DefaultConfiguration();
             Timer timer = new Timer(true);
             timer.schedule(
                     new TimerTask()
@@ -68,7 +70,7 @@ public class AutoRefreshOperationTest
                         }
                     },
                     // Delay                        // Interval
-                    Configuration.RESTORE_INTERVAL, Configuration.RESTORE_INTERVAL
+                    config.restoreInterval(), config.restoreInterval()
             );
         }
 

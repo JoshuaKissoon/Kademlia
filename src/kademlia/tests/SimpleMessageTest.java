@@ -1,7 +1,7 @@
 package kademlia.tests;
 
 import java.io.IOException;
-import kademlia.core.Kademlia;
+import kademlia.Kademlia;
 import kademlia.message.SimpleMessage;
 import kademlia.node.NodeId;
 import kademlia.message.SimpleReceiver;

@@ -3,7 +3,7 @@ package kademlia.tests;
 import java.io.IOException;
 import java.util.List;
 import kademlia.core.GetParameter;
-import kademlia.core.Kademlia;
+import kademlia.Kademlia;
 import kademlia.dht.KadContent;
 import kademlia.node.NodeId;
 

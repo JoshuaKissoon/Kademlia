@@ -1,6 +1,7 @@
 package kademlia.operation;
 
 import java.io.IOException;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
@@ -17,11 +18,13 @@ public class BucketRefreshOperation implements Operation
 
     private final KadServer server;
     private final Node localNode;
+    private final KadConfiguration config;
 
-    public BucketRefreshOperation(KadServer server, Node localNode)
+    public BucketRefreshOperation(KadServer server, Node localNode, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
+        this.config = config;
     }
 
     /**
@@ -50,7 +53,7 @@ public class BucketRefreshOperation implements Operation
                 {
                     try
                     {
-                        new NodeLookupOperation(server, localNode, localNode.getNodeId()).execute();
+                        new NodeLookupOperation(server, localNode, localNode.getNodeId(), BucketRefreshOperation.this.config).execute();
                     }
                     catch (IOException e)
                     {

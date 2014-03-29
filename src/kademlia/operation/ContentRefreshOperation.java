@@ -2,7 +2,8 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
-import kademlia.core.Configuration;
+import kademlia.core.DefaultConfiguration;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.StorageEntry;
@@ -23,12 +24,14 @@ public class ContentRefreshOperation implements Operation
     private final KadServer server;
     private final Node localNode;
     private final DHT dht;
+    private final KadConfiguration config;
 
-    public ContentRefreshOperation(KadServer server, Node localNode, DHT dht)
+    public ContentRefreshOperation(KadServer server, Node localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
         this.dht = dht;
+        this.config = config;
     }
 
     /**
@@ -54,7 +57,7 @@ public class ContentRefreshOperation implements Operation
              * only distribute it if it has been last updated > 1 hour ago
              */
             /* Get the K closest nodes to this entries */
-            List<Node> closestNodes = this.localNode.getRoutingTable().findClosest(e.getKey(), Configuration.K);
+            List<Node> closestNodes = this.localNode.getRoutingTable().findClosest(e.getKey(), this.config.k());
 
             /* Create the message */
             Message msg = new StoreContentMessage(this.localNode, dht.get(e));

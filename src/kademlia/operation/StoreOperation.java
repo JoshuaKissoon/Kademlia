@@ -2,6 +2,7 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
+import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
@@ -22,26 +23,29 @@ public class StoreOperation implements Operation
     private final Node localNode;
     private final KadContent content;
     private final DHT localDht;
+    private final KadConfiguration config;
 
     /**
      * @param server
      * @param localNode
      * @param content   The content to be stored on the DHT
      * @param localDht  The local DHT
+     * @param config
      */
-    public StoreOperation(KadServer server, Node localNode, KadContent content, DHT localDht)
+    public StoreOperation(KadServer server, Node localNode, KadContent content, DHT localDht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
         this.content = content;
         this.localDht = localDht;
+        this.config = config;
     }
 
     @Override
     public synchronized void execute() throws IOException
     {
         /* Get the nodes on which we need to store the content */
-        NodeLookupOperation ndlo = new NodeLookupOperation(this.server, this.localNode, this.content.getKey());
+        NodeLookupOperation ndlo = new NodeLookupOperation(this.server, this.localNode, this.content.getKey(), this.config);
         ndlo.execute();
         List<Node> nodes = ndlo.getClosestNodes();
 

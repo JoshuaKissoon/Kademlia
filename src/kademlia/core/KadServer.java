@@ -30,6 +30,9 @@ public class KadServer
     /* Maximum size of a Datagram Packet */
     private static final int DATAGRAM_BUFFER_SIZE = 64 * 1024;      // 64KB
 
+    /* Basic Kad Objects */
+    private final KadConfiguration config;
+
     /* Server Objects */
     private final int udpPort;
     private final DatagramSocket socket;
@@ -57,12 +60,15 @@ public class KadServer
      * @param udpPort   The port to listen on
      * @param mFactory  Factory used to create messages
      * @param localNode Local node on which this server runs on
+     * @param config
      *
      * @throws java.net.SocketException
      */
-    public KadServer(int udpPort, MessageFactory mFactory, Node localNode) throws SocketException
+    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config) throws SocketException
     {
         this.udpPort = udpPort;
+        this.config = config;
+
         this.socket = new DatagramSocket(udpPort);
 
         this.localNode = localNode;
@@ -116,7 +122,7 @@ public class KadServer
             //System.out.println(this.localNode + " Putting Receiver for comm: " + comm + " Receiver: " + recv);
             receivers.put(comm, recv);
             TimerTask task = new TimeoutTask(comm, recv);
-            timer.schedule(task, Configuration.RESPONSE_TIMEOUT);
+            timer.schedule(task, this.config.responseTimeout());
             tasks.put(comm, task);
         }
 
