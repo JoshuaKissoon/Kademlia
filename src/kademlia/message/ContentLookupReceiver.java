@@ -35,6 +35,9 @@ public class ContentLookupReceiver implements Receiver
     {
         ContentLookupMessage msg = (ContentLookupMessage) incoming;
         this.localNode.getRoutingTable().insert(msg.getOrigin());
+        
+        System.out.println("Received request for content with GetParameter" + msg.getParameters());
+        System.out.println("Have Content? " + this.dht.contains(msg.getParameters()));
 
         /* Check if we can have this data */
         if (this.dht.contains(msg.getParameters()))
@@ -49,6 +52,7 @@ public class ContentLookupReceiver implements Receiver
              * Return a the K closest nodes to this content identifier
              * We create a NodeLookupReceiver and let this receiver handle this operation
              */
+            System.out.println("We do not have this content");
             NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
             new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
         }

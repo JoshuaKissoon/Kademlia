@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import kademlia.core.DefaultConfiguration;
 import kademlia.core.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
@@ -35,10 +34,10 @@ public class ContentLookupOperation implements Operation, Receiver
 {
 
     /* Constants */
-    private static final Byte UNASKED = new Byte((byte) 0x00);
-    private static final Byte AWAITING = new Byte((byte) 0x01);
-    private static final Byte ASKED = new Byte((byte) 0x02);
-    private static final Byte FAILED = new Byte((byte) 0x03);
+    private static final Byte UNASKED = (byte) 0x00;
+    private static final Byte AWAITING = (byte) 0x01;
+    private static final Byte ASKED = (byte) 0x02;
+    private static final Byte FAILED = (byte) 0x03;
 
     private final KadServer server;
     private final Node localNode;
@@ -194,7 +193,7 @@ public class ContentLookupOperation implements Operation, Receiver
             int comm = server.sendMessage(n, lookupMessage, this);
 
             this.nodes.put(n, AWAITING);
-            this.messagesTransiting.put(new Integer(comm), n);
+            this.messagesTransiting.put(comm, n);
         }
 
         /* We're not finished as yet, return false */
@@ -277,7 +276,7 @@ public class ContentLookupOperation implements Operation, Receiver
             this.nodes.put(origin, ASKED);
 
             /* Remove this msg from messagesTransiting since it's completed now */
-            this.messagesTransiting.remove(new Integer(comm));
+            this.messagesTransiting.remove(comm);
 
             /* Add the received nodes to our nodes list to query */
             this.addNodes(msg.getNodes());
@@ -306,7 +305,7 @@ public class ContentLookupOperation implements Operation, Receiver
         /* Mark this node as failed */
         this.nodes.put(n, FAILED);
         this.localNode.getRoutingTable().remove(n);
-        this.messagesTransiting.remove(new Integer(comm));
+        this.messagesTransiting.remove(comm);
 
         this.askNodesorFinish();
     }

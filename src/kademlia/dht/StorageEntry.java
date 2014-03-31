@@ -64,7 +64,7 @@ public class StorageEntry
         {
             return false;
         }
-
+        
         /* Check that type matches */
         if ((params.getType() != null) && (!params.getType().equals(this.type)))
         {
@@ -72,7 +72,7 @@ public class StorageEntry
         }
 
         /* Check that key matches */
-        return ((params.getKey() != null) && (!params.getKey().equals(this.key)));
+        return (params.getKey() != null) && (params.getKey().equals(this.key));
     }
 
     @Override

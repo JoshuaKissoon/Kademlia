@@ -76,6 +76,7 @@ class StorageEntryManager
     {
         if (this.entries.containsKey(param.getKey()))
         {
+            System.out.println("Does contain the key");
             /* Content with this key exist, check if any match the rest of the search criteria */
             for (StorageEntry e : this.entries.get(param.getKey()))
             {
@@ -85,6 +86,11 @@ class StorageEntryManager
                     return true;
                 }
             }
+        }
+        else
+        {
+            System.out.println("Does not contain the key");
+            System.out.println(this);
         }
         return false;
     }

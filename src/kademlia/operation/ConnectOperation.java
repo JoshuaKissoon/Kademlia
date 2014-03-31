@@ -6,7 +6,6 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import kademlia.core.DefaultConfiguration;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
