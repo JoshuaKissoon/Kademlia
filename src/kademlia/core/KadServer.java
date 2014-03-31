@@ -31,7 +31,7 @@ public class KadServer
     private static final int DATAGRAM_BUFFER_SIZE = 64 * 1024;      // 64KB
 
     /* Basic Kad Objects */
-    private final KadConfiguration config;
+    private final transient KadConfiguration config;
 
     /* Server Objects */
     private final int udpPort;

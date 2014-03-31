@@ -61,7 +61,7 @@ public class Kademlia
     private final transient DHT dht;
     private final transient Timer timer;
     private final int udpPort;
-    private KadConfiguration config;
+    private transient KadConfiguration config;
 
     /* Factories */
     private final transient MessageFactory messageFactory;
@@ -123,7 +123,8 @@ public class Kademlia
 
     public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
     {
-        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, new DHT(ownerId, new DefaultConfiguration()), new DefaultConfiguration());
+        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, 
+                new DHT(ownerId, new DefaultConfiguration()), new DefaultConfiguration());
     }
 
     /**
@@ -185,7 +186,7 @@ public class Kademlia
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "dht.kns"));
         DHT idht = new JsonDHTSerializer().read(din);
 
-        return new Kademlia(ownerId, inode, ikad.getPort(), idht, ikad.getCurrentConfiguration());
+        return new Kademlia(ownerId, inode, ikad.getPort(), idht, iconfig);
     }
 
     /**

@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import kademlia.core.DefaultConfiguration;
 import kademlia.core.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.exceptions.ContentExistException;
@@ -27,8 +26,8 @@ public class DHT
 {
 
     private transient StorageEntryManager entriesManager;
-    private transient final JsonSerializer<KadContent> contentSerializer;
-    private final KadConfiguration config;
+    private final transient JsonSerializer<KadContent> contentSerializer;
+    private final transient KadConfiguration config;
 
     private final String ownerId;
 

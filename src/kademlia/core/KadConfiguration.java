@@ -8,7 +8,7 @@ package kademlia.core;
  */
 public interface KadConfiguration
 {
-
+    
     /**
      * @return Interval in milliseconds between execution of RestoreOperations.
      */

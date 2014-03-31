@@ -19,6 +19,14 @@ public class DefaultConfiguration implements KadConfiguration
     private final static int STALE = 1;
     private final static String LOCAL_FOLDER = "kademlia";
 
+    /**
+     * Default constructor to support Gson Serialization
+     */
+    public DefaultConfiguration()
+    {
+
+    }
+
     @Override
     public long restoreInterval()
     {
