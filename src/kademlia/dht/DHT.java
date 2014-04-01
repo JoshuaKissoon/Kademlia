@@ -15,6 +15,7 @@ import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
 import kademlia.serializer.JsonSerializer;
+import kademlia.serializer.KadSerializer;
 
 /**
  * The main Distributed Hash Table class that manages the entire DHT
@@ -26,15 +27,10 @@ public class DHT
 {
 
     private transient StorageEntryManager entriesManager;
-    private final transient JsonSerializer<KadContent> contentSerializer;
-    private final transient KadConfiguration config;
+    private transient KadSerializer<KadContent> contentSerializer = null;
+    private transient KadConfiguration config;
 
     private final String ownerId;
-
-    
-    {
-        contentSerializer = new JsonSerializer<>();
-    }
 
     public DHT(String ownerId, KadConfiguration config)
     {
@@ -49,6 +45,31 @@ public class DHT
     public final void initialize()
     {
         entriesManager = new StorageEntryManager();
+    }
+
+    /**
+     * Set a new configuration. Mainly used when we restore the DHT state from a file
+     *
+     * @param con The new configuration file
+     */
+    public void setConfiguration(KadConfiguration con)
+    {
+        this.config = con;
+    }
+
+    /**
+     * Creates a new Serializer or returns an existing serializer
+     *
+     * @return The new ContentSerializer
+     */
+    public KadSerializer<KadContent> getContentSerializer()
+    {
+        if (null == contentSerializer)
+        {
+            contentSerializer = new JsonSerializer<>();
+        }
+
+        return contentSerializer;
     }
 
     /**
@@ -68,7 +89,7 @@ public class DHT
             /* Now we store the content locally in a file */
             String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
             DataOutputStream dout = new DataOutputStream(new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct"));
-            contentSerializer.write(content, dout);
+            getContentSerializer().write(content, dout);
         }
         catch (ContentExistException e)
         {
@@ -88,7 +109,7 @@ public class DHT
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream in = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
-        return contentSerializer.read(in);
+        return getContentSerializer().read(in);
     }
 
     /**

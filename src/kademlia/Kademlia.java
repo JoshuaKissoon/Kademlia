@@ -185,6 +185,7 @@ public class Kademlia
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "dht.kns"));
         DHT idht = new JsonDHTSerializer().read(din);
+        idht.setConfiguration(iconfig);
 
         return new Kademlia(ownerId, inode, ikad.getPort(), idht, iconfig);
     }
