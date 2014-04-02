@@ -6,7 +6,7 @@ import kademlia.core.DefaultConfiguration;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.StorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
@@ -46,10 +46,10 @@ public class ContentRefreshOperation implements Operation
     public void execute() throws IOException
     {
         /* Get a list of all storage entries for content */
-        List<StorageEntry> entries = this.dht.getStorageEntries();
+        List<StorageEntryMetadata> entries = this.dht.getStorageEntries();
 
         /* For each storage entry, distribute it */
-        for (StorageEntry e : entries)
+        for (StorageEntryMetadata e : entries)
         {
             /**
              * @todo - Paper improvement 1 -

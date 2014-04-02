@@ -18,7 +18,7 @@ public class ContentMessage implements Message
 
     public static final byte CODE = 0x04;
 
-    private KadContent content;
+    private byte[] content;
     private Node origin;
 
     /**
@@ -26,7 +26,7 @@ public class ContentMessage implements Message
      * @param content The content to be stored
      *
      */
-    public ContentMessage(Node origin, KadContent content)
+    public ContentMessage(Node origin, byte[] content)
     {
         this.content = content;
         this.origin = origin;
@@ -43,7 +43,8 @@ public class ContentMessage implements Message
         this.origin.toStream(out);
 
         /* Serialize the KadContent, then send it to the stream */
-        new JsonSerializer<KadContent>().write(content, out);
+        out.writeInt(content.length);
+        out.write(content);
     }
 
     @Override
@@ -51,14 +52,9 @@ public class ContentMessage implements Message
     {
         this.origin = new Node(in);
 
-        try
-        {
-            this.content = new JsonSerializer<KadContent>().read(in);
-        }
-        catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
-        }
+        final int length = in.readInt();
+        this.content = new byte[length];
+        in.read(content);
     }
 
     public Node getOrigin()
@@ -66,7 +62,7 @@ public class ContentMessage implements Message
         return this.origin;
     }
 
-    public KadContent getContent()
+    public byte[] getContent()
     {
         return this.content;
     }

@@ -21,7 +21,7 @@ import kademlia.node.NodeId;
 class StorageEntryManager
 {
 
-    private final Map<NodeId, List<StorageEntry>> entries;
+    private final Map<NodeId, List<StorageEntryMetadata>> entries;
 
     
     {
@@ -33,9 +33,9 @@ class StorageEntryManager
      *
      * @param content The content to store a reference to
      */
-    public StorageEntry put(KadContent content) throws ContentExistException
+    public StorageEntryMetadata put(KadContent content) throws ContentExistException
     {
-        return this.put(new StorageEntry(content));
+        return this.put(new StorageEntryMetadata(content));
     }
 
     /**
@@ -43,11 +43,11 @@ class StorageEntryManager
      *
      * @param entry The StorageEntry to store
      */
-    public StorageEntry put(StorageEntry entry) throws ContentExistException
+    public StorageEntryMetadata put(StorageEntryMetadata entry) throws ContentExistException
     {
         if (!this.entries.containsKey(entry.getKey()))
         {
-            this.entries.put(entry.getKey(), new ArrayList<StorageEntry>());
+            this.entries.put(entry.getKey(), new ArrayList<>());
         }
 
         /* If this entry doesn't already exist, then we add it */
@@ -78,7 +78,7 @@ class StorageEntryManager
         {
             System.out.println("Does contain the key");
             /* Content with this key exist, check if any match the rest of the search criteria */
-            for (StorageEntry e : this.entries.get(param.getKey()))
+            for (StorageEntryMetadata e : this.entries.get(param.getKey()))
             {
                 /* If any entry satisfies the given parameters, return true */
                 if (e.satisfiesParameters(param))
@@ -100,13 +100,13 @@ class StorageEntryManager
      */
     public boolean contains(KadContent content)
     {
-        return this.contains(new StorageEntry(content));
+        return this.contains(new StorageEntryMetadata(content));
     }
 
     /**
      * Check if a StorageEntry exist on this DHT
      */
-    private boolean contains(StorageEntry entry)
+    private boolean contains(StorageEntryMetadata entry)
     {
         if (this.entries.containsKey(entry.getKey()))
         {
@@ -125,12 +125,12 @@ class StorageEntryManager
      *
      * @return List of content for the specific search parameters
      */
-    public StorageEntry get(GetParameter param) throws NoSuchElementException
+    public StorageEntryMetadata get(GetParameter param) throws NoSuchElementException
     {
         if (this.entries.containsKey(param.getKey()))
         {
             /* Content with this key exist, check if any match the rest of the search criteria */
-            for (StorageEntry e : this.entries.get(param.getKey()))
+            for (StorageEntryMetadata e : this.entries.get(param.getKey()))
             {
                 /* If any entry satisfies the given parameters, return true */
                 if (e.satisfiesParameters(param))
@@ -151,11 +151,11 @@ class StorageEntryManager
     /**
      * @return A list of all storage entries
      */
-    public List<StorageEntry> getAllEntries()
+    public List<StorageEntryMetadata> getAllEntries()
     {
-        List<StorageEntry> entriesRet = new ArrayList<>();
+        List<StorageEntryMetadata> entriesRet = new ArrayList<>();
 
-        for (List<StorageEntry> entrySet : this.entries.values())
+        for (List<StorageEntryMetadata> entrySet : this.entries.values())
         {
             if (entrySet.size() > 0)
             {
@@ -168,10 +168,10 @@ class StorageEntryManager
 
     public void remove(KadContent content) throws ContentNotFoundException
     {
-        this.remove(new StorageEntry(content));
+        this.remove(new StorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntry entry) throws ContentNotFoundException
+    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         if (contains(entry))
         {
@@ -187,14 +187,14 @@ class StorageEntryManager
     public String toString()
     {
         StringBuilder sb = new StringBuilder("Stored Content: \n");
-        for (List<StorageEntry> es : this.entries.values())
+        for (List<StorageEntryMetadata> es : this.entries.values())
         {
             if (entries.size() < 1)
             {
                 continue;
             }
 
-            for (StorageEntry e : es)
+            for (StorageEntryMetadata e : es)
             {
                 sb.append(e);
                 sb.append("\n");

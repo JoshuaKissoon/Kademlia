@@ -84,12 +84,18 @@ public class DHT
         /* Keep track of this content in the entries manager */
         try
         {
-            StorageEntry sEntry = this.entriesManager.put(content);
+            StorageEntryMetadata sEntry = this.entriesManager.put(content);
 
             /* Now we store the content locally in a file */
             String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
-            DataOutputStream dout = new DataOutputStream(new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct"));
-            getContentSerializer().write(content, dout);
+
+            try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct");
+                    DataOutputStream dout = new DataOutputStream(fout))
+            {
+                byte[] data = content.toBytes();
+                dout.writeInt(data.length);
+                dout.write(data);
+            }
         }
         catch (ContentExistException e)
         {
@@ -105,11 +111,15 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private KadContent retrieve(NodeId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private byte[] retrieve(NodeId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
-        DataInputStream in = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
-        return getContentSerializer().read(in);
+        DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
+        int length = din.readInt();
+
+        byte[] data = new byte[length];
+        din.read(data);
+        return data;
     }
 
     /**
@@ -133,7 +143,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public KadContent get(StorageEntry entry) throws IOException, NoSuchElementException
+    public byte[] get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -162,12 +172,12 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public KadContent get(GetParameter param) throws NoSuchElementException, IOException
+    public byte[] get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
         {
-            StorageEntry e = this.entriesManager.get(param);
+            StorageEntryMetadata e = this.entriesManager.get(param);
             return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
@@ -193,10 +203,10 @@ public class DHT
      */
     public void remove(KadContent content) throws ContentNotFoundException
     {
-        this.remove(new StorageEntry(content));
+        this.remove(new StorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntry entry) throws ContentNotFoundException
+    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
@@ -242,7 +252,7 @@ public class DHT
     /**
      * @return A List of all StorageEntries for this node
      */
-    public List<StorageEntry> getStorageEntries()
+    public List<StorageEntryMetadata> getStorageEntries()
     {
         return entriesManager.getAllEntries();
     }
@@ -253,9 +263,9 @@ public class DHT
      *
      * @param ientries The entries to add
      */
-    public void putStorageEntries(List<StorageEntry> ientries)
+    public void putStorageEntries(List<StorageEntryMetadata> ientries)
     {
-        for (StorageEntry e : ientries)
+        for (StorageEntryMetadata e : ientries)
         {
             try
             {

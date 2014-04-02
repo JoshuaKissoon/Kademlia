@@ -43,7 +43,6 @@ public class JsonSerializer<T> implements KadSerializer<T>
 
             writer.endArray();
         }
-
     }
 
     @Override

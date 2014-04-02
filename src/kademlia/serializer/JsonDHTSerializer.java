@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.dht.DHT;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.StorageEntryMetadata;
 
 /**
  * A KadSerializer that serializes DHT to JSON format
@@ -48,7 +48,7 @@ public class JsonDHTSerializer implements KadSerializer<DHT>
     {
         gson = new Gson();
 
-        storageEntriesCollectionType = new TypeToken<List<StorageEntry>>()
+        storageEntriesCollectionType = new TypeToken<List<StorageEntryMetadata>>()
         {
         }.getType();
     }
@@ -84,7 +84,7 @@ public class JsonDHTSerializer implements KadSerializer<DHT>
             dht.initialize();
 
             /* Now get the entries and add them back to the DHT */
-            List<StorageEntry> entries = gson.fromJson(reader, this.storageEntriesCollectionType);
+            List<StorageEntryMetadata> entries = gson.fromJson(reader, this.storageEntriesCollectionType);
             dht.putStorageEntries(entries);
 
             reader.endArray();

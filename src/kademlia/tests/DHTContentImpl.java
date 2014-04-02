@@ -42,7 +42,7 @@ public class DHTContentImpl implements KadContent
         this.data = newData;
     }
 
-    public String getData()
+    public String toBytes()
     {
         return this.data;
     }

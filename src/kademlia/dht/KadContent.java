@@ -41,4 +41,14 @@ public interface KadContent
      * @return The ID of the owner of this content
      */
     public String getOwnerId();
+
+    public default byte[] toBytes()
+    {
+        return new byte[2];
+    }
+
+    public default void fromBytes(byte[] data)
+    {
+
+    }
 }
