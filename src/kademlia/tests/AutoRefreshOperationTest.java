@@ -25,7 +25,7 @@ public class AutoRefreshOperationTest
             final Kademlia kad2 = new Kademlia("Crystal", new NodeId("AJDHR678947584567464"), 4585);
             final Kademlia kad3 = new Kademlia("Shameer", new NodeId("AS84k6789KRNS45KFJ8W"), 8104);
             final Kademlia kad4 = new Kademlia("Lokesh.", new NodeId("ASF45678947A845674GG"), 8335);
-            final Kademlia kad5 = new Kademlia("Chandu.", new NodeId("AS84RUD894758456dyrj"), 13345);
+            final Kademlia kad5 = new Kademlia("Chandu.", new NodeId("AS84kUD894758456dyrj"), 13345);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");

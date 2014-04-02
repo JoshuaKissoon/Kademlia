@@ -2,7 +2,6 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
-import kademlia.core.DefaultConfiguration;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;

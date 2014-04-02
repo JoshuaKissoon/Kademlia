@@ -6,6 +6,7 @@ import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.message.Message;
 import kademlia.message.StoreContentMessage;
 import kademlia.node.Node;
@@ -50,7 +51,7 @@ public class StoreOperation implements Operation
         List<Node> nodes = ndlo.getClosestNodes();
 
         /* Create the message */
-        Message msg = new StoreContentMessage(this.localNode, this.content);
+        Message msg = new StoreContentMessage(this.localNode, new StorageEntry(this.content));
 
         /*Store the message on all of the K-Nodes*/
         for (Node n : nodes)

@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import kademlia.core.GetParameter;
 import kademlia.Kademlia;
-import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.node.NodeId;
 
 /**
@@ -30,10 +30,10 @@ public class RefreshOperationTest
             kad2.put(c);
 
             /* Lets retrieve the content */
-            GetParameter gp = new GetParameter(c.getKey());
+            GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
             gp.setType(DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
-            List<KadContent> conte = kad2.get(gp, 1);
+            List<StorageEntry> conte = kad2.get(gp, 1);
 
             kad2.refresh();
         }

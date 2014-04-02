@@ -3,7 +3,7 @@ package kademlia.tests;
 import java.util.List;
 import kademlia.Kademlia;
 import kademlia.core.GetParameter;
-import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.node.NodeId;
 
 /**
@@ -53,11 +53,11 @@ public class SaveStateTest2
 
             /* Trying to get a content stored on the restored node */
             GetParameter gp = new GetParameter(c.getKey(), kad2.getOwnerId(), c.getType());
-            List<KadContent> content = kad2.get(gp, 1);
+            List<StorageEntry> content = kad2.get(gp, 1);
 
             if (!content.isEmpty())
             {
-                DHTContentImpl cc = (DHTContentImpl) content.get(0);
+                DHTContentImpl cc = new DHTContentImpl().fromBytes(content.get(0).getContent());
                 System.out.println("Content received: " + cc);
             }
             else

@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.node.Node;
 import kademlia.serializer.JsonSerializer;
 
@@ -18,7 +19,7 @@ public class StoreContentMessage implements Message
 
     public static final byte CODE = 0x08;
 
-    private KadContent content;
+    private StorageEntry content;
     private Node origin;
 
     /**
@@ -26,7 +27,7 @@ public class StoreContentMessage implements Message
      * @param content The content to be stored
      *
      */
-    public StoreContentMessage(Node origin, KadContent content)
+    public StoreContentMessage(Node origin, StorageEntry content)
     {
         this.content = content;
         this.origin = origin;
@@ -43,7 +44,7 @@ public class StoreContentMessage implements Message
         this.origin.toStream(out);
 
         /* Serialize the KadContent, then send it to the stream */
-        new JsonSerializer<KadContent>().write(content, out);
+        new JsonSerializer<StorageEntry>().write(content, out);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class StoreContentMessage implements Message
         this.origin = new Node(in);
         try
         {
-            this.content = new JsonSerializer<KadContent>().read(in);
+            this.content = new JsonSerializer<StorageEntry>().read(in);
         }
         catch (ClassNotFoundException e)
         {
@@ -65,7 +66,7 @@ public class StoreContentMessage implements Message
         return this.origin;
     }
 
-    public KadContent getContent()
+    public StorageEntry getContent()
     {
         return this.content;
     }

@@ -12,7 +12,7 @@ import java.util.TreeMap;
 import kademlia.core.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
-import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
 import kademlia.message.ContentLookupMessage;
@@ -42,7 +42,7 @@ public class ContentLookupOperation implements Operation, Receiver
     private final KadServer server;
     private final Node localNode;
     private final GetParameter params;
-    private final List<KadContent> contentFound;
+    private final List<StorageEntry> contentFound;
     private final int numResultsReq;
     private final KadConfiguration config;
 
@@ -250,7 +250,7 @@ public class ContentLookupOperation implements Operation, Receiver
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
-            KadContent content = msg.getContent();
+            StorageEntry content = msg.getContent();
             System.out.println("Content Received: " + content);
 
             /*@todo Check if the content matches the given criteria */
@@ -313,7 +313,7 @@ public class ContentLookupOperation implements Operation, Receiver
     /**
      * @return The list of all content found during the lookup operation
      */
-    public List<KadContent> getContentFound()
+    public List<StorageEntry> getContentFound()
     {
         return this.contentFound;
     }

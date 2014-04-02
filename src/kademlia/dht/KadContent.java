@@ -1,16 +1,19 @@
 package kademlia.dht;
 
+import com.google.gson.Gson;
 import kademlia.node.NodeId;
 
 /**
  * Any piece of content that needs to be stored on the DHT
  *
  * @author Joshua Kissoon
+ * @param <T>
+ *
  * @since 20140224
  */
 public interface KadContent
 {
-
+    
     /**
      * @return NodeId The DHT key for this content
      */
@@ -42,13 +45,7 @@ public interface KadContent
      */
     public String getOwnerId();
 
-    public default byte[] toBytes()
-    {
-        return new byte[2];
-    }
+    public byte[] toBytes();
 
-    public default void fromBytes(byte[] data)
-    {
-
-    }
+    public KadContent fromBytes(byte[] data);
 }

@@ -1,5 +1,6 @@
 package kademlia.tests;
 
+import com.google.gson.Gson;
 import kademlia.dht.KadContent;
 import kademlia.node.NodeId;
 
@@ -12,16 +13,19 @@ import kademlia.node.NodeId;
 public class DHTContentImpl implements KadContent
 {
 
-    private final NodeId key;
+    private NodeId key;
     private String data;
-    private final String ownerId;
-    private final long createTs, updateTs;
-
-    public static final String TYPE = "DHTContentImpl";
+    private String ownerId;
+    private long createTs, updateTs;
 
     
     {
         this.createTs = this.updateTs = System.currentTimeMillis() / 1000L;
+    }
+    
+    public DHTContentImpl()
+    {
+        
     }
 
     public DHTContentImpl(String ownerId, String data)
@@ -40,11 +44,6 @@ public class DHTContentImpl implements KadContent
     public void setData(String newData)
     {
         this.data = newData;
-    }
-
-    public String toBytes()
-    {
-        return this.data;
     }
 
     @Override
@@ -75,6 +74,22 @@ public class DHTContentImpl implements KadContent
     public long getLastUpdatedTimestamp()
     {
         return this.updateTs;
+    }
+    
+    
+    @Override
+    public byte[] toBytes()
+    {
+        Gson gson = new Gson();
+        return gson.toJson(this).getBytes();
+    }
+    
+    @Override
+    public DHTContentImpl fromBytes(byte[] data)
+    {
+        Gson gson = new Gson();
+        DHTContentImpl val = gson.fromJson(new String(data), DHTContentImpl.class);
+        return val;
     }
 
     @Override

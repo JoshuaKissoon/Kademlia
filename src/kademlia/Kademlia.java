@@ -19,6 +19,7 @@ import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -280,7 +281,7 @@ public class Kademlia
      *
      * @throws java.io.IOException
      */
-    public List<KadContent> get(GetParameter param, int numResultsReq) throws NoSuchElementException, IOException
+    public List<StorageEntry> get(GetParameter param, int numResultsReq) throws NoSuchElementException, IOException
     {
         List contentFound;
         if (this.dht.contains(param))

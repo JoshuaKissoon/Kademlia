@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import kademlia.core.GetParameter;
 import kademlia.Kademlia;
-import kademlia.dht.KadContent;
+import kademlia.dht.StorageEntry;
 import kademlia.node.NodeId;
 
 /**
@@ -37,14 +37,15 @@ public class ContentSendingTest
              * Lets retrieve the content
              */
             System.out.println("Retrieving Content");
-            GetParameter gp = new GetParameter(c.getKey());
+            GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
             gp.setType(DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
             System.out.println("Get Parameter: " + gp);
-            List<KadContent> conte = kad2.get(gp, 1);
-            for (KadContent cc : conte)
+            List<StorageEntry> conte = kad2.get(gp, 4);
+            for (StorageEntry cc : conte)
             {
-                System.out.println("Content Found: " + cc);
+                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent()));
+                System.out.println("Content Metadata: " + cc.getContentMetadata());
             }
 
         }

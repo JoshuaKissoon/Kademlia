@@ -27,7 +27,7 @@ public class DHT
 {
 
     private transient StorageEntryManager entriesManager;
-    private transient KadSerializer<KadContent> contentSerializer = null;
+    private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
 
     private final String ownerId;
@@ -62,14 +62,14 @@ public class DHT
      *
      * @return The new ContentSerializer
      */
-    public KadSerializer<KadContent> getContentSerializer()
+    public KadSerializer<StorageEntry> getSerializer()
     {
-        if (null == contentSerializer)
+        if (null == serializer)
         {
-            contentSerializer = new JsonSerializer<>();
+            serializer = new JsonSerializer<>();
         }
 
-        return contentSerializer;
+        return serializer;
     }
 
     /**
@@ -79,28 +79,31 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public void store(KadContent content) throws IOException
+    public void store(StorageEntry content) throws IOException
     {
         /* Keep track of this content in the entries manager */
         try
         {
-            StorageEntryMetadata sEntry = this.entriesManager.put(content);
+            StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
 
             /* Now we store the content locally in a file */
-            String contentStorageFolder = this.getContentStorageFolderName(content.getKey());
+            String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
 
             try (FileOutputStream fout = new FileOutputStream(contentStorageFolder + File.separator + sEntry.hashCode() + ".kct");
                     DataOutputStream dout = new DataOutputStream(fout))
             {
-                byte[] data = content.toBytes();
-                dout.writeInt(data.length);
-                dout.write(data);
+                this.getSerializer().write(content, dout);
             }
         }
         catch (ContentExistException e)
         {
             /* Content already exist on the DHT, no need to do anything here */
         }
+    }
+
+    public void store(KadContent content) throws IOException
+    {
+        this.store(new StorageEntry(content));
     }
 
     /**
@@ -111,15 +114,11 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private byte[] retrieve(NodeId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private StorageEntry retrieve(NodeId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
-        int length = din.readInt();
-
-        byte[] data = new byte[length];
-        din.read(data);
-        return data;
+        return this.getSerializer().read(din);
     }
 
     /**
@@ -143,7 +142,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public byte[] get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -172,7 +171,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public byte[] get(GetParameter param) throws NoSuchElementException, IOException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
