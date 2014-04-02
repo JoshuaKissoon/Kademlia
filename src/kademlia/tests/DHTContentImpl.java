@@ -13,6 +13,8 @@ import kademlia.node.NodeId;
 public class DHTContentImpl implements KadContent
 {
 
+    public static final transient String TYPE = "DHTContentImpl";
+
     private NodeId key;
     private String data;
     private String ownerId;
@@ -22,10 +24,10 @@ public class DHTContentImpl implements KadContent
     {
         this.createTs = this.updateTs = System.currentTimeMillis() / 1000L;
     }
-    
+
     public DHTContentImpl()
     {
-        
+
     }
 
     public DHTContentImpl(String ownerId, String data)
@@ -75,15 +77,14 @@ public class DHTContentImpl implements KadContent
     {
         return this.updateTs;
     }
-    
-    
+
     @Override
     public byte[] toBytes()
     {
         Gson gson = new Gson();
         return gson.toJson(this).getBytes();
     }
-    
+
     @Override
     public DHTContentImpl fromBytes(byte[] data)
     {

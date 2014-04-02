@@ -1,19 +1,17 @@
 package kademlia.dht;
 
-import com.google.gson.Gson;
 import kademlia.node.NodeId;
 
 /**
  * Any piece of content that needs to be stored on the DHT
  *
  * @author Joshua Kissoon
- * @param <T>
  *
  * @since 20140224
  */
 public interface KadContent
 {
-    
+
     /**
      * @return NodeId The DHT key for this content
      */
@@ -45,7 +43,23 @@ public interface KadContent
      */
     public String getOwnerId();
 
+    /**
+     * Each content needs to be in byte format for transporting and storage,
+     * this method takes care of that.
+     *
+     * Each object is responsible for transforming itself to byte format since the
+     * structure of methods may differ.
+     *
+     * @return byte[] The content in byte format
+     */
     public byte[] toBytes();
 
+    /**
+     * Given the Content in byte format, read it
+     *
+     * @param data The object in byte format
+     *
+     * @return A new object from the given byte[]
+     */
     public KadContent fromBytes(byte[] data);
 }

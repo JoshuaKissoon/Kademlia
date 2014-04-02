@@ -38,7 +38,6 @@ public class ContentSendingTest
              */
             System.out.println("Retrieving Content");
             GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
-            gp.setType(DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
             System.out.println("Get Parameter: " + gp);
             List<StorageEntry> conte = kad2.get(gp, 4);
