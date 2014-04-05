@@ -1,7 +1,6 @@
 package kademlia.dht;
 
 import java.util.Objects;
-import kademlia.core.GetParameter;
 import kademlia.node.NodeId;
 
 /**
@@ -18,7 +17,7 @@ public class StorageEntryMetadata
     private final String ownerId;
     private final String type;
     private final int contentHash;
-    private final long lastUpdated;
+    private final long updatedTs;
 
     public StorageEntryMetadata(KadContent content)
     {
@@ -26,7 +25,7 @@ public class StorageEntryMetadata
         this.ownerId = content.getOwnerId();
         this.type = content.getType();
         this.contentHash = content.hashCode();
-        this.lastUpdated = content.getLastUpdatedTimestamp();
+        this.updatedTs = content.getLastUpdatedTimestamp();
     }
 
     public NodeId getKey()
@@ -47,6 +46,11 @@ public class StorageEntryMetadata
     public int getContentHash()
     {
         return this.contentHash;
+    }
+    
+    public long getLastUpdatedTimestamp()
+    {
+        return this.updatedTs;
     }
 
     /**

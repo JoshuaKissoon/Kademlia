@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import kademlia.core.GetParameter;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
@@ -76,7 +75,6 @@ class StorageEntryManager
     {
         if (this.entries.containsKey(param.getKey()))
         {
-            System.out.println("Does contain the key");
             /* Content with this key exist, check if any match the rest of the search criteria */
             for (StorageEntryMetadata e : this.entries.get(param.getKey()))
             {
@@ -89,7 +87,6 @@ class StorageEntryManager
         }
         else
         {
-            System.out.println("Does not contain the key");
             System.out.println(this);
         }
         return false;
@@ -100,20 +97,15 @@ class StorageEntryManager
      */
     public boolean contains(KadContent content)
     {
-        return this.contains(new StorageEntryMetadata(content));
+        return this.contains(new GetParameter(content));
     }
 
     /**
      * Check if a StorageEntry exist on this DHT
      */
-    private boolean contains(StorageEntryMetadata entry)
+    public boolean contains(StorageEntryMetadata entry)
     {
-        if (this.entries.containsKey(entry.getKey()))
-        {
-            return this.entries.get(entry.getKey()).contains(entry);
-        }
-
-        return false;
+        return this.contains(new GetParameter(entry));
     }
 
     /**
@@ -146,6 +138,11 @@ class StorageEntryManager
         {
             throw new NoSuchElementException("No content exist for the given parameters");
         }
+    }
+
+    public StorageEntryMetadata get(StorageEntryMetadata md)
+    {
+        return this.get(new GetParameter(md));
     }
 
     /**

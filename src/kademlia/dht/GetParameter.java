@@ -1,4 +1,4 @@
-package kademlia.core;
+package kademlia.dht;
 
 import kademlia.node.NodeId;
 
@@ -35,13 +35,53 @@ public class GetParameter
      * Construct a GetParameter to search for data by NodeId, owner, type
      *
      * @param key
-     * @param owner
      * @param type
+     * @param owner
      */
-    public GetParameter(NodeId key, String owner, String type)
+    public GetParameter(NodeId key, String type, String owner)
     {
         this(key, owner);
         this.type = type;
+    }
+
+    /**
+     * Construct our get parameter from a Content
+     *
+     * @param c
+     */
+    public GetParameter(KadContent c)
+    {
+        this.key = c.getKey();
+
+        if (c.getType() != null)
+        {
+            this.type = c.getType();
+        }
+
+        if (c.getOwnerId() != null)
+        {
+            this.ownerId = c.getOwnerId();
+        }
+    }
+
+    /**
+     * Construct our get parameter from a StorageEntryMeta data
+     *
+     * @param md
+     */
+    public GetParameter(StorageEntryMetadata md)
+    {
+        this.key = md.getKey();
+
+        if (md.getType() != null)
+        {
+            this.type = md.getType();
+        }
+
+        if (md.getOwnerId() != null)
+        {
+            this.ownerId = md.getOwnerId();
+        }
     }
 
     public NodeId getKey()

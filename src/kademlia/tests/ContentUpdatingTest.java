@@ -13,7 +13,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140224
  */
-public class ContentSendingTest
+public class ContentUpdatingTest
 {
 
     public static void main(String[] args)
@@ -27,20 +27,28 @@ public class ContentSendingTest
             System.out.println("Created Node Kad 2: " + kad2.getNode().getNodeId());
             kad2.bootstrap(kad1.getNode());
 
-            /**
-             * Lets create the content and share it
-             */
+            /* Lets create the content and share it */
             DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");
             kad2.put(c);
 
-            /**
-             * Lets retrieve the content
-             */
+            /* Lets retrieve the content */
             System.out.println("Retrieving Content");
-            GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
-            gp.setOwnerId(c.getOwnerId());
+            GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE, c.getOwnerId());
             System.out.println("Get Parameter: " + gp);
             List<StorageEntry> conte = kad2.get(gp, 4);
+            for (StorageEntry cc : conte)
+            {
+                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent()));
+                System.out.println("Content Metadata: " + cc.getContentMetadata());
+            }
+
+            /* Lets update the content and put it again */
+            c.setData("Some New Data");
+            kad2.put(c);
+
+            /* Lets retrieve the content */
+            System.out.println("Retrieving Content Again");
+            conte = kad2.get(gp, 4);
             for (StorageEntry cc : conte)
             {
                 System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent()));

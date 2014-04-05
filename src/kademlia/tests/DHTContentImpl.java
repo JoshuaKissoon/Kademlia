@@ -18,7 +18,8 @@ public class DHTContentImpl implements KadContent
     private NodeId key;
     private String data;
     private String ownerId;
-    private long createTs, updateTs;
+    private final long createTs;
+    private long updateTs;
 
     
     {
@@ -46,6 +47,7 @@ public class DHTContentImpl implements KadContent
     public void setData(String newData)
     {
         this.data = newData;
+        this.setUpdated();
     }
 
     @Override
@@ -64,6 +66,14 @@ public class DHTContentImpl implements KadContent
     public String getOwnerId()
     {
         return this.ownerId;
+    }
+
+    /**
+     * Set the content as updated
+     */
+    public void setUpdated()
+    {
+        this.updateTs = System.currentTimeMillis() / 1000L;
     }
 
     @Override

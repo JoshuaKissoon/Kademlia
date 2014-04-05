@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
-import kademlia.core.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
@@ -77,13 +76,43 @@ public class DHT
      *
      * @param content The DHT content to store
      *
+     * @return boolean true if we stored the content, false if the content already exists and is up to date
+     *
      * @throws java.io.IOException
      */
-    public void store(StorageEntry content) throws IOException
+    public boolean store(StorageEntry content) throws IOException
     {
-        /* Keep track of this content in the entries manager */
+        /* Lets check if we have this content and it's the updated version */
+        if (this.entriesManager.contains(content.getContentMetadata()))
+        {
+            StorageEntryMetadata current = this.entriesManager.get(content.getContentMetadata());
+            if (current.getLastUpdatedTimestamp() >= content.getContentMetadata().getLastUpdatedTimestamp())
+            {
+                /* We have the current content, no need to update it! just leave this method now */
+                return false;
+            }
+            else
+            {
+                /* We have this content, but not the latest version, lets delete it so the new version will be added below */
+                try
+                {
+                    this.remove(content.getContentMetadata());
+                }
+                catch (ContentNotFoundException ex)
+                {
+                    /* @todo Log an error here */
+                }
+            }
+        }
+
+        /**
+         * If we got here means we don't have this content, or we need to update the content
+         * If we need to update the content, the code above would've already deleted it, so we just need to re-add it
+         */
         try
         {
+            System.out.println("Adding new content.");
+            /* Keep track of this content in the entries manager */
             StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
 
             /* Now we store the content locally in a file */
@@ -94,16 +123,19 @@ public class DHT
             {
                 this.getSerializer().write(content, dout);
             }
+            return true;
         }
         catch (ContentExistException e)
         {
-            /* Content already exist on the DHT, no need to do anything here */
+            /* @todo Content already exist on the DHT, log an error here */
+            return false;
         }
+
     }
 
-    public void store(KadContent content) throws IOException
+    public boolean store(KadContent content) throws IOException
     {
-        this.store(new StorageEntry(content));
+        return this.store(new StorageEntry(content));
     }
 
     /**
