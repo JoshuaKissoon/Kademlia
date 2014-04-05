@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.dht.StorageEntry;
 import kademlia.node.Node;
-import kademlia.serializer.JsonSerializer;
+import kademlia.util.serializer.JsonSerializer;
 
 /**
  * A Message used to send content between nodes

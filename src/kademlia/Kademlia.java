@@ -30,9 +30,9 @@ import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 import kademlia.routing.RoutingTable;
-import kademlia.serializer.JsonDHTSerializer;
-import kademlia.serializer.JsonRoutingTableSerializer;
-import kademlia.serializer.JsonSerializer;
+import kademlia.util.serializer.JsonDHTSerializer;
+import kademlia.util.serializer.JsonRoutingTableSerializer;
+import kademlia.util.serializer.JsonSerializer;
 
 /**
  * The main Kademlia network management class

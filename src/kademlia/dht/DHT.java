@@ -13,8 +13,8 @@ import kademlia.core.KadConfiguration;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
-import kademlia.serializer.JsonSerializer;
-import kademlia.serializer.KadSerializer;
+import kademlia.util.serializer.JsonSerializer;
+import kademlia.util.serializer.KadSerializer;
 
 /**
  * The main Distributed Hash Table class that manages the entire DHT

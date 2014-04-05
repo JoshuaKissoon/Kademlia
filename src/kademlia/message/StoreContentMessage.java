@@ -6,7 +6,7 @@ import java.io.IOException;
 import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
 import kademlia.node.Node;
-import kademlia.serializer.JsonSerializer;
+import kademlia.util.serializer.JsonSerializer;
 
 /**
  * A StoreContentMessage used to send a store message to a node

@@ -1,4 +1,4 @@
-package kademlia.serializer;
+package kademlia.util.serializer;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

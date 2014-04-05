@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import kademlia.dht.GetParameter;
 import kademlia.node.Node;
-import kademlia.serializer.JsonSerializer;
+import kademlia.util.serializer.JsonSerializer;
 
 /**
  * Messages used to send to another node requesting content.
