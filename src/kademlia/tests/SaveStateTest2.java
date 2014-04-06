@@ -57,7 +57,7 @@ public class SaveStateTest2
 
             if (!content.isEmpty())
             {
-                DHTContentImpl cc = new DHTContentImpl().fromBytes(content.get(0).getContent());
+                DHTContentImpl cc = new DHTContentImpl().fromBytes(content.get(0).getContent().getBytes());
                 System.out.println("Content received: " + cc);
             }
             else

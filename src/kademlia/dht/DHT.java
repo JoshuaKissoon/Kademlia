@@ -96,6 +96,7 @@ public class DHT
                 /* We have this content, but not the latest version, lets delete it so the new version will be added below */
                 try
                 {
+                    System.out.println("Removing older content to update it");
                     this.remove(content.getContentMetadata());
                 }
                 catch (ContentNotFoundException ex)

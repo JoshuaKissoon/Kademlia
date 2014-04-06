@@ -43,7 +43,7 @@ public class ContentSendingTest
             List<StorageEntry> conte = kad2.get(gp, 4);
             for (StorageEntry cc : conte)
             {
-                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent()));
+                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent().getBytes()));
                 System.out.println("Content Metadata: " + cc.getContentMetadata());
             }
 
