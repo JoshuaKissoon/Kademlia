@@ -48,7 +48,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final ContentLookupMessage lookupMessage;
 
-    private boolean error, isRunning;
+    private boolean error, contentsFound;
     private final SortedMap<Node, Byte> nodes;
 
     /* Tracks messages in transit and awaiting reply */
@@ -61,7 +61,7 @@ public class ContentLookupOperation implements Operation, Receiver
     {
         contentFound = new ArrayList<>();
         messagesTransiting = new HashMap<>();
-        isRunning = true;
+        contentsFound = false;
     }
 
     /**
@@ -108,10 +108,10 @@ public class ContentLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 50;     // We re-check every 300 milliseconds
+            int timeInterval = 100;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
-                if (!this.askNodesorFinish())
+                if (!this.askNodesorFinish() && !contentsFound)
                 {
                     wait(timeInterval);
                     totalTimeWaited += timeInterval;
@@ -124,7 +124,7 @@ public class ContentLookupOperation implements Operation, Receiver
             if (error)
             {
                 /* If we still haven't received any responses by then, do a routing timeout */
-                throw new RoutingException("Lookup Timeout.");
+                throw new RoutingException("ContentLookupOperation: Lookup Timeout.");
             }
             
             /**
@@ -254,7 +254,7 @@ public class ContentLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException, RoutingException
     {
-        if (!this.isRunning)
+        if (this.contentsFound)
         {
             return;
         }
@@ -278,7 +278,8 @@ public class ContentLookupOperation implements Operation, Receiver
             {
                 /* We've got all the content required, let's stop the loopup operation */
                 System.out.println("We good");
-                this.isRunning = false;
+                this.error = false;
+                this.contentsFound = true;
             }
         }
         else

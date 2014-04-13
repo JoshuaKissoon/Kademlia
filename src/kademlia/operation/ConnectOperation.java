@@ -72,7 +72,7 @@ public class ConnectOperation implements Operation, Receiver
             if (error)
             {
                 /* If we still haven't received any responses by then, do a routing timeout */
-                throw new RoutingException("Bootstrap node did not respond: " + bootstrapNode);
+                throw new RoutingException("ConnectOperation: Bootstrap node did not respond: " + bootstrapNode);
             }
 
             /* Perform lookup for our own ID to get nodes close to us */

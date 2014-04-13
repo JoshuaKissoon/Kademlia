@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import kademlia.core.DefaultConfiguration;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
