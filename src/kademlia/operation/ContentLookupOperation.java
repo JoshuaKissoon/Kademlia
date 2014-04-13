@@ -106,26 +106,44 @@ public class ContentLookupOperation implements Operation, Receiver
 
             this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
-            if (!this.askNodesorFinish())
+            /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
+            int totalTimeWaited = 0;
+            int timeInterval = 100;     // We re-check every 300 milliseconds
+            while (totalTimeWaited < this.config.operationTimeout())
             {
-                /* If we haven't finished as yet, wait a while */
-                /**
-                 * @todo Get rid of this wait here!
-                 * We should run this until there are no nodes left to ask from the K closest nodes
-                 * and only pause for short intervals in between
-                 *
-                 * @todo Do the same for the NodeLookupOperation
-                 */
-                wait(this.config.operationTimeout());
-
-                /* If we still haven't received any responses by then, do a routing timeout */
-                if (error)
+                if (!this.askNodesorFinish())
                 {
-                    /* Lets not throw any exception */
-
-                    //throw new RoutingException("Content Lookup Operation Timeout.");
+                    wait(timeInterval);
+                    totalTimeWaited += timeInterval;
+                }
+                else
+                {
+                    break;
                 }
             }
+            if (error)
+            {
+                /* If we still haven't received any responses by then, do a routing timeout */
+                throw new RoutingException("Lookup Timeout.");
+            }
+            
+            /**
+             * @deprecated - replaced by the above code
+             * We just keep this code in case any problems are encountered later
+             */
+//            if (!this.askNodesorFinish())
+//            {
+//                /* If we haven't finished as yet, wait a while */
+//                wait(this.config.operationTimeout());
+//
+//                /* If we still haven't received any responses by then, do a routing timeout */
+//                if (error)
+//                {
+//                    /* Lets not throw any exception */
+//
+//                    //throw new RoutingException("Content Lookup Operation Timeout.");
+//                }
+//            }
         }
         catch (InterruptedException e)
         {

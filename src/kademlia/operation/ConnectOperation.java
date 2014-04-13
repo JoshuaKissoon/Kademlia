@@ -54,12 +54,24 @@ public class ConnectOperation implements Operation, Receiver
             /* Send a connect message to the bootstrap node */
             server.sendMessage(this.bootstrapNode, m, this);
 
-            /* Wait for a while */
-            wait(config.operationTimeout());
-
+            /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
+            int totalTimeWaited = 0;
+            int timeInterval = 100;     // We re-check every 300 milliseconds
+            while (totalTimeWaited < this.config.operationTimeout())
+            {
+                if (error)
+                {
+                    wait(timeInterval);
+                    totalTimeWaited += timeInterval;
+                }
+                else
+                {
+                    break;
+                }
+            }
             if (error)
             {
-                /* Means the contact failed */
+                /* If we still haven't received any responses by then, do a routing timeout */
                 throw new RoutingException("Bootstrap node did not respond: " + bootstrapNode);
             }
 

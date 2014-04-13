@@ -124,7 +124,7 @@ public class Kademlia
 
     public Kademlia(String ownerId, NodeId defaultId, int udpPort) throws IOException
     {
-        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort, 
+        this(ownerId, new Node(defaultId, InetAddress.getLocalHost(), udpPort), udpPort,
                 new DHT(ownerId, new DefaultConfiguration()), new DefaultConfiguration());
     }
 

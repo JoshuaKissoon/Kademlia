@@ -97,17 +97,42 @@ public class NodeLookupOperation implements Operation, Receiver
 
             this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
-            if (!this.askNodesorFinish())
+            /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
+            int totalTimeWaited = 0;
+            int timeInterval = 100;     // We re-check every 300 milliseconds
+            while (totalTimeWaited < this.config.operationTimeout())
             {
-                /* If we haven't finished as yet, wait a while */
-                wait(this.config.operationTimeout());
-
-                /* If we still haven't received any responses by then, do a routing timeout */
-                if (error)
+                if (!this.askNodesorFinish())
                 {
-                    throw new RoutingException("Lookup Timeout.");
+                    wait(timeInterval);
+                    totalTimeWaited += timeInterval;
+                }
+                else
+                {
+                    break;
                 }
             }
+            if (error)
+            {
+                /* If we still haven't received any responses by then, do a routing timeout */
+                throw new RoutingException("Lookup Timeout.");
+            }
+
+            /**
+             * @deprecated - replaced by the above code
+             * We just keep this code in case any problems are encountered later
+             */
+//            if (!this.askNodesorFinish())
+//            {
+//                /* If we haven't finished as yet, wait for a maximum of OPERATION_TIMEOUT time */
+//                wait(this.config.operationTimeout());
+//
+//                /* If we still haven't received any responses by then, do a routing timeout */
+//                if (error)
+//                {
+//                    throw new RoutingException("Lookup Timeout.");
+//                }
+//            }
         }
         catch (InterruptedException e)
         {
