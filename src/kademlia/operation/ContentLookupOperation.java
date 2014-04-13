@@ -108,7 +108,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 100;     // We re-check every 300 milliseconds
+            int timeInterval = 50;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish())
