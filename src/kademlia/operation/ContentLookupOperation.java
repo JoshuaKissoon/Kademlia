@@ -1,5 +1,6 @@
 package kademlia.operation;
 
+import kademlia.message.Receiver;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

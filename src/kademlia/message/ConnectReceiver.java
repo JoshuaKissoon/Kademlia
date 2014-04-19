@@ -3,7 +3,6 @@ package kademlia.message;
 import java.io.IOException;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
 
 /**
  * Receives a ConnectMessage and sends an AcknowledgeMessage as reply.

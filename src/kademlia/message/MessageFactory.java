@@ -6,7 +6,6 @@ import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
 
 /**
  * Handles creating messages and receivers

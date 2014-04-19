@@ -5,7 +5,6 @@ import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
 
 /**
  * Responds to a ContentLookupMessage by sending a ContentMessage containing the requested content;

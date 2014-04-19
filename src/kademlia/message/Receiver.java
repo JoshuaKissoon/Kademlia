@@ -1,7 +1,6 @@
-package kademlia.operation;
+package kademlia.message;
 
 import java.io.IOException;
-import kademlia.message.Message;
 
 /**
  * A receiver waits for incoming messages and perform some action when the message is received

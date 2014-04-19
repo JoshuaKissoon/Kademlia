@@ -5,7 +5,6 @@ import java.util.List;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
 
 /**
  * Receives a NodeLookupMessage and sends a NodeReplyMessage as reply with the K-Closest nodes to the ID sent.

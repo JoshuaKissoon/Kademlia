@@ -4,7 +4,6 @@ import java.io.IOException;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
 
 /**
  * Receiver for incoming StoreContentMessage

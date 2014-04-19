@@ -16,7 +16,7 @@ import java.util.TimerTask;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
-import kademlia.operation.Receiver;
+import kademlia.message.Receiver;
 
 /**
  * The server that handles sending and receiving messages between nodes on the Kad Network

@@ -1,7 +1,6 @@
 package kademlia.message;
 
 import java.io.IOException;
-import kademlia.operation.Receiver;
 
 /**
  * Default receiver if none other is called

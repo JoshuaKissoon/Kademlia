@@ -5,6 +5,7 @@
  */
 package kademlia.operation;
 
+import kademlia.message.Receiver;
 import java.io.IOException;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
