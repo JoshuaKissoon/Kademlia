@@ -274,29 +274,31 @@ public class Kademlia
      * Get some content stored on the DHT
      * The content returned is a JSON String in byte format; this string is parsed into a class
      *
-     * @param param         The parameters used to search for the content
-     * @param numResultsReq How many results are required from different nodes
+     * @param param           The parameters used to search for the content
+     * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
      *
      * @return DHTContent The content
      *
      * @throws java.io.IOException
      */
-    public List<StorageEntry> get(GetParameter param, int numResultsReq) throws NoSuchElementException, IOException
+    public List<StorageEntry> get(GetParameter param, int numNodesToQuery) throws NoSuchElementException, IOException
     {
-        List contentFound;
+        List contentFound = new ArrayList<>();;
         if (this.dht.contains(param))
         {
             /* If the content exist in our own DHT, then return it. */
-            contentFound = new ArrayList<>();
             contentFound.add(this.dht.get(param));
         }
-        else
+
+        if (contentFound.size() == numNodesToQuery)
         {
-            /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-            ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numResultsReq, this.config);
-            clo.execute();
-            contentFound = clo.getContentFound();
+            return contentFound;
         }
+
+        /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numNodesToQuery, this.config);
+        clo.execute();
+        contentFound = clo.getContentFound();
 
         return contentFound;
     }

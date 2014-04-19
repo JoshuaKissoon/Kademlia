@@ -43,7 +43,7 @@ public class ContentLookupOperation implements Operation, Receiver
     private final Node localNode;
     private final GetParameter params;
     private final List<StorageEntry> contentFound;
-    private final int numResultsReq;
+    private final int numNodesToQuery;
     private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
@@ -67,11 +67,11 @@ public class ContentLookupOperation implements Operation, Receiver
     /**
      * @param server
      * @param localNode
-     * @param params        The parameters to search for the content which we need to find
-     * @param numResultsReq The number of results for this content from different nodes required
+     * @param params          The parameters to search for the content which we need to find
+     * @param numNodesToQuery The number of nodes to query to get this content. We return the content among these nodes.
      * @param config
      */
-    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numResultsReq, KadConfiguration config)
+    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numNodesToQuery, KadConfiguration config)
     {
         /* Construct our lookup message */
         this.lookupMessage = new ContentLookupMessage(localNode, params);
@@ -79,7 +79,7 @@ public class ContentLookupOperation implements Operation, Receiver
         this.server = server;
         this.localNode = localNode;
         this.params = params;
-        this.numResultsReq = numResultsReq;
+        this.numNodesToQuery = numNodesToQuery;
         this.config = config;
 
         /**
@@ -99,14 +99,15 @@ public class ContentLookupOperation implements Operation, Receiver
     {
         try
         {
-            error = true;
-
             /* Set the local node as already asked */
             nodes.put(this.localNode, ASKED);
 
             this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
-            /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
+            /**
+             * If we haven't found the requested amount of content as yet,
+             * keey trying until config.operationTimeout() time has expired
+             */
             int totalTimeWaited = 0;
             int timeInterval = 100;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
@@ -121,29 +122,6 @@ public class ContentLookupOperation implements Operation, Receiver
                     break;
                 }
             }
-            if (error)
-            {
-                /* If we still haven't received any responses by then, do a routing timeout */
-                throw new RoutingException("ContentLookupOperation: Lookup Timeout.");
-            }
-            
-            /**
-             * @deprecated - replaced by the above code
-             * We just keep this code in case any problems are encountered later
-             */
-//            if (!this.askNodesorFinish())
-//            {
-//                /* If we haven't finished as yet, wait a while */
-//                wait(this.config.operationTimeout());
-//
-//                /* If we still haven't received any responses by then, do a routing timeout */
-//                if (error)
-//                {
-//                    /* Lets not throw any exception */
-//
-//                    //throw new RoutingException("Content Lookup Operation Timeout.");
-//                }
-//            }
         }
         catch (InterruptedException e)
         {
@@ -274,11 +252,9 @@ public class ContentLookupOperation implements Operation, Receiver
             /*@todo Check if the content matches the given criteria */
             this.contentFound.add(content);
 
-            if (this.contentFound.size() == this.numResultsReq)
+            if (this.contentFound.size() == this.numNodesToQuery)
             {
                 /* We've got all the content required, let's stop the loopup operation */
-                System.out.println("We good");
-                this.error = false;
                 this.contentsFound = true;
             }
         }

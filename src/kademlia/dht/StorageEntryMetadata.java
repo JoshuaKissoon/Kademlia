@@ -47,7 +47,7 @@ public class StorageEntryMetadata
     {
         return this.contentHash;
     }
-    
+
     public long getLastUpdatedTimestamp()
     {
         return this.updatedTs;
@@ -76,7 +76,12 @@ public class StorageEntryMetadata
         }
 
         /* Check that key matches */
-        return (params.getKey() != null) && (params.getKey().equals(this.key));
+        if ((params.getKey() != null) && (!params.getKey().equals(this.key)))
+        {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
