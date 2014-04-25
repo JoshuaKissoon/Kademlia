@@ -28,8 +28,6 @@ import kademlia.node.Node;
  *
  * @author Joshua Kissoon
  * @since 20140226
- *
- * @todo When we've retrieved the required amount of versions of the content, stop the operation
  */
 public class ContentLookupOperation implements Operation, Receiver
 {
@@ -49,7 +47,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final ContentLookupMessage lookupMessage;
 
-    private boolean error, contentsFound;
+    private boolean contentsFound;
     private final SortedMap<Node, Byte> nodes;
 
     /* Tracks messages in transit and awaiting reply */
@@ -172,7 +170,6 @@ public class ContentLookupOperation implements Operation, Receiver
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {
             /* We have no unasked nodes nor any messages in transit, we're finished! */
-            error = false;
             return true;
         }
 

@@ -17,7 +17,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @since 20140226
  */
-class StorageEntryManager
+class StoredContentManager
 {
 
     private final Map<NodeId, List<StorageEntryMetadata>> entries;

@@ -25,7 +25,7 @@ import kademlia.util.serializer.KadSerializer;
 public class DHT
 {
 
-    private transient StorageEntryManager entriesManager;
+    private transient StoredContentManager entriesManager;
     private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
 
@@ -43,7 +43,7 @@ public class DHT
      */
     public final void initialize()
     {
-        entriesManager = new StorageEntryManager();
+        entriesManager = new StoredContentManager();
     }
 
     /**
