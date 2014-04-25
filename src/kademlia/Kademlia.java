@@ -133,8 +133,6 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
-     *
-     * @todo Boot up this Kademlia instance from a saved file state
      */
     public static Kademlia loadFromFile(String ownerId) throws FileNotFoundException, IOException, ClassNotFoundException
     {
@@ -151,8 +149,6 @@ public class Kademlia
      *
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
-     *
-     * @todo Boot up this Kademlia instance from a saved file state
      */
     public static Kademlia loadFromFile(String ownerId, KadConfiguration iconfig) throws FileNotFoundException, IOException, ClassNotFoundException
     {
