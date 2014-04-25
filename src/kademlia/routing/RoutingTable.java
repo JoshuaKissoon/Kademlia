@@ -41,9 +41,19 @@ public class RoutingTable
     }
 
     /**
-     * Adds a new node to the routing table based on how far it is from the LocalNode.
+     * Adds a contact to the routing table based on how far it is from the LocalNode.
      *
-     * @param n The contact to add
+     * @param c The contact to add
+     */
+    public final void insert(Contact c)
+    {
+        this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
+    }
+
+    /**
+     * Adds a node to the routing table based on how far it is from the LocalNode.
+     *
+     * @param n The node to add
      */
     public final void insert(Node n)
     {
@@ -60,7 +70,7 @@ public class RoutingTable
         int bucketId = this.getBucketId(n.getNodeId());
 
         /* If the bucket has the contact, remove it */
-        if (this.buckets[bucketId].containNode(n))
+        if (this.buckets[bucketId].containsNode(n))
         {
             this.buckets[bucketId].removeNode(n);
         }
@@ -97,11 +107,11 @@ public class RoutingTable
         int bucketIndex = this.getBucketId(target);
 
         /* Add the contacts from this bucket to the return contacts */
-        for (Node c : this.buckets[bucketIndex].getNodes())
+        for (Contact c : this.buckets[bucketIndex].getContacts())
         {
             if (closest.size() < numNodesRequired)
             {
-                closest.add(c);
+                closest.add(c.getNode());
             }
             else
             {
@@ -120,11 +130,11 @@ public class RoutingTable
          */
         for (int i = 1; (bucketIndex - i) >= 0; i++)
         {
-            for (Node c : this.buckets[bucketIndex - i].getNodes())
+            for (Contact c : this.buckets[bucketIndex - i].getContacts())
             {
                 if (closest.size() < numNodesRequired)
                 {
-                    closest.add(c);
+                    closest.add(c.getNode());
                 }
                 else
                 {
@@ -149,11 +159,11 @@ public class RoutingTable
          */
         for (int i = 1; (bucketIndex + i) < NodeId.ID_LENGTH; i++)
         {
-            for (Node c : this.buckets[bucketIndex + i].getNodes())
+            for (Contact c : this.buckets[bucketIndex + i].getContacts())
             {
                 if (closest.size() < numNodesRequired)
                 {
-                    closest.add(c);
+                    closest.add(c.getNode());
                 }
                 else
                 {
@@ -180,10 +190,28 @@ public class RoutingTable
 
         for (Bucket b : this.buckets)
         {
-            nodes.addAll(b.getNodes());
+            for (Contact c : b.getContacts())
+            {
+                nodes.add(c.getNode());
+            }
         }
 
         return nodes;
+    }
+
+    /**
+     * @return List A List of all Nodes in this RoutingTable
+     */
+    public final List getAllContacts()
+    {
+        List<Contact> contacts = new ArrayList<>();
+
+        for (Bucket b : this.buckets)
+        {
+            contacts.addAll(b.getContacts());
+        }
+
+        return contacts;
     }
 
     /**
@@ -210,12 +238,12 @@ public class RoutingTable
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         for (Bucket b : this.buckets)
         {
-            if (b.numNodes() > 0)
+            if (b.numContacts() > 0)
             {
                 sb.append("# nodes in Bucket with depth ");
                 sb.append(b.getDepth());
                 sb.append(": ");
-                sb.append(b.numNodes());
+                sb.append(b.numContacts());
                 sb.append("\n");
                 sb.append(b.toString());
                 sb.append("\n");

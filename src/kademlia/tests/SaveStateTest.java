@@ -79,7 +79,10 @@ public class SaveStateTest
             Kademlia kadR2 = Kademlia.loadFromFile("JoshuaK");
             System.out.println(kadR2);
         }
-        
+        catch (IllegalStateException e)
+        {
+            
+        }
         catch (Exception e)
         {
             e.printStackTrace();

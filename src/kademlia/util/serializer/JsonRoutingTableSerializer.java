@@ -13,6 +13,7 @@ import kademlia.routing.RoutingTable;
 import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.node.Node;
+import kademlia.routing.Contact;
 
 /**
  * A KadSerializer that serializes routing tables to JSON format
@@ -43,6 +44,10 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
 
     private final Gson gson;
 
+    Type contactCollectionType = new TypeToken<List<Contact>>()
+    {
+    }.getType();
+
     
     {
         gson = new Gson();
@@ -58,15 +63,11 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
             /* Write the basic RoutingTable */
             gson.toJson(data, RoutingTable.class, writer);
 
-            /* Now Store the Nodes  */
-            Type collectionType = new TypeToken<List<Node>>()
-            {
-            }.getType();
-            gson.toJson(data.getAllNodes(), collectionType, writer);
+            /* Now Store the Contacts  */
+            gson.toJson(data.getAllContacts(), contactCollectionType, writer);
 
             writer.endArray();
         }
-
     }
 
     @Override
@@ -80,16 +81,13 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
             /* Read the basic RoutingTable */
             RoutingTable tbl = gson.fromJson(reader, RoutingTable.class);
 
-            /* Now get the nodes and add them back to the RoutingTable */
-            Type collectionType = new TypeToken<List<Node>>()
-            {
-            }.getType();
-            List<Node> nodes = gson.fromJson(reader, collectionType);
+            /* Now get the Contacts and add them back to the RoutingTable */
+            List<Contact> contacts = gson.fromJson(reader, contactCollectionType);
             tbl.initialize();
 
-            for (Node n : nodes)
+            for (Contact c : contacts)
             {
-                tbl.insert(n);
+                tbl.insert(c);
             }
 
             reader.endArray();

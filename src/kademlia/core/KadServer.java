@@ -36,7 +36,7 @@ public class KadServer
     /* Server Objects */
     private final int udpPort;
     private final DatagramSocket socket;
-    private boolean isRunning;
+    private transient boolean isRunning;
     private final Map<Integer, Receiver> receivers;
     private final Timer timer;      // Schedule future tasks
     private final Map<Integer, TimerTask> tasks;    // Keep track of scheduled tasks
@@ -109,7 +109,7 @@ public class KadServer
     {
         if (!isRunning)
         {
-            throw new IllegalStateException("Kad Server is not running.");
+            throw new IllegalStateException("Kad Server is not running on node " + this.localNode);
         }
 
         /* Generate a random communication ID */

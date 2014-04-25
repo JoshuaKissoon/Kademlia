@@ -17,11 +17,11 @@ public class KadBucket implements Bucket
 {
 
     private final int depth;
-    private final Map<NodeId, Node> nodes;
+    private final Map<NodeId, Contact> contacts;
 
     
     {
-        nodes = new HashMap<>();
+        contacts = new HashMap<>();
     }
 
     /**
@@ -33,49 +33,55 @@ public class KadBucket implements Bucket
     }
 
     @Override
-    public void insert(Node n)
+    public void insert(Contact c)
     {
         /* @todo Check if the bucket is filled already and handle the situation */
         /* Check if the contact is already in the bucket */
-        if (this.nodes.containsKey(n.getNodeId()))
+        if (this.contacts.containsKey(c.getNode().getNodeId()))
         {
             /* @todo If it is, then move it to the front */
             /* @todo Possibly use a doubly linked list instead of an ArrayList */
         }
         else
         {
-            nodes.put(n.getNodeId(), n);
+            contacts.put(c.getNode().getNodeId(), c);
         }
     }
 
-    /**
-     * Checks if this bucket contain a node
-     *
-     * @param n The node to check for
-     *
-     * @return boolean
-     */
     @Override
-    public boolean containNode(Node n)
+    public void insert(Node n)
     {
-        return this.nodes.containsKey(n.getNodeId());
+        this.insert(new Contact(n));
     }
 
-    /**
-     * Remove a node from this bucket
-     *
-     * @param n The node to remove
-     */
+    @Override
+    public boolean containsContact(Contact c)
+    {
+        return this.contacts.containsKey(c.getNode().getNodeId());
+    }
+
+    @Override
+    public boolean containsNode(Node n)
+    {
+        return this.contacts.containsKey(n.getNodeId());
+    }
+
+    @Override
+    public void removeContact(Contact c)
+    {
+        this.contacts.remove(c.getNode().getNodeId());
+    }
+
     @Override
     public void removeNode(Node n)
     {
-        this.nodes.remove(n.getNodeId());
+        this.contacts.remove(n.getNodeId());
     }
 
     @Override
-    public int numNodes()
+    public int numContacts()
     {
-        return this.nodes.size();
+        return this.contacts.size();
     }
 
     @Override
@@ -85,9 +91,9 @@ public class KadBucket implements Bucket
     }
 
     @Override
-    public List<Node> getNodes()
+    public List<Contact> getContacts()
     {
-        return new ArrayList<>(this.nodes.values());
+        return new ArrayList<>(this.contacts.values());
     }
 
     @Override
@@ -96,10 +102,10 @@ public class KadBucket implements Bucket
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
-        for (Node n : this.nodes.values())
+        for (Contact n : this.contacts.values())
         {
             sb.append("Node: ");
-            sb.append(n.getNodeId().toString());
+            sb.append(n.getNode().getNodeId().toString());
             sb.append("\n");
         }
 

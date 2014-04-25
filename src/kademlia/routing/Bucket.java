@@ -4,7 +4,7 @@ import java.util.List;
 import kademlia.node.Node;
 
 /**
- * A bucket used to store Nodes in the routing table.
+ * A bucket used to store Contacts in the routing table.
  *
  * @author Joshua Kissoon
  * @created 20140215
@@ -13,11 +13,27 @@ public interface Bucket
 {
 
     /**
-     * Adds a new node to the bucket
+     * Adds a contact to the bucket
      *
-     * @param n the new node
+     * @param c the new contact
+     */
+    public void insert(Contact c);
+
+    /**
+     * Create a new contact and insert it into the bucket.
+     *
+     * @param n The node to create the contact from
      */
     public void insert(Node n);
+
+    /**
+     * Checks if this bucket contain a contact
+     *
+     * @param c The contact to check for
+     *
+     * @return boolean
+     */
+    public boolean containsContact(Contact c);
 
     /**
      * Checks if this bucket contain a node
@@ -26,21 +42,28 @@ public interface Bucket
      *
      * @return boolean
      */
-    public boolean containNode(Node n);
+    public boolean containsNode(Node n);
 
     /**
-     * Remove a node from this bucket
+     * Remove a contact from this bucket
      *
-     * @param n The node to remove
+     * @param c The contact to remove
+     */
+    public void removeContact(Contact c);
+
+    /**
+     * Remove the contact object related to a node from this bucket
+     *
+     * @param n The node of the contact to remove
      */
     public void removeNode(Node n);
 
     /**
-     * Counts the number of nodes in this bucket.
+     * Counts the number of contacts in this bucket.
      *
-     * @return Integer The number of nodes in this bucket
+     * @return Integer The number of contacts in this bucket
      */
-    public int numNodes();
+    public int numContacts();
 
     /**
      * @return Integer The depth of this bucket in the RoutingTable
@@ -48,7 +71,7 @@ public interface Bucket
     public int getDepth();
 
     /**
-     * @return An Iterable structure with all nodes in this bucket
+     * @return An Iterable structure with all contacts in this bucket
      */
-    public List<Node> getNodes();
+    public List<Contact> getContacts();
 }
