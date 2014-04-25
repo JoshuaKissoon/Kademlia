@@ -65,8 +65,6 @@ class StoredContentManager
     /**
      * Checks if our DHT has a Content for the given criteria
      *
-     * @todo Add searching for content by type and ownerID
-     *
      * @param param The parameters used to search for a content
      *
      * @return boolean
@@ -112,8 +110,6 @@ class StoredContentManager
      * Checks if our DHT has a Content for the given criteria
      *
      * @param param The parameters used to search for a content
-     *
-     * @todo Add finding for content by type and ownerID
      *
      * @return List of content for the specific search parameters
      */

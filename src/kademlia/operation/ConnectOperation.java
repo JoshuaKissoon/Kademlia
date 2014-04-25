@@ -81,10 +81,11 @@ public class ConnectOperation implements Operation, Receiver
             lookup.execute();
 
             /**
-             * @todo Refresh buckets to get a good routing table
-             * I think after the above lookup operation, K buckets will be filled
-             * Not sure if this operation is needed here
+             * Refresh buckets to get a good routing table
+             * After the above lookup operation, K nodes will be in our routing table,
+             * Now we try to populate all of our buckets.
              */
+            new BucketRefreshOperation(this.server, this.localNode, this.config).execute();
         }
         catch (IOException | InterruptedException e)
         {
