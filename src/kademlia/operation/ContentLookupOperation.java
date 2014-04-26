@@ -14,6 +14,7 @@ import kademlia.dht.GetParameter;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.exceptions.UnknownMessageException;
 import kademlia.message.ContentLookupMessage;
@@ -40,14 +41,12 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final KadServer server;
     private final Node localNode;
-    private final GetParameter params;
-    private final List<StorageEntry> contentFound;
-    private final int numNodesToQuery;
+    private StorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
 
-    private boolean contentsFound;
+    private boolean isContentFound;
     private final SortedMap<Node, Byte> nodes;
 
     /* Tracks messages in transit and awaiting reply */
@@ -58,27 +57,23 @@ public class ContentLookupOperation implements Operation, Receiver
 
     
     {
-        contentFound = new ArrayList<>();
         messagesTransiting = new HashMap<>();
-        contentsFound = false;
+        isContentFound = false;
     }
 
     /**
      * @param server
      * @param localNode
-     * @param params          The parameters to search for the content which we need to find
-     * @param numNodesToQuery The number of nodes to query to get this content. We return the content among these nodes.
+     * @param params    The parameters to search for the content which we need to find
      * @param config
      */
-    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, int numNodesToQuery, KadConfiguration config)
+    public ContentLookupOperation(KadServer server, Node localNode, GetParameter params, KadConfiguration config)
     {
         /* Construct our lookup message */
         this.lookupMessage = new ContentLookupMessage(localNode, params);
 
         this.server = server;
         this.localNode = localNode;
-        this.params = params;
-        this.numNodesToQuery = numNodesToQuery;
         this.config = config;
 
         /**
@@ -111,7 +106,7 @@ public class ContentLookupOperation implements Operation, Receiver
             int timeInterval = 100;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
-                if (!this.askNodesorFinish() && !contentsFound)
+                if (!this.askNodesorFinish() && !isContentFound)
                 {
                     wait(timeInterval);
                     totalTimeWaited += timeInterval;
@@ -230,7 +225,7 @@ public class ContentLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException, RoutingException
     {
-        if (this.contentsFound)
+        if (this.isContentFound)
         {
             return;
         }
@@ -246,14 +241,8 @@ public class ContentLookupOperation implements Operation, Receiver
             /* Get the Content and check if it satisfies the required parameters */
             StorageEntry content = msg.getContent();
             System.out.println("Content Received: " + content);
-
-            this.contentFound.add(content);
-
-            if (this.contentFound.size() == this.numNodesToQuery)
-            {
-                /* We've got all the content required, let's stop the loopup operation */
-                this.contentsFound = true;
-            }
+            this.contentFound = content;
+            this.isContentFound = true;
         }
         else
         {
@@ -305,8 +294,15 @@ public class ContentLookupOperation implements Operation, Receiver
     /**
      * @return The list of all content found during the lookup operation
      */
-    public List<StorageEntry> getContentFound()
+    public StorageEntry getContentFound() throws ContentNotFoundException
     {
-        return this.contentFound;
+        if (this.isContentFound)
+        {
+            return this.contentFound;
+        }
+        else
+        {
+            throw new ContentNotFoundException("No Value was found for the given key.");
+        }
     }
 }

@@ -1,6 +1,5 @@
 package kademlia.tests;
 
-import java.util.List;
 import kademlia.Kademlia;
 import kademlia.dht.GetParameter;
 import kademlia.dht.StorageEntry;
@@ -53,17 +52,9 @@ public class SaveStateTest2
 
             /* Trying to get a content stored on the restored node */
             GetParameter gp = new GetParameter(c.getKey(), kad2.getOwnerId(), c.getType());
-            List<StorageEntry> content = kad2.get(gp, 1);
-
-            if (!content.isEmpty())
-            {
-                DHTContentImpl cc = new DHTContentImpl().fromBytes(content.get(0).getContent().getBytes());
-                System.out.println("Content received: " + cc);
-            }
-            else
-            {
-                System.out.println("No Content found");
-            }
+            StorageEntry content = kad2.get(gp);
+            DHTContentImpl cc = new DHTContentImpl().fromBytes(content.getContent().getBytes());
+            System.out.println("Content received: " + cc);
         }
 
         catch (Exception e)

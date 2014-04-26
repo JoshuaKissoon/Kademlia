@@ -1,10 +1,10 @@
 package kademlia.tests;
 
 import java.io.IOException;
-import java.util.List;
 import kademlia.dht.GetParameter;
 import kademlia.Kademlia;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
 
 /**
@@ -33,11 +33,11 @@ public class RefreshOperationTest
             GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
             gp.setType(DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
-            List<StorageEntry> conte = kad2.get(gp, 1);
+            StorageEntry conte = kad2.get(gp);
 
             kad2.refresh();
         }
-        catch (IOException e)
+        catch (IOException | ContentNotFoundException e)
         {
             e.printStackTrace();
         }

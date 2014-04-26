@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +18,7 @@ import kademlia.core.KadServer;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -266,33 +265,24 @@ public class Kademlia
      * Get some content stored on the DHT
      * The content returned is a JSON String in byte format; this string is parsed into a class
      *
-     * @param param           The parameters used to search for the content
-     * @param numNodesToQuery How many nodes should we query to get this content. We return all content on these nodes.
+     * @param param The parameters used to search for the content
      *
      * @return DHTContent The content
      *
      * @throws java.io.IOException
      */
-    public List<StorageEntry> get(GetParameter param, int numNodesToQuery) throws NoSuchElementException, IOException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
-        List contentFound = new ArrayList<>();;
         if (this.dht.contains(param))
         {
             /* If the content exist in our own DHT, then return it. */
-            contentFound.add(this.dht.get(param));
-        }
-
-        if (contentFound.size() == numNodesToQuery)
-        {
-            return contentFound;
+            return this.dht.get(param);
         }
 
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
-        ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, numNodesToQuery, this.config);
+        ContentLookupOperation clo = new ContentLookupOperation(server, localNode, param, this.config);
         clo.execute();
-        contentFound = clo.getContentFound();
-
-        return contentFound;
+        return clo.getContentFound();
     }
 
     /**

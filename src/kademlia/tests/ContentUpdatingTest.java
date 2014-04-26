@@ -1,10 +1,10 @@
 package kademlia.tests;
 
 import java.io.IOException;
-import java.util.List;
 import kademlia.dht.GetParameter;
 import kademlia.Kademlia;
 import kademlia.dht.StorageEntry;
+import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
 
 /**
@@ -34,13 +34,11 @@ public class ContentUpdatingTest
             /* Lets retrieve the content */
             System.out.println("Retrieving Content");
             GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE, c.getOwnerId());
+            
             System.out.println("Get Parameter: " + gp);
-            List<StorageEntry> conte = kad2.get(gp, 4);
-            for (StorageEntry cc : conte)
-            {
-                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent().getBytes()));
-                System.out.println("Content Metadata: " + cc.getContentMetadata());
-            }
+            StorageEntry conte = kad2.get(gp);
+            System.out.println("Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
+            System.out.println("Content Metadata: " + conte.getContentMetadata());
 
             /* Lets update the content and put it again */
             c.setData("Some New Data");
@@ -48,15 +46,12 @@ public class ContentUpdatingTest
 
             /* Lets retrieve the content */
             System.out.println("Retrieving Content Again");
-            conte = kad2.get(gp, 4);
-            for (StorageEntry cc : conte)
-            {
-                System.out.println("Content Found: " + new DHTContentImpl().fromBytes(cc.getContent().getBytes()));
-                System.out.println("Content Metadata: " + cc.getContentMetadata());
-            }
+            conte = kad2.get(gp);
+            System.out.println("Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
+            System.out.println("Content Metadata: " + conte.getContentMetadata());
 
         }
-        catch (IOException e)
+        catch (IOException | ContentNotFoundException e)
         {
             e.printStackTrace();
         }
