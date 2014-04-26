@@ -268,6 +268,7 @@ public class Kademlia
      * @return DHTContent The content
      *
      * @throws java.io.IOException
+     * @throws kademlia.exceptions.ContentNotFoundException
      */
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {

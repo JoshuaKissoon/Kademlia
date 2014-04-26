@@ -19,6 +19,9 @@ public class StorageEntryMetadata
     private final int contentHash;
     private final long updatedTs;
 
+    /* This value is the last time this content was last updated from the network */
+    private long lastRepublished;
+
     public StorageEntryMetadata(KadContent content)
     {
         this.key = content.getKey();
@@ -26,6 +29,8 @@ public class StorageEntryMetadata
         this.type = content.getType();
         this.contentHash = content.hashCode();
         this.updatedTs = content.getLastUpdatedTimestamp();
+
+        this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
     public NodeId getKey()
@@ -82,6 +87,19 @@ public class StorageEntryMetadata
         }
 
         return true;
+    }
+
+    public long lastRepublished()
+    {
+        return this.lastRepublished;
+    }
+
+    /**
+     * Whenever we republish a content or get this content from the network, we update the last republished time
+     */
+    public void updateLastRepublished()
+    {
+        this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
     @Override

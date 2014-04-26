@@ -47,14 +47,21 @@ public class ContentRefreshOperation implements Operation
         /* Get a list of all storage entries for content */
         List<StorageEntryMetadata> entries = this.dht.getStorageEntries();
 
+        /* If a content was last republished before this time, then we need to republish it */
+        final long minRepublishTime = (System.currentTimeMillis() / 1000L) - this.config.restoreInterval();
+
         /* For each storage entry, distribute it */
         for (StorageEntryMetadata e : entries)
         {
-            /**
-             * @todo - Paper improvement 1 -
-             * Check last update time of this entry and
-             * only distribute it if it has been last updated > 1 hour ago
-             */
+            /* Check last update time of this entry and only distribute it if it has been last updated > 1 hour ago */
+            if (e.lastRepublished() > minRepublishTime)
+            {
+                continue;
+            }
+
+            /* Set that this content is now republished */
+            e.updateLastRepublished();
+
             /* Get the K closest nodes to this entries */
             List<Node> closestNodes = this.localNode.getRoutingTable().findClosest(e.getKey(), this.config.k());
 
