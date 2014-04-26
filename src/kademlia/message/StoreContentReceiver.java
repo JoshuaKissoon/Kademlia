@@ -49,6 +49,9 @@ public class StoreContentReceiver implements Receiver
     @Override
     public void timeout(int comm)
     {
-        /* @todo Do something if the request times out */
+        /**
+         * This receiver only handles Receiving content when we've received the message,
+         * so no timeout will happen with this receiver.
+         */
     }
 }

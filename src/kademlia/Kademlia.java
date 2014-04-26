@@ -41,8 +41,6 @@ import kademlia.util.serializer.JsonSerializer;
  *
  * @todo When we receive a store message - if we have a newer version of the content, re-send this newer version to that node so as to update their version
  * @todo Handle IPv6 Addresses
- * @todo Handle compressing data
- * @todo Implement Kademlia.ping() operation.
  *
  */
 public class Kademlia
