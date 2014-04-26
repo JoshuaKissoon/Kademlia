@@ -1,11 +1,10 @@
 package kademlia.routing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import kademlia.node.Node;
-import kademlia.node.NodeId;
 
 /**
  * A bucket in the Kademlia routing table
@@ -17,11 +16,11 @@ public class KadBucket implements Bucket
 {
 
     private final int depth;
-    private final Map<NodeId, Contact> contacts;
+    private final Map<Contact, Contact> contacts;
 
     
     {
-        contacts = new HashMap<>();
+        contacts = new TreeMap<>(new ContactLastSeenComparator());
     }
 
     /**
@@ -36,15 +35,19 @@ public class KadBucket implements Bucket
     public void insert(Contact c)
     {
         /* @todo Check if the bucket is filled already and handle the situation */
-        /* Check if the contact is already in the bucket */
-        if (this.contacts.containsKey(c.getNode().getNodeId()))
+        if (this.contacts.containsKey(c))
         {
-            /* @todo If it is, then move it to the front */
-            /* @todo Possibly use a doubly linked list instead of an ArrayList */
+            /**
+             * If the contact is already in the bucket, lets update that we've seen it
+             * We need to remove and re-add the contact to get the Sorted Set to update sort order
+             */
+            Contact tmp = this.contacts.remove(c);
+            tmp.setSeenNow();
+            this.contacts.put(tmp, tmp);
         }
         else
         {
-            contacts.put(c.getNode().getNodeId(), c);
+            contacts.put(c, c);
         }
     }
 
@@ -57,25 +60,25 @@ public class KadBucket implements Bucket
     @Override
     public boolean containsContact(Contact c)
     {
-        return this.contacts.containsKey(c.getNode().getNodeId());
+        return this.contacts.containsKey(c);
     }
 
     @Override
     public boolean containsNode(Node n)
     {
-        return this.contacts.containsKey(n.getNodeId());
+        return this.containsContact(new Contact(n));
     }
 
     @Override
     public void removeContact(Contact c)
     {
-        this.contacts.remove(c.getNode().getNodeId());
+        this.contacts.remove(c);
     }
 
     @Override
     public void removeNode(Node n)
     {
-        this.contacts.remove(n.getNodeId());
+        this.removeContact(new Contact(n));
     }
 
     @Override

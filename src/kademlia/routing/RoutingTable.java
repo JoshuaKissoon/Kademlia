@@ -45,7 +45,7 @@ public class RoutingTable
      *
      * @param c The contact to add
      */
-    public final void insert(Contact c)
+    public synchronized final void insert(Contact c)
     {
         this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
     }
@@ -55,7 +55,7 @@ public class RoutingTable
      *
      * @param n The node to add
      */
-    public final void insert(Node n)
+    public synchronized final void insert(Node n)
     {
         this.buckets[this.getBucketId(n.getNodeId())].insert(n);
     }
