@@ -2,8 +2,8 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
+import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
 
 /**
@@ -19,10 +19,12 @@ public class KadBucket implements Bucket
     private final int depth;
 
     /* Contacts stored in this routing table */
-    private final Map<Contact, Contact> contacts;
+    private final TreeMap<Contact, Contact> contacts;
 
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
-    private final Map<Contact, Contact> replacementCache;
+    private final TreeMap<Contact, Contact> replacementCache;
+
+    private KadConfiguration config;
 
     
     {
@@ -31,17 +33,18 @@ public class KadBucket implements Bucket
     }
 
     /**
-     * @param depth How deep in the routing tree is this bucket
+     * @param depth  How deep in the routing tree is this bucket
+     * @param config
      */
-    public KadBucket(int depth)
+    public KadBucket(int depth, KadConfiguration config)
     {
         this.depth = depth;
+        this.config = config;
     }
 
     @Override
     public void insert(Contact c)
     {
-        /* @todo Check if the bucket is filled already and handle the situation */
         if (this.contacts.containsKey(c))
         {
             /**
@@ -54,7 +57,16 @@ public class KadBucket implements Bucket
         }
         else
         {
-            contacts.put(c, c);
+            /* If the bucket is filled, we put the contacts in the replacement cache */
+            if (contacts.size() >= this.config.k())
+            {
+                /* Bucket is filled, place this contact in the replacement cache */
+                this.insertIntoCache(c);
+            }
+            else
+            {
+                contacts.put(c, c);
+            }
         }
     }
 
@@ -77,15 +89,31 @@ public class KadBucket implements Bucket
     }
 
     @Override
-    public void removeContact(Contact c)
+    public boolean removeContact(Contact c)
     {
+        /* If the contact does not exist, then we failed to remove it */
+        if (!this.contacts.containsKey(c))
+        {
+            return false;
+        }
+
         this.contacts.remove(c);
+
+        /* If there are replacement contacts in the replacement cache, lets put them into the bucket */
+        if (!this.replacementCache.isEmpty())
+        {
+            Contact replacement = this.replacementCache.firstKey();
+            this.contacts.put(replacement, replacement);
+            this.replacementCache.remove(replacement);
+        }
+
+        return true;
     }
 
     @Override
-    public void removeNode(Node n)
+    public boolean removeNode(Node n)
     {
-        this.removeContact(new Contact(n));
+        return this.removeContact(new Contact(n));
     }
 
     @Override
@@ -104,6 +132,26 @@ public class KadBucket implements Bucket
     public synchronized List<Contact> getContacts()
     {
         return (this.contacts.isEmpty()) ? new ArrayList<>() : new ArrayList<>(this.contacts.values());
+    }
+
+    /**
+     * When the bucket is filled, we keep extra contacts in the replacement cache.
+     */
+    private void insertIntoCache(Contact c)
+    {
+        /* Just return if this contact is already in our replacement cache */
+        if (this.replacementCache.containsKey(c))
+        {
+            return;
+        }
+        
+        /* if our cache is filled, we remove the least recently seen contact */
+        if (this.replacementCache.size() > this.config.k())
+        {
+            this.replacementCache.remove(this.replacementCache.lastKey());
+        }
+
+        this.replacementCache.put(c, c);
     }
 
     @Override

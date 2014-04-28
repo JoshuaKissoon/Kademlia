@@ -40,7 +40,7 @@ public class RoutingTable
         this.buckets = new Bucket[NodeId.ID_LENGTH];
         for (int i = 0; i < NodeId.ID_LENGTH; i++)
         {
-            buckets[i] = new KadBucket(i);
+            buckets[i] = new KadBucket(i, this.config);
         }
     }
 
@@ -62,22 +62,6 @@ public class RoutingTable
     public synchronized final void insert(Node n)
     {
         this.buckets[this.getBucketId(n.getNodeId())].insert(n);
-    }
-
-    /**
-     * Remove a node from the routing table.
-     *
-     * @param n The node to remove
-     */
-    public final void remove(Node n)
-    {
-        int bucketId = this.getBucketId(n.getNodeId());
-
-        /* If the bucket has the contact, remove it */
-        if (this.buckets[bucketId].containsNode(n))
-        {
-            this.buckets[bucketId].removeNode(n);
-        }
     }
 
     /**
@@ -247,12 +231,25 @@ public class RoutingTable
         {
             return;
         }
-
-        System.out.println("Unresponsive contacts: ");
         for (Node n : contacts)
         {
-            System.out.println(n);
+            this.setUnresponsiveContact(n);
         }
+    }
+
+    /**
+     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
+     *
+     * @param n
+     */
+    public synchronized void setUnresponsiveContact(Node n)
+    {
+        int bucketId = this.getBucketId(n.getNodeId());
+
+        //System.out.println(this.localNode + " Removing unresponsive node " + n);
+
+        /* Remove the contact from the bucket */
+        this.buckets[bucketId].removeNode(n);
     }
 
     @Override

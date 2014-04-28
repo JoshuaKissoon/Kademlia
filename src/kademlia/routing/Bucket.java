@@ -48,15 +48,19 @@ public interface Bucket
      * Remove a contact from this bucket
      *
      * @param c The contact to remove
+     *
+     * @return Boolean whether the removal was successful.
      */
-    public void removeContact(Contact c);
+    public boolean removeContact(Contact c);
 
     /**
      * Remove the contact object related to a node from this bucket
      *
      * @param n The node of the contact to remove
+     *
+     * @return Boolean whether the removal was successful.
      */
-    public void removeNode(Node n);
+    public boolean removeNode(Node n);
 
     /**
      * Counts the number of contacts in this bucket.

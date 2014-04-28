@@ -284,9 +284,9 @@ public class ContentLookupOperation implements Operation, Receiver
             throw new UnknownMessageException("Unknown comm: " + comm);
         }
 
-        /* Mark this node as failed */
+        /* Mark this node as failed and inform the routing table that it's unresponsive */
         this.nodes.put(n, FAILED);
-        this.localNode.getRoutingTable().remove(n);
+        this.localNode.getRoutingTable().setUnresponsiveContact(n);
         this.messagesTransiting.remove(comm);
 
         this.askNodesorFinish();
