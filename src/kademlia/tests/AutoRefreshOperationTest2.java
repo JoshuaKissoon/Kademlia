@@ -3,7 +3,7 @@ package kademlia.tests;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.core.DefaultConfiguration;
-import kademlia.Kademlia;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.node.NodeId;
 
@@ -21,9 +21,9 @@ public class AutoRefreshOperationTest2
         try
         {
             /* Setting up 2 Kad networks */
-            final Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF456789djem4567463"), 12049);
-            final Kademlia kad2 = new Kademlia("Crystal", new NodeId("AS84k678DJRW84567465"), 4585);
-            final Kademlia kad3 = new Kademlia("Shameer", new NodeId("AS84k67894758456746A"), 8104);
+            final KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF456789djem4567463"), 12049);
+            final KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("AS84k678DJRW84567465"), 4585);
+            final KademliaNode kad3 = new KademliaNode("Shameer", new NodeId("AS84k67894758456746A"), 8104);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");

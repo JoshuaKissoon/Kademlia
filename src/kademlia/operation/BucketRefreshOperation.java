@@ -1,9 +1,9 @@
 package kademlia.operation;
 
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
-import kademlia.node.Node;
 import kademlia.node.NodeId;
 
 /**
@@ -17,10 +17,10 @@ public class BucketRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final KadConfiguration config;
 
-    public BucketRefreshOperation(KadServer server, Node localNode, KadConfiguration config)
+    public BucketRefreshOperation(KadServer server, KademliaNode localNode, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
@@ -43,7 +43,7 @@ public class BucketRefreshOperation implements Operation
         for (int i = 1; i < NodeId.ID_LENGTH; i++)
         {
             /* Construct a NodeId that is i bits away from the current node Id */
-            final NodeId current = this.localNode.getNodeId().generateNodeIdByDistance(i);
+            final NodeId current = this.localNode.getNode().getNodeId().generateNodeIdByDistance(i);
 
             /* Run the Node Lookup Operation, each in a different thread to speed up things */
             new Thread()
@@ -53,7 +53,7 @@ public class BucketRefreshOperation implements Operation
                 {
                     try
                     {
-                        new NodeLookupOperation(server, localNode, localNode.getNodeId(), BucketRefreshOperation.this.config).execute();
+                        new NodeLookupOperation(server, localNode, localNode.getNode().getNodeId(), BucketRefreshOperation.this.config).execute();
                     }
                     catch (IOException e)
                     {

@@ -7,10 +7,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import kademlia.message.Streamable;
-import kademlia.routing.RoutingTable;
 
 /**
- * A Node in the Kademlia network
+ * A Node in the Kademlia network - Contains basic node network information.
  *
  * @author Joshua Kissoon
  * @since 20140202
@@ -24,15 +23,12 @@ public class Node implements Streamable
     private int port;
     private final String strRep;
 
-    private transient RoutingTable routingTable;
-
     public Node(NodeId nid, InetAddress ip, int port)
     {
         this.nodeId = nid;
         this.inetAddress = ip;
         this.port = port;
         this.strRep = this.nodeId.toString();
-        this.routingTable = new RoutingTable(this);
     }
 
     /**
@@ -107,24 +103,6 @@ public class Node implements Streamable
 
         /* Read in the port */
         this.port = in.readInt();
-    }
-
-    /**
-     * @return The RoutingTable of this Node
-     */
-    public RoutingTable getRoutingTable()
-    {
-        return this.routingTable;
-    }
-
-    /**
-     * Sets a new routing table to this node, mainly used when we retrieve the node from a saved state
-     *
-     * @param tbl The routing table to use
-     */
-    public void setRoutingTable(RoutingTable tbl)
-    {
-        this.routingTable = tbl;
     }
 
     @Override

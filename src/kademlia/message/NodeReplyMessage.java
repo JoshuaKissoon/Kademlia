@@ -89,6 +89,6 @@ public class NodeReplyMessage implements Message
     @Override
     public String toString()
     {
-        return "ConnectMessage[origin NodeId=" + origin.getNodeId() + "]";
+        return "NodeReplyMessage[origin NodeId=" + origin.getNodeId() + "]";
     }
 }

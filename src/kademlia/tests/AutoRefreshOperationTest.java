@@ -3,7 +3,7 @@ package kademlia.tests;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.core.DefaultConfiguration;
-import kademlia.Kademlia;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.node.NodeId;
 
@@ -21,11 +21,11 @@ public class AutoRefreshOperationTest
         try
         {
             /* Setting up 2 Kad networks */
-            final Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF456789djem45674DH"), 12049);
-            final Kademlia kad2 = new Kademlia("Crystal", new NodeId("AJDHR678947584567464"), 4585);
-            final Kademlia kad3 = new Kademlia("Shameer", new NodeId("AS84k6789KRNS45KFJ8W"), 8104);
-            final Kademlia kad4 = new Kademlia("Lokesh.", new NodeId("ASF45678947A845674GG"), 8335);
-            final Kademlia kad5 = new Kademlia("Chandu.", new NodeId("AS84kUD894758456dyrj"), 13345);
+            final KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF456789djem45674DH"), 12049);
+            final KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("AJDHR678947584567464"), 4585);
+            final KademliaNode kad3 = new KademliaNode("Shameer", new NodeId("AS84k6789KRNS45KFJ8W"), 8104);
+            final KademliaNode kad4 = new KademliaNode("Lokesh.", new NodeId("ASF45678947A845674GG"), 8335);
+            final KademliaNode kad5 = new KademliaNode("Chandu.", new NodeId("AS84kUD894758456dyrj"), 13345);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");

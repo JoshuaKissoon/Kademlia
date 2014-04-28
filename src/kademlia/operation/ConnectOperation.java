@@ -7,6 +7,7 @@ package kademlia.operation;
 
 import kademlia.message.Receiver;
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
@@ -21,7 +22,7 @@ public class ConnectOperation implements Operation, Receiver
     public static final int MAX_CONNECT_ATTEMPTS = 5;       // Try 5 times to connect to a node
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final Node bootstrapNode;
     private final KadConfiguration config;
 
@@ -34,7 +35,7 @@ public class ConnectOperation implements Operation, Receiver
      * @param bootstrap Node to use to bootstrap the local node onto the network
      * @param config
      */
-    public ConnectOperation(KadServer server, Node local, Node bootstrap, KadConfiguration config)
+    public ConnectOperation(KadServer server, KademliaNode local, Node bootstrap, KadConfiguration config)
     {
         this.server = server;
         this.localNode = local;
@@ -50,7 +51,7 @@ public class ConnectOperation implements Operation, Receiver
             /* Contact the bootstrap node */
             this.error = true;
             this.attempts = 0;
-            Message m = new ConnectMessage(this.localNode);
+            Message m = new ConnectMessage(this.localNode.getNode());
 
             /* Send a connect message to the bootstrap node */
             server.sendMessage(this.bootstrapNode, m, this);
@@ -77,7 +78,7 @@ public class ConnectOperation implements Operation, Receiver
             }
 
             /* Perform lookup for our own ID to get nodes close to us */
-            Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNodeId(), this.config);
+            Operation lookup = new NodeLookupOperation(this.server, this.localNode, this.localNode.getNode().getNodeId(), this.config);
             lookup.execute();
 
             /**
@@ -127,7 +128,7 @@ public class ConnectOperation implements Operation, Receiver
     {
         if (++this.attempts < MAX_CONNECT_ATTEMPTS)
         {
-            this.server.sendMessage(this.bootstrapNode, new ConnectMessage(this.localNode), this);
+            this.server.sendMessage(this.bootstrapNode, new ConnectMessage(this.localNode.getNode()), this);
         }
         else
         {

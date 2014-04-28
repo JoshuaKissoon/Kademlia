@@ -1,10 +1,10 @@
 package kademlia.message;
 
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
-import kademlia.node.Node;
 
 /**
  * Responds to a ContentLookupMessage by sending a ContentMessage containing the requested content;
@@ -17,11 +17,11 @@ public class ContentLookupReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public ContentLookupReceiver(KadServer server, Node localNode, DHT dht, KadConfiguration config)
+    public ContentLookupReceiver(KadServer server, KademliaNode localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
@@ -42,7 +42,7 @@ public class ContentLookupReceiver implements Receiver
         if (this.dht.contains(msg.getParameters()))
         {
             /* Return a ContentMessage with the required data */
-            ContentMessage cMsg = new ContentMessage(localNode, this.dht.get(msg.getParameters()));
+            ContentMessage cMsg = new ContentMessage(localNode.getNode(), this.dht.get(msg.getParameters()));
             server.reply(msg.getOrigin(), cMsg, comm);
         }
         else

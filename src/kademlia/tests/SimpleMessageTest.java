@@ -1,7 +1,7 @@
 package kademlia.tests;
 
 import java.io.IOException;
-import kademlia.Kademlia;
+import kademlia.KademliaNode;
 import kademlia.message.SimpleMessage;
 import kademlia.node.NodeId;
 import kademlia.message.SimpleReceiver;
@@ -19,8 +19,8 @@ public class SimpleMessageTest
     {
         try
         {
-            Kademlia kad1 = new Kademlia("Joshua", new NodeId("12345678901234567890"), 7574);
-            Kademlia kad2 = new Kademlia("Crystal", new NodeId("12345678901234567891"), 7572);
+            KademliaNode kad1 = new KademliaNode("Joshua", new NodeId("12345678901234567890"), 7574);
+            KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("12345678901234567891"), 7572);
 
             kad1.getServer().sendMessage(kad2.getNode(), new SimpleMessage("Some Message"), new SimpleReceiver());
         }

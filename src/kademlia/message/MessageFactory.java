@@ -2,10 +2,10 @@ package kademlia.message;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
-import kademlia.node.Node;
 
 /**
  * Handles creating messages and receivers
@@ -16,11 +16,11 @@ import kademlia.node.Node;
 public class MessageFactory
 {
 
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public MessageFactory(Node local, DHT dht, KadConfiguration config)
+    public MessageFactory(KademliaNode local, DHT dht, KadConfiguration config)
     {
         this.localNode = local;
         this.dht = dht;
@@ -64,12 +64,10 @@ public class MessageFactory
                 return new ContentLookupReceiver(server, this.localNode, this.dht, this.config);
             case NodeLookupMessage.CODE:
                 return new NodeLookupReceiver(server, this.localNode, this.config);
-            case SimpleMessage.CODE:
-                return new SimpleReceiver();
             case StoreContentMessage.CODE:
                 return new StoreContentReceiver(server, this.localNode, this.dht);
             default:
-                System.out.println("No reveiver found for message. Code: " + code);
+                System.out.println("No receiver found for message. Code: " + code);
                 return new SimpleReceiver();
         }
     }

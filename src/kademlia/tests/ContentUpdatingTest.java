@@ -2,7 +2,7 @@ package kademlia.tests;
 
 import java.io.IOException;
 import kademlia.dht.GetParameter;
-import kademlia.Kademlia;
+import kademlia.KademliaNode;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.NodeId;
@@ -21,9 +21,9 @@ public class ContentUpdatingTest
         try
         {
             /* Setting up 2 Kad networks */
-            Kademlia kad1 = new Kademlia("JoshuaK", new NodeId("ASF45678947584567467"), 7574);
+            KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF45678947584567467"), 7574);
             System.out.println("Created Node Kad 1: " + kad1.getNode().getNodeId());
-            Kademlia kad2 = new Kademlia("Crystal", new NodeId("ASERTKJDHGVHERJHGFLK"), 7572);
+            KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("ASERTKJDHGVHERJHGFLK"), 7572);
             System.out.println("Created Node Kad 2: " + kad2.getNode().getNodeId());
             kad2.bootstrap(kad1.getNode());
 

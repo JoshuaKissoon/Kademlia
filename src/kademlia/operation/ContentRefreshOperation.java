@@ -2,6 +2,7 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
@@ -21,11 +22,11 @@ public class ContentRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final DHT dht;
     private final KadConfiguration config;
 
-    public ContentRefreshOperation(KadServer server, Node localNode, DHT dht, KadConfiguration config)
+    public ContentRefreshOperation(KadServer server, KademliaNode localNode, DHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
@@ -66,7 +67,7 @@ public class ContentRefreshOperation implements Operation
             List<Node> closestNodes = this.localNode.getRoutingTable().findClosest(e.getKey(), this.config.k());
 
             /* Create the message */
-            Message msg = new StoreContentMessage(this.localNode, dht.get(e));
+            Message msg = new StoreContentMessage(this.localNode.getNode(), dht.get(e));
 
             /*Store the message on all of the K-Nodes*/
             for (Node n : closestNodes)

@@ -2,6 +2,7 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.List;
+import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -17,9 +18,12 @@ public class RoutingTable
     private final Node localNode;  // The current node
     private transient Bucket[] buckets;
 
-    public RoutingTable(Node localNode)
+    private final KadConfiguration config;
+
+    public RoutingTable(Node localNode, KadConfiguration config)
     {
         this.localNode = localNode;
+        this.config = config;
 
         /* Initialize all of the buckets to a specific depth */
         this.initialize();
@@ -99,7 +103,7 @@ public class RoutingTable
      *
      * @return List A List of contacts closest to target
      */
-    public final List<Node> findClosest(NodeId target, int numNodesRequired)
+    public synchronized final List<Node> findClosest(NodeId target, int numNodesRequired)
     {
         List<Node> closest = new ArrayList<>(numNodesRequired);
 
@@ -232,14 +236,35 @@ public class RoutingTable
         this.buckets = buckets;
     }
 
+    /**
+     * Method used by operations to notify the routing table of any contacts that have been unresponsive.
+     *
+     * @param contacts The set of unresponsive contacts
+     */
+    public void setUnresponsiveContacts(List<Node> contacts)
+    {
+        if (contacts.isEmpty())
+        {
+            return;
+        }
+
+        System.out.println("Unresponsive contacts: ");
+        for (Node n : contacts)
+        {
+            System.out.println(n);
+        }
+    }
+
     @Override
-    public final String toString()
+    public synchronized final String toString()
     {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
+        int totalContacts = 0;
         for (Bucket b : this.buckets)
         {
             if (b.numContacts() > 0)
             {
+                totalContacts += b.numContacts();
                 sb.append("# nodes in Bucket with depth ");
                 sb.append(b.getDepth());
                 sb.append(": ");
@@ -249,6 +274,11 @@ public class RoutingTable
                 sb.append("\n");
             }
         }
+
+        sb.append("\nTotal Contacts: ");
+        sb.append(totalContacts);
+        sb.append("\n\n");
+
         sb.append("Printing Routing Table Ended ******************** ");
 
         return sb.toString();

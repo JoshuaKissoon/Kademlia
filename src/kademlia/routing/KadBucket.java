@@ -15,12 +15,19 @@ import kademlia.node.Node;
 public class KadBucket implements Bucket
 {
 
+    /* How deep is this bucket in the Routing Table */
     private final int depth;
+
+    /* Contacts stored in this routing table */
     private final Map<Contact, Contact> contacts;
+
+    /* A set of last seen contacts that can replace any current contact that is unresponsive */
+    private final Map<Contact, Contact> replacementCache;
 
     
     {
         contacts = new TreeMap<>(new ContactLastSeenComparator());
+        replacementCache = new TreeMap<>(new ContactLastSeenComparator());
     }
 
     /**
@@ -94,9 +101,9 @@ public class KadBucket implements Bucket
     }
 
     @Override
-    public List<Contact> getContacts()
+    public synchronized List<Contact> getContacts()
     {
-        return new ArrayList<>(this.contacts.values());
+        return (this.contacts.isEmpty()) ? new ArrayList<>() : new ArrayList<>(this.contacts.values());
     }
 
     @Override

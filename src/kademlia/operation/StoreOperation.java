@@ -2,6 +2,7 @@ package kademlia.operation;
 
 import java.io.IOException;
 import java.util.List;
+import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
@@ -21,7 +22,7 @@ public class StoreOperation implements Operation
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final KadContent content;
     private final DHT localDht;
     private final KadConfiguration config;
@@ -33,7 +34,7 @@ public class StoreOperation implements Operation
      * @param localDht  The local DHT
      * @param config
      */
-    public StoreOperation(KadServer server, Node localNode, KadContent content, DHT localDht, KadConfiguration config)
+    public StoreOperation(KadServer server, KademliaNode localNode, KadContent content, DHT localDht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
@@ -51,7 +52,7 @@ public class StoreOperation implements Operation
         List<Node> nodes = ndlo.getClosestNodes();
 
         /* Create the message */
-        Message msg = new StoreContentMessage(this.localNode, new StorageEntry(this.content));
+        Message msg = new StoreContentMessage(this.localNode.getNode(), new StorageEntry(this.content));
 
         /*Store the message on all of the K-Nodes*/
         for (Node n : nodes)

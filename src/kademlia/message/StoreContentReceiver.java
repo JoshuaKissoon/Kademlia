@@ -1,9 +1,9 @@
 package kademlia.message;
 
 import java.io.IOException;
+import kademlia.KademliaNode;
 import kademlia.core.KadServer;
 import kademlia.dht.DHT;
-import kademlia.node.Node;
 
 /**
  * Receiver for incoming StoreContentMessage
@@ -15,10 +15,10 @@ public class StoreContentReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final Node localNode;
+    private final KademliaNode localNode;
     private final DHT dht;
 
-    public StoreContentReceiver(KadServer server, Node localNode, DHT dht)
+    public StoreContentReceiver(KadServer server, KademliaNode localNode, DHT dht)
     {
         this.server = server;
         this.localNode = localNode;
