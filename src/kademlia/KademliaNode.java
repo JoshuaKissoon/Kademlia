@@ -54,9 +54,15 @@ public class KademliaNode
     private final transient KadServer server;
     private final transient DHT dht;
     private transient RoutingTable routingTable;
-    private final transient Timer timer;
     private final int udpPort;
     private transient KadConfiguration config;
+
+    /* Timer used to execute refresh operations */
+    private final transient Timer refreshOperationTimer;
+    private final transient TimerTask refreshOperationTTask;
+    
+    /* Whether this node is up and running */
+    private boolean isRunning = false;
 
     /* Factories */
     private final transient MessageFactory messageFactory;
@@ -88,11 +94,10 @@ public class KademliaNode
         this.routingTable = routingTable;
         this.messageFactory = new MessageFactory(this, this.dht, this.config);
         this.server = new KadServer(udpPort, this.messageFactory, this.localNode, this.config);
-        this.timer = new Timer(true);
+        this.refreshOperationTimer = new Timer(true);
 
         /* Schedule Recurring RestoreOperation */
-        timer.schedule(
-                new TimerTask()
+        refreshOperationTTask = new TimerTask()
                 {
                     @Override
                     public void run()
@@ -107,19 +112,22 @@ public class KademliaNode
                             System.err.println("Refresh Operation Failed; Message: " + e.getMessage());
                         }
                     }
-                },
-                // Delay                        // Interval
-                this.config.restoreInterval(), this.config.restoreInterval()
-        );
+        };
+        refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
+        
+        this.isRunning = true;
     }
 
-    public KademliaNode(String ownerId, NodeId defaultId, int udpPort, RoutingTable routingTable, KadConfiguration config) throws IOException
+    public KademliaNode(String ownerId, Node node, int udpPort, RoutingTable routingTable, KadConfiguration config) throws IOException
     {
-        this(ownerId,
-                new Node(defaultId, InetAddress.getLocalHost(), udpPort, config),
+        this(
+                ownerId,
+                node,
                 udpPort,
+                new DHT(ownerId, config),
                 routingTable,
-                new DHT(ownerId, config), config);
+                config
+        );
     }
 
     public KademliaNode(String ownerId, Node node, int udpPort, KadConfiguration config) throws IOException
@@ -128,7 +136,6 @@ public class KademliaNode
                 ownerId,
                 node,
                 udpPort,
-                new DHT(ownerId, config),
                 new RoutingTable(node, config),
                 config
         );
@@ -283,7 +290,6 @@ public class KademliaNode
 
     /**
      * Get some content stored on the DHT
-     * The content returned is a JSON String in byte format; this string is parsed into a class
      *
      * @param param The parameters used to search for the content
      *
@@ -343,6 +349,13 @@ public class KademliaNode
     {
         /* Shut down the server */
         this.server.shutdown();
+
+        /* Close off the timer tasks */
+        this.refreshOperationTTask.cancel();
+        this.refreshOperationTimer.cancel();
+        this.refreshOperationTimer.purge();
+        
+        this.isRunning = false;
 
         /* Save this Kademlia instance's state if required */
         if (saveState)

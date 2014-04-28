@@ -44,7 +44,7 @@ public class ConnectOperation implements Operation, Receiver
     }
 
     @Override
-    public synchronized void execute()
+    public synchronized void execute() throws IOException
     {
         try
         {
@@ -88,9 +88,9 @@ public class ConnectOperation implements Operation, Receiver
              */
             new BucketRefreshOperation(this.server, this.localNode, this.config).execute();
         }
-        catch (IOException | InterruptedException e)
+        catch (InterruptedException e)
         {
-            e.printStackTrace();
+            System.err.println("Connect operation was interrupted. ");
         }
     }
 

@@ -44,10 +44,6 @@ public class RoutingTableStateTesting
 
             /* Lets shut down a node and then try putting a content on the network. We'll then see how the un-responsive contacts work */
         }
-        catch (IllegalStateException e)
-        {
-
-        }
         catch (Exception e)
         {
             e.printStackTrace();

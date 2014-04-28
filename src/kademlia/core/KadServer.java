@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -104,12 +105,13 @@ public class KadServer
      * @return Integer The communication ID of this message
      *
      * @throws IOException
+     * @throws kademlia.exceptions.KadServerDownException
      */
-    public synchronized int sendMessage(Node to, Message msg, Receiver recv) throws IOException
+    public synchronized int sendMessage(Node to, Message msg, Receiver recv) throws IOException, KadServerDownException
     {
         if (!isRunning)
         {
-            throw new IllegalStateException("Kad Server is not running on node " + this.localNode);
+            throw new KadServerDownException("Kad Server is not running on node " + this.localNode);
         }
 
         /* Generate a random communication ID */
