@@ -20,6 +20,15 @@ public class Contact implements Comparable<Contact>
     private long lastSeen;
 
     /**
+     * Stale as described by Kademlia paper page 64
+     * When a contact fails to respond, if the replacement cache is empty and there is no replacement for the contact,
+     * just mark it as stale.
+     *
+     * Now when a new contact is added, if the contact is stale, it is removed.
+     */
+    private int staleCount;
+
+    /**
      * Create a contact object
      *
      * @param n The node associated with this contact
@@ -57,6 +66,22 @@ public class Contact implements Comparable<Contact>
     public boolean equals(Contact c)
     {
         return c.getNode().equals(this.getNode());
+    }
+
+    /**
+     * Increments the amount of times this count has failed to respond to a request.
+     */
+    public void incrementStaleCount()
+    {
+        staleCount++;
+    }
+
+    /**
+     * @return Integer Stale count
+     */
+    public int staleCount()
+    {
+        return this.staleCount;
     }
 
     @Override

@@ -57,11 +57,38 @@ public class KadBucket implements Bucket
         }
         else
         {
-            /* If the bucket is filled, we put the contacts in the replacement cache */
+            /* If the bucket is filled, so put the contacts in the replacement cache */
             if (contacts.size() >= this.config.k())
             {
-                /* Bucket is filled, place this contact in the replacement cache */
-                this.insertIntoCache(c);
+                /* If the cache is empty, we check if any contacts are stale and replace the stalest one */
+                Contact stalest = null;
+                for (Contact tmp : this.contacts.keySet())
+                {
+                    if (tmp.staleCount() > this.config.stale())
+                    {
+                        /* Contact is stale */
+                        if (stalest == null)
+                        {
+                            stalest = tmp;
+                        }
+                        else if (tmp.staleCount() > stalest.staleCount())
+                        {
+                            stalest = tmp;
+                        }
+                    }
+                }
+
+                /* If we have a stale contact, remove it and add the new contact to the bucket */
+                if (stalest != null)
+                {
+                    this.contacts.remove(stalest);
+                    this.insert(c);
+                }
+                else
+                {
+                    /* No stale contact, lets insert this into replacement cache */
+                    this.insertIntoReplacementCache(c);
+                }
             }
             else
             {
@@ -97,14 +124,18 @@ public class KadBucket implements Bucket
             return false;
         }
 
-        this.contacts.remove(c);
-
-        /* If there are replacement contacts in the replacement cache, lets put them into the bucket */
         if (!this.replacementCache.isEmpty())
         {
+            /* Replace the contact with one from the replacement cache */
+            this.contacts.remove(c);
             Contact replacement = this.replacementCache.firstKey();
             this.contacts.put(replacement, replacement);
             this.replacementCache.remove(replacement);
+        }
+        else
+        {
+            /* There is no replacement, just increment the contact's stale count */
+            this.contacts.get(c).incrementStaleCount();
         }
 
         return true;
@@ -137,14 +168,14 @@ public class KadBucket implements Bucket
     /**
      * When the bucket is filled, we keep extra contacts in the replacement cache.
      */
-    private void insertIntoCache(Contact c)
+    private void insertIntoReplacementCache(Contact c)
     {
         /* Just return if this contact is already in our replacement cache */
         if (this.replacementCache.containsKey(c))
         {
             return;
         }
-        
+
         /* if our cache is filled, we remove the least recently seen contact */
         if (this.replacementCache.size() > this.config.k())
         {

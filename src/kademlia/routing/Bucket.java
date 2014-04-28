@@ -45,7 +45,13 @@ public interface Bucket
     public boolean containsNode(Node n);
 
     /**
-     * Remove a contact from this bucket
+     * Remove a contact from this bucket.
+     * 
+     * If there are replacement contacts in the replacement cache,
+     * select the last seen one and put it into the bucket while removing the required contact.
+     *
+     * If there are no contacts in the replacement cache, then we just mark the contact requested to be removed as stale.
+     * Marking as stale would actually be incrementing the stale count of the contact.
      *
      * @param c The contact to remove
      *
