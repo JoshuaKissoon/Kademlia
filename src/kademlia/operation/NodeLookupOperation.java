@@ -36,14 +36,14 @@ public class NodeLookupOperation implements Operation, Receiver
     private static final String AWAITING = "Awaiting";
     private static final String ASKED = "Asked";
     private static final String FAILED = "Failed";
-    
+
     private final KadServer server;
     private final KademliaNode localNode;
     private final NodeId lookupId;
     private final KadConfiguration config;
-    
+
     private boolean error;
-    
+
     private final Message lookupMessage;        // Message sent to each peer
     private final Map<Node, String> nodes;
 
@@ -52,7 +52,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
     /* Used to sort nodes */
     private final Comparator comparator;
-    
+
     
     {
         messagesTransiting = new HashMap<>();
@@ -70,7 +70,7 @@ public class NodeLookupOperation implements Operation, Receiver
         this.localNode = localNode;
         this.lookupId = lookupId;
         this.config = config;
-        
+
         this.lookupMessage = new NodeLookupMessage(localNode.getNode(), lookupId);
 
         /**
@@ -95,8 +95,12 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* Set the local node as already asked */
             nodes.put(this.localNode.getNode(), ASKED);
-            
-            this.addNodes(this.localNode.getRoutingTable().findClosest(this.lookupId, this.config.k()));
+
+            /**
+             * We add all nodes here instead of the K-Closest because there may be the case that the K-Closest are offline
+             * - The operation takes care of looking at the K-Closest.
+             */
+            this.addNodes(this.localNode.getRoutingTable().getAllNodes());
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
@@ -121,14 +125,14 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* Now after we've finished, we would have an idea of offline nodes, lets update our routing table */
             this.localNode.getRoutingTable().setUnresponsiveContacts(this.getFailedNodes());
-            
+
         }
         catch (InterruptedException e)
         {
             throw new RuntimeException(e);
         }
     }
-    
+
     public List<Node> getClosestNodes()
     {
         return this.closestNodes(ASKED);
@@ -172,7 +176,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
         /* Get unqueried nodes among the K closest seen that have not FAILED */
         List<Node> unasked = this.closestNodesNotFailed(UNASKED);
-        
+
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {
             /* We have no unasked nodes nor any messages in transit, we're finished! */
@@ -187,9 +191,9 @@ public class NodeLookupOperation implements Operation, Receiver
         for (int i = 0; (this.messagesTransiting.size() < this.config.maxConcurrentMessagesTransiting()) && (i < unasked.size()); i++)
         {
             Node n = (Node) unasked.get(i);
-            
+
             int comm = server.sendMessage(n, lookupMessage, this);
-            
+
             this.nodes.put(n, AWAITING);
             this.messagesTransiting.put(comm, n);
         }
@@ -207,7 +211,7 @@ public class NodeLookupOperation implements Operation, Receiver
     {
         List<Node> closestNodes = new ArrayList<>(this.config.k());
         int remainingSpaces = this.config.k();
-        
+
         for (Map.Entry e : this.nodes.entrySet())
         {
             if (status.equals(e.getValue()))
@@ -220,7 +224,7 @@ public class NodeLookupOperation implements Operation, Receiver
                 }
             }
         }
-        
+
         return closestNodes;
     }
 
@@ -236,7 +240,7 @@ public class NodeLookupOperation implements Operation, Receiver
     {
         List<Node> closestNodes = new ArrayList<>(this.config.k());
         int remainingSpaces = this.config.k();
-        
+
         for (Map.Entry<Node, String> e : this.nodes.entrySet())
         {
             if (!FAILED.equals(e.getValue()))
@@ -246,14 +250,14 @@ public class NodeLookupOperation implements Operation, Receiver
                     /* We got one with the required status, now add it */
                     closestNodes.add(e.getKey());
                 }
-                
+
                 if (--remainingSpaces == 0)
                 {
                     break;
                 }
             }
         }
-        
+
         return closestNodes;
     }
 
@@ -297,7 +301,7 @@ public class NodeLookupOperation implements Operation, Receiver
     {
         /* Get the node associated with this communication */
         Node n = this.messagesTransiting.get(new Integer(comm));
-        
+
         if (n == null)
         {
             throw new UnknownMessageException("Unknown comm: " + comm);
@@ -307,14 +311,14 @@ public class NodeLookupOperation implements Operation, Receiver
         this.nodes.put(n, FAILED);
         this.localNode.getRoutingTable().setUnresponsiveContact(n);
         this.messagesTransiting.remove(comm);
-        
+
         this.askNodesorFinish();
     }
-    
+
     public List<Node> getFailedNodes()
     {
         List<Node> failedNodes = new ArrayList<>();
-        
+
         for (Map.Entry<Node, String> e : this.nodes.entrySet())
         {
             if (e.getValue().equals(FAILED))
@@ -322,7 +326,7 @@ public class NodeLookupOperation implements Operation, Receiver
                 failedNodes.add(e.getKey());
             }
         }
-        
+
         return failedNodes;
     }
 }

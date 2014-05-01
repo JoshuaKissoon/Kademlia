@@ -173,6 +173,7 @@ public class KadBucket implements Bucket
         /* Just return if this contact is already in our replacement cache */
         if (this.replacementCache.containsKey(c))
         {
+            /* @todo update last seen time */
             return;
         }
 
