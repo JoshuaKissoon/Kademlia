@@ -16,7 +16,7 @@ public class RoutingTable
 {
 
     private final Node localNode;  // The current node
-    private transient Bucket[] buckets;
+    private transient KadBucket[] buckets;
 
     private final KadConfiguration config;
 
@@ -37,10 +37,10 @@ public class RoutingTable
      */
     public final void initialize()
     {
-        this.buckets = new Bucket[NodeId.ID_LENGTH];
+        this.buckets = new KadBucket[NodeId.ID_LENGTH];
         for (int i = 0; i < NodeId.ID_LENGTH; i++)
         {
-            buckets[i] = new KadBucket(i, this.config);
+            buckets[i] = new KadBucketImpl(i, this.config);
         }
     }
 
@@ -176,7 +176,7 @@ public class RoutingTable
     {
         List<Node> nodes = new ArrayList<>();
 
-        for (Bucket b : this.buckets)
+        for (KadBucket b : this.buckets)
         {
             for (Contact c : b.getContacts())
             {
@@ -194,7 +194,7 @@ public class RoutingTable
     {
         List<Contact> contacts = new ArrayList<>();
 
-        for (Bucket b : this.buckets)
+        for (KadBucket b : this.buckets)
         {
             contacts.addAll(b.getContacts());
         }
@@ -205,7 +205,7 @@ public class RoutingTable
     /**
      * @return Bucket[] The buckets in this Kad Instance
      */
-    public final Bucket[] getBuckets()
+    public final KadBucket[] getBuckets()
     {
         return this.buckets;
     }
@@ -215,7 +215,7 @@ public class RoutingTable
      *
      * @param buckets
      */
-    public final void setBuckets(Bucket[] buckets)
+    public final void setBuckets(KadBucket[] buckets)
     {
         this.buckets = buckets;
     }
@@ -257,7 +257,7 @@ public class RoutingTable
     {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         int totalContacts = 0;
-        for (Bucket b : this.buckets)
+        for (KadBucket b : this.buckets)
         {
             if (b.numContacts() > 0)
             {
