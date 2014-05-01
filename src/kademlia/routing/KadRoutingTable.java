@@ -1,6 +1,7 @@
 package kademlia.routing;
 
 import java.util.List;
+import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -17,6 +18,13 @@ public interface KadRoutingTable
      * Initialize the RoutingTable to it's default state
      */
     public void initialize();
+
+    /**
+     * Sets the configuration file for this routing table
+     *
+     * @param config
+     */
+    public void setConfiguration(KadConfiguration config);
 
     /**
      * Adds a contact to the routing table based on how far it is from the LocalNode.

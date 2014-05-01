@@ -18,7 +18,7 @@ public class RoutingTable implements KadRoutingTable
     private final Node localNode;  // The current node
     private transient KadBucket[] buckets;
 
-    private final KadConfiguration config;
+    private transient KadConfiguration config;
 
     public RoutingTable(Node localNode, KadConfiguration config)
     {
@@ -43,6 +43,11 @@ public class RoutingTable implements KadRoutingTable
         {
             buckets[i] = new KadBucketImpl(i, this.config);
         }
+    }
+
+    public void setConfiguration(KadConfiguration config)
+    {
+        this.config = config;
     }
 
     /**
