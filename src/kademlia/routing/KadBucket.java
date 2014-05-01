@@ -173,7 +173,13 @@ public class KadBucket implements Bucket
         /* Just return if this contact is already in our replacement cache */
         if (this.replacementCache.containsKey(c))
         {
-            /* @todo update last seen time */
+            /**
+             * If the contact is already in the bucket, lets update that we've seen it
+             * We need to remove and re-add the contact to get the Sorted Set to update sort order
+             */
+            Contact tmp = this.replacementCache.remove(c);
+            tmp.setSeenNow();
+            this.replacementCache.put(tmp, tmp);
             return;
         }
 
