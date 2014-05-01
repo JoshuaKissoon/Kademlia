@@ -183,7 +183,7 @@ public class RoutingTable implements KadRoutingTable
      * @return List A List of all Nodes in this RoutingTable
      */
     @Override
-    public final List getAllNodes()
+    public synchronized final List getAllNodes()
     {
         List<Node> nodes = new ArrayList<>();
 
