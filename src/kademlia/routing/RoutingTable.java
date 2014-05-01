@@ -12,7 +12,7 @@ import kademlia.node.NodeId;
  * @author Joshua Kissoon
  * @created 20140215
  */
-public class RoutingTable
+public class RoutingTable implements KadRoutingTable
 {
 
     private final Node localNode;  // The current node
@@ -35,6 +35,7 @@ public class RoutingTable
     /**
      * Initialize the RoutingTable to it's default state
      */
+    @Override
     public final void initialize()
     {
         this.buckets = new KadBucket[NodeId.ID_LENGTH];
@@ -49,6 +50,7 @@ public class RoutingTable
      *
      * @param c The contact to add
      */
+    @Override
     public synchronized final void insert(Contact c)
     {
         this.buckets[this.getBucketId(c.getNode().getNodeId())].insert(c);
@@ -59,6 +61,7 @@ public class RoutingTable
      *
      * @param n The node to add
      */
+    @Override
     public synchronized final void insert(Node n)
     {
         this.buckets[this.getBucketId(n.getNodeId())].insert(n);
@@ -71,6 +74,7 @@ public class RoutingTable
      *
      * @return Integer The bucket ID in which the given node should be placed.
      */
+    @Override
     public final int getBucketId(NodeId nid)
     {
         int bId = this.localNode.getNodeId().getDistance(nid) - 1;
@@ -87,6 +91,7 @@ public class RoutingTable
      *
      * @return List A List of contacts closest to target
      */
+    @Override
     public synchronized final List<Node> findClosest(NodeId target, int numNodesRequired)
     {
         List<Node> closest = new ArrayList<>(numNodesRequired);
@@ -172,6 +177,7 @@ public class RoutingTable
     /**
      * @return List A List of all Nodes in this RoutingTable
      */
+    @Override
     public final List getAllNodes()
     {
         List<Node> nodes = new ArrayList<>();
@@ -190,6 +196,7 @@ public class RoutingTable
     /**
      * @return List A List of all Nodes in this RoutingTable
      */
+    @Override
     public final List getAllContacts()
     {
         List<Contact> contacts = new ArrayList<>();
@@ -205,6 +212,7 @@ public class RoutingTable
     /**
      * @return Bucket[] The buckets in this Kad Instance
      */
+    @Override
     public final KadBucket[] getBuckets()
     {
         return this.buckets;
@@ -225,6 +233,7 @@ public class RoutingTable
      *
      * @param contacts The set of unresponsive contacts
      */
+    @Override
     public void setUnresponsiveContacts(List<Node> contacts)
     {
         if (contacts.isEmpty())
@@ -242,6 +251,7 @@ public class RoutingTable
      *
      * @param n
      */
+    @Override
     public synchronized void setUnresponsiveContact(Node n)
     {
         int bucketId = this.getBucketId(n.getNodeId());
