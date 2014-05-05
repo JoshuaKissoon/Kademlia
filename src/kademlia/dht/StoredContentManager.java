@@ -143,7 +143,7 @@ class StoredContentManager
     /**
      * @return A list of all storage entries
      */
-    public List<StorageEntryMetadata> getAllEntries()
+    public synchronized List<StorageEntryMetadata> getAllEntries()
     {
         List<StorageEntryMetadata> entriesRet = new ArrayList<>();
 

@@ -57,7 +57,7 @@ public class BucketRefreshOperation implements Operation
                     }
                     catch (IOException e)
                     {
-                        System.err.println("Bucket Refresh Operation Failed. Msg: " + e.getMessage());
+                        //System.err.println("Bucket Refresh Operation Failed. Msg: " + e.getMessage());
                     }
                 }
             }.start();

@@ -35,8 +35,8 @@ public class ContentLookupReceiver implements Receiver
         ContentLookupMessage msg = (ContentLookupMessage) incoming;
         this.localNode.getRoutingTable().insert(msg.getOrigin());
         
-        System.out.println("Received request for content with GetParameter" + msg.getParameters());
-        System.out.println("Have Content? " + this.dht.contains(msg.getParameters()));
+        //System.out.println("Received request for content with GetParameter" + msg.getParameters());
+        //System.out.println("Have Content? " + this.dht.contains(msg.getParameters()));
 
         /* Check if we can have this data */
         if (this.dht.contains(msg.getParameters()))

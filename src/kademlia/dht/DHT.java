@@ -100,7 +100,7 @@ public class DHT
                 /* We have this content, but not the latest version, lets delete it so the new version will be added below */
                 try
                 {
-                    System.out.println("Removing older content to update it");
+                    //System.out.println("Removing older content to update it");
                     this.remove(content.getContentMetadata());
                 }
                 catch (ContentNotFoundException ex)
@@ -116,7 +116,7 @@ public class DHT
          */
         try
         {
-            System.out.println("Adding new content.");
+            //System.out.println("Adding new content.");
             /* Keep track of this content in the entries manager */
             StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
 
@@ -292,7 +292,7 @@ public class DHT
     /**
      * @return A List of all StorageEntries for this node
      */
-    public List<StorageEntryMetadata> getStorageEntries()
+    public synchronized List<StorageEntryMetadata> getStorageEntries()
     {
         return entriesManager.getAllEntries();
     }

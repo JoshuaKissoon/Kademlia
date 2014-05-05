@@ -10,11 +10,11 @@ import java.io.File;
 public class DefaultConfiguration implements KadConfiguration
 {
 
-    private final static long RESTORE_INTERVAL = 10 * 1000;   // Default at 1 hour
+    private final static long RESTORE_INTERVAL = 5 * 1000;   // Default at 1 hour
     private final static long RESPONSE_TIMEOUT = 1500;
     private final static long OPERATION_TIMEOUT = 3000;
     private final static int CONCURRENCY = 10;
-    private final static int K = 10;
+    private final static int K = 4;
     private final static int RCSIZE = 3;
     private final static int STALE = 1;
     private final static String LOCAL_FOLDER = "kademlia";
