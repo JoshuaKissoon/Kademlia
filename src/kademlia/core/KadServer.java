@@ -195,6 +195,8 @@ public class KadServer
                     byte[] buffer = new byte[DATAGRAM_BUFFER_SIZE];
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
+                    
+                    //System.out.println("Received packet of size: " + packet.getLength());
 
                     /* We've received a packet, now handle it */
                     try (ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());

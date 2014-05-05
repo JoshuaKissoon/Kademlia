@@ -82,7 +82,7 @@ public class KadBucketImpl implements KadBucket
                 if (stalest != null)
                 {
                     this.contacts.remove(stalest);
-                    this.insert(c);
+                    this.contacts.put(c, c);
                 }
                 else
                 {
