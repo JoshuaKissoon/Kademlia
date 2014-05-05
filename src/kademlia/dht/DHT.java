@@ -80,7 +80,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public boolean store(StorageEntry content) throws IOException
+    public synchronized boolean store(StorageEntry content) throws IOException
     {
         /* Lets check if we have this content and it's the updated version */
         if (this.entriesManager.contains(content.getContentMetadata()))
@@ -142,7 +142,7 @@ public class DHT
 
     }
 
-    public boolean store(KadContent content) throws IOException
+    public synchronized boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
     }

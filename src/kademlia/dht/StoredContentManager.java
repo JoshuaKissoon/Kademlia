@@ -69,7 +69,7 @@ class StoredContentManager
      *
      * @return boolean
      */
-    public boolean contains(GetParameter param)
+    public synchronized boolean contains(GetParameter param)
     {
         if (this.entries.containsKey(param.getKey()))
         {
@@ -93,7 +93,7 @@ class StoredContentManager
     /**
      * Check if a content exist in the DHT
      */
-    public boolean contains(KadContent content)
+    public synchronized boolean contains(KadContent content)
     {
         return this.contains(new GetParameter(content));
     }
@@ -101,7 +101,7 @@ class StoredContentManager
     /**
      * Check if a StorageEntry exist on this DHT
      */
-    public boolean contains(StorageEntryMetadata entry)
+    public synchronized boolean contains(StorageEntryMetadata entry)
     {
         return this.contains(new GetParameter(entry));
     }
