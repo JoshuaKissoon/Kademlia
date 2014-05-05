@@ -121,7 +121,6 @@ public class KadServer
         if (recv != null)
         {
             /* Setup the receiver to handle message response */
-            //System.out.println(this.localNode + " Putting Receiver for comm: " + comm + " Receiver: " + recv);
             receivers.put(comm, recv);
             TimerTask task = new TimeoutTask(comm, recv);
             timer.schedule(task, this.config.responseTimeout());
@@ -209,8 +208,6 @@ public class KadServer
 
                         Message msg = messageFactory.createMessage(messCode, din);
                         din.close();
-
-                        //System.out.println(this.localNode.getNodeId() + " Message Received: [Comm: " + comm + "] " + msg);
 
                         /* Get a receiver for this message */
                         Receiver receiver;

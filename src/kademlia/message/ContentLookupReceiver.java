@@ -51,7 +51,6 @@ public class ContentLookupReceiver implements Receiver
              * Return a the K closest nodes to this content identifier
              * We create a NodeLookupReceiver and let this receiver handle this operation
              */
-            System.out.println("We do not have this content");
             NodeLookupMessage lkpMsg = new NodeLookupMessage(msg.getOrigin(), msg.getParameters().getKey());
             new NodeLookupReceiver(server, localNode, this.config).receive(lkpMsg, comm);
         }

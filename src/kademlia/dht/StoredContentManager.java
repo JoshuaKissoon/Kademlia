@@ -85,7 +85,6 @@ class StoredContentManager
         }
         else
         {
-            System.out.println(this);
         }
         return false;
     }

@@ -261,8 +261,6 @@ public class RoutingTable implements KadRoutingTable
     {
         int bucketId = this.getBucketId(n.getNodeId());
 
-        //System.out.println(this.localNode + " Removing unresponsive node " + n);
-
         /* Remove the contact from the bucket */
         this.buckets[bucketId].removeNode(n);
     }
