@@ -319,7 +319,7 @@ public class DHT
     }
 
     @Override
-    public String toString()
+    public synchronized String toString()
     {
         return this.entriesManager.toString();
     }
