@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import kademlia.Statistics;
 import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
@@ -195,6 +196,7 @@ public class KadServer
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
                     
+                    Statistics.dataReceived += packet.getLength();
                     //System.out.println("Received packet of size: " + packet.getLength());
 
                     /* We've received a packet, now handle it */
