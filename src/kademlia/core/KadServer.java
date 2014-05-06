@@ -222,7 +222,10 @@ public class KadServer
                             {
                                 receiver = this.receivers.remove(comm);
                                 TimerTask task = (TimerTask) tasks.remove(comm);
-                                task.cancel();
+                                if (task != null)
+                                {
+                                    task.cancel();
+                                }
                             }
                         }
                         else
@@ -297,6 +300,11 @@ public class KadServer
         @Override
         public void run()
         {
+            if (!KadServer.this.isRunning)
+            {
+                return;
+            }
+
             try
             {
                 unregister(comm);

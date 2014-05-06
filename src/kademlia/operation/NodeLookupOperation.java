@@ -39,7 +39,6 @@ public class NodeLookupOperation implements Operation, Receiver
 
     private final KadServer server;
     private final KademliaNode localNode;
-    private final NodeId lookupId;
     private final KadConfiguration config;
 
     private boolean error;
@@ -68,7 +67,6 @@ public class NodeLookupOperation implements Operation, Receiver
     {
         this.server = server;
         this.localNode = localNode;
-        this.lookupId = lookupId;
         this.config = config;
 
         this.lookupMessage = new NodeLookupMessage(localNode.getNode(), lookupId);
@@ -79,7 +77,6 @@ public class NodeLookupOperation implements Operation, Receiver
          */
         this.comparator = new KeyComparator(lookupId);
         this.nodes = new TreeMap(this.comparator);
-        //this.nodes = new HashMap<>();
     }
 
     /**
@@ -117,11 +114,17 @@ public class NodeLookupOperation implements Operation, Receiver
                     break;
                 }
             }
-            if (error)
-            {
-                /* If we still haven't received any responses by then, do a routing timeout */
-                throw new RoutingException("Lookup Timeout.");
-            }
+            
+            /**
+             * There is no need to throw an exception here! 
+             * If the operation times out means we didn't get replies from all nodes, 
+             * so lets just simply return the K-Closest nodes we knoe
+             */
+//            if (error)
+//            {
+//                /* If we still haven't received any responses by then, do a routing timeout */
+//                throw new RoutingException("Node Lookup Timeout.");
+//            }
 
             /* Now after we've finished, we would have an idea of offline nodes, lets update our routing table */
             this.localNode.getRoutingTable().setUnresponsiveContacts(this.getFailedNodes());
@@ -300,11 +303,11 @@ public class NodeLookupOperation implements Operation, Receiver
     public synchronized void timeout(int comm) throws IOException
     {
         /* Get the node associated with this communication */
-        Node n = this.messagesTransiting.get(new Integer(comm));
+        Node n = this.messagesTransiting.get(comm);
 
         if (n == null)
         {
-            throw new UnknownMessageException("Unknown comm: " + comm);
+            return;
         }
 
         /* Mark this node as failed and inform the routing table that it is unresponsive */

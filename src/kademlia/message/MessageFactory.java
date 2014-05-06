@@ -48,7 +48,7 @@ public class MessageFactory
             case StoreContentMessage.CODE:
                 return new StoreContentMessage(in);
             default:
-                System.out.println(this.localNode + " - No Message handler found for message. Code: " + code);
+                //System.out.println(this.localNode + " - No Message handler found for message. Code: " + code);
                 return new SimpleMessage(in);
 
         }
@@ -67,7 +67,7 @@ public class MessageFactory
             case StoreContentMessage.CODE:
                 return new StoreContentReceiver(server, this.localNode, this.dht);
             default:
-                System.out.println("No receiver found for message. Code: " + code);
+                //System.out.println("No receiver found for message. Code: " + code);
                 return new SimpleReceiver();
         }
     }
