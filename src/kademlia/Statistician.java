@@ -14,10 +14,20 @@ public class Statistician
     /* How much data was sent and received by the server over the network */
     private long totalDataSent, totalDataReceived;
 
+    /* Bootstrap timings */
+    private long bootstrapTime;
+
+    /* Content lookup operation timing */
+    private int numContentLookups;
+    private long totalContentLookupTime;
+
     
     {
         this.totalDataSent = 0;
         this.totalDataReceived = 0;
+        this.bootstrapTime = 0;
+        this.numContentLookups = 0;
+        this.totalContentLookupTime = 0;
     }
 
     /**
@@ -54,5 +64,51 @@ public class Statistician
     public long getTotalDataReceived()
     {
         return this.totalDataReceived;
+    }
+
+    /**
+     * Sets the bootstrap time for this Kademlia Node
+     *
+     * @param time The bootstrap time in milliseconds
+     */
+    public void setBootstrapTime(long time)
+    {
+        this.bootstrapTime = time;
+    }
+
+    public long getBootstrapTime()
+    {
+        return this.bootstrapTime;
+    }
+
+    /**
+     * Add the timing for a new content lookup operation that took place
+     *
+     * @param time The time the content lookup took in milliseconds
+     */
+    public void addContentLookupTime(long time)
+    {
+        this.numContentLookups++;
+        this.totalContentLookupTime += time;
+    }
+
+    public int numContentLookups()
+    {
+        return this.numContentLookups;
+    }
+
+    public long totalContentLookupTime()
+    {
+        return this.totalContentLookupTime;
+    }
+
+    /**
+     * Compute the average time a content lookup took
+     *
+     * @return The average time
+     */
+    public long averageContentLookupTime()
+    {
+        return this.totalContentLookupTime / this.numContentLookups;
     }
 }
