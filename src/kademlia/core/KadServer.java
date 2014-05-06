@@ -176,6 +176,9 @@ public class KadServer
             DatagramPacket pkt = new DatagramPacket(data, 0, data.length);
             pkt.setSocketAddress(to.getSocketAddress());
             socket.send(pkt);
+
+            /* Lets inform the statistician that we've sent some data */
+            this.statistician.sentData(data.length);
         }
     }
 
@@ -195,8 +198,8 @@ public class KadServer
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
 
-                    //Statistics.dataReceived += packet.getLength();
-                    //System.out.println("Received packet of size: " + packet.getLength());
+                    /* Lets inform the statistician that we've received some data */
+                    this.statistician.receivedData(packet.getLength());
 
                     /* We've received a packet, now handle it */
                     try (ByteArrayInputStream bin = new ByteArrayInputStream(packet.getData(), packet.getOffset(), packet.getLength());
