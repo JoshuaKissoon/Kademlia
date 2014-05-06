@@ -67,6 +67,14 @@ public class KademliaNode
     /* Factories */
     private final transient MessageFactory messageFactory;
 
+    /* Statistics */
+    private final Statistician statistician;
+
+    
+    {
+        statistician = new Statistician();
+    }
+
     /**
      * Creates a Kademlia DistributedMap using the specified name as filename base.
      * If the id cannot be read from disk the specified defaultId is used.
@@ -93,7 +101,7 @@ public class KademliaNode
         this.config = config;
         this.routingTable = routingTable;
         this.messageFactory = new MessageFactory(this, this.dht, this.config);
-        this.server = new KadServer(udpPort, this.messageFactory, this.localNode, this.config);
+        this.server = new KadServer(udpPort, this.messageFactory, this.localNode, this.config, this.statistician);
         this.startRefreshOperation();
         this.isRunning = true;
     }
@@ -122,7 +130,7 @@ public class KademliaNode
         };
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
     }
-    
+
     public final void stopRefreshOperation()
     {
         /* Close off the timer tasks */

@@ -8,7 +8,7 @@ package kademlia;
  * @author Joshua Kissoon
  * @since 20140505
  */
-public class Statistics
+public class Statistician
 {
 
     /* How much data was sent and received by the server over the network */

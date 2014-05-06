@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+import kademlia.Statistician;
 import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
@@ -46,6 +47,8 @@ public class KadServer
     /* Factories */
     private final MessageFactory messageFactory;
 
+    private final Statistician statistician;
+
     
     {
         isRunning = true;
@@ -57,22 +60,21 @@ public class KadServer
     /**
      * Initialize our KadServer
      *
-     * @param udpPort   The port to listen on
-     * @param mFactory  Factory used to create messages
-     * @param localNode Local node on which this server runs on
+     * @param udpPort      The port to listen on
+     * @param mFactory     Factory used to create messages
+     * @param localNode    Local node on which this server runs on
      * @param config
+     * @param statistician A statistician to manage the server statistics
      *
      * @throws java.net.SocketException
      */
-    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config) throws SocketException
+    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config, Statistician statistician) throws SocketException
     {
         this.config = config;
-
         this.socket = new DatagramSocket(udpPort);
-
         this.localNode = localNode;
-
         this.messageFactory = mFactory;
+        this.statistician = statistician;
 
         /* Start listening for incoming requests in a new thread */
         this.startListener();
@@ -192,7 +194,7 @@ public class KadServer
                     byte[] buffer = new byte[DATAGRAM_BUFFER_SIZE];
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
-                    
+
                     //Statistics.dataReceived += packet.getLength();
                     //System.out.println("Received packet of size: " + packet.getLength());
 
