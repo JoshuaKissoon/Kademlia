@@ -437,9 +437,20 @@ public class KademliaNode
         return nodeStateFolder.toString();
     }
 
+    /**
+     * @return The routing table for this node.
+     */
     public RoutingTable getRoutingTable()
     {
         return this.routingTable;
+    }
+
+    /**
+     * @return The statistician that manages all statistics
+     */
+    public Statistician getStatistician()
+    {
+        return this.statistician;
     }
 
     /**
