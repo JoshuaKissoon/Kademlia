@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.Statistics;
 import kademlia.exceptions.KadServerDownException;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
@@ -36,7 +35,6 @@ public class KadServer
     private final transient KadConfiguration config;
 
     /* Server Objects */
-    private final int udpPort;
     private final DatagramSocket socket;
     private transient boolean isRunning;
     private final Map<Integer, Receiver> receivers;
@@ -68,7 +66,6 @@ public class KadServer
      */
     public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config) throws SocketException
     {
-        this.udpPort = udpPort;
         this.config = config;
 
         this.socket = new DatagramSocket(udpPort);
@@ -196,7 +193,7 @@ public class KadServer
                     DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                     socket.receive(packet);
                     
-                    Statistics.dataReceived += packet.getLength();
+                    //Statistics.dataReceived += packet.getLength();
                     //System.out.println("Received packet of size: " + packet.getLength());
 
                     /* We've received a packet, now handle it */
