@@ -69,7 +69,7 @@ public class Statistician
     /**
      * Sets the bootstrap time for this Kademlia Node
      *
-     * @param time The bootstrap time in milliseconds
+     * @param time The bootstrap time in nanoseconds
      */
     public void setBootstrapTime(long time)
     {
@@ -84,7 +84,7 @@ public class Statistician
     /**
      * Add the timing for a new content lookup operation that took place
      *
-     * @param time The time the content lookup took in milliseconds
+     * @param time The time the content lookup took in nanoseconds
      */
     public void addContentLookupTime(long time)
     {
