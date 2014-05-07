@@ -161,7 +161,7 @@ public class KadServer
     /**
      * Internal sendMessage method called by the public sendMessage method after a communicationId is generated
      */
-    private synchronized void sendMessage(Node to, Message msg, int comm) throws IOException
+    private void sendMessage(Node to, Message msg, int comm) throws IOException
     {
         /* Use a try-with resource to auto-close streams after usage */
         try (ByteArrayOutputStream bout = new ByteArrayOutputStream(); DataOutputStream dout = new DataOutputStream(bout);)
@@ -192,7 +192,7 @@ public class KadServer
     /**
      * Listen for incoming messages in a separate thread
      */
-    private synchronized void listen()
+    private void listen()
     {
         try
         {

@@ -126,4 +126,37 @@ public class Statistician
         DecimalFormat df = new DecimalFormat("#.00");
         return new Double(df.format(avg));
     }
+    
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("Statistician: [");
+        
+        sb.append("Bootstrap Time: ");
+        sb.append(this.getBootstrapTime());
+        sb.append("; ");
+        
+        sb.append("Data Sent: ");
+        sb.append(this.getTotalDataSent());
+        sb.append("; ");
+        
+        sb.append("Data Received: ");
+        sb.append(this.getTotalDataReceived());
+        sb.append("; ");
+        
+        sb.append("Num Content Lookups: ");
+        sb.append(this.numContentLookups());
+        sb.append("; ");
+        
+        sb.append("Avg Content Lookup Time: ");
+        sb.append(this.averageContentLookupTime());
+        sb.append("; ");
+        
+        sb.append("Avg Content Lookup Route Lth: ");
+        sb.append(this.averageContentLookupRouteLength());
+        sb.append("; ");
+        
+        sb.append("]");
+        
+        return sb.toString();
+    }
 }
