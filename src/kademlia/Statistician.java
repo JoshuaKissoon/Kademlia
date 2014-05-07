@@ -115,4 +115,9 @@ public class Statistician
     {
         return this.totalContentLookupTime / this.numContentLookups;
     }
+
+    public double averageContentLookupRouteLength()
+    {
+        return (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
+    }
 }
