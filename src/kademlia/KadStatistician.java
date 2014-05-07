@@ -43,7 +43,7 @@ public interface KadStatistician
     public void setBootstrapTime(long time);
 
     /**
-     * @return How long the system took to bootstrap
+     * @return How long the system took to bootstrap in milliseconds
      */
     public long getBootstrapTime();
 

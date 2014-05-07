@@ -70,7 +70,7 @@ public class Statistician implements KadStatistician
     @Override
     public long getBootstrapTime()
     {
-        return this.bootstrapTime;
+        return this.bootstrapTime / 1000000L;
     }
 
     @Override
