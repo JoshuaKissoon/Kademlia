@@ -18,6 +18,8 @@ public class DefaultConfiguration implements KadConfiguration
     private final static int RCSIZE = 3;
     private final static int STALE = 1;
     private final static String LOCAL_FOLDER = "kademlia";
+    
+    private final static boolean IS_TESTING = true;
 
     /**
      * Default constructor to support Gson Serialization
@@ -89,5 +91,11 @@ public class DefaultConfiguration implements KadConfiguration
 
         /* Return the path */
         return ownerFolder.toString();
+    }
+
+    @Override
+    public boolean isTesting()
+    {
+        return IS_TESTING;
     }
 }

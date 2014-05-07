@@ -15,6 +15,7 @@ public class Statistician
 
     /* How much data was sent and received by the server over the network */
     private long totalDataSent, totalDataReceived;
+    private long numDataSent, numDataReceived;
 
     /* Bootstrap timings */
     private long bootstrapTime;
@@ -42,6 +43,7 @@ public class Statistician
     public void sentData(long size)
     {
         this.totalDataSent += size;
+        this.numDataSent++;
     }
 
     /**
@@ -60,6 +62,7 @@ public class Statistician
     public void receivedData(long size)
     {
         this.totalDataReceived += size;
+        this.numDataReceived++;
     }
 
     /**
@@ -136,12 +139,18 @@ public class Statistician
         sb.append("; ");
         
         sb.append("Data Sent: ");
+        sb.append("(");
+        sb.append(this.numDataSent);
+        sb.append(") ");
         sb.append(this.getTotalDataSent());
-        sb.append("; ");
+        sb.append(" bytes; ");
         
         sb.append("Data Received: ");
+        sb.append("(");
+        sb.append(this.numDataReceived);
+        sb.append(") ");
         sb.append(this.getTotalDataReceived());
-        sb.append("; ");
+        sb.append(" bytes; ");
         
         sb.append("Num Content Lookups: ");
         sb.append(this.numContentLookups());

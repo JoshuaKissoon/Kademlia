@@ -324,16 +324,14 @@ public class KademliaNode
      */
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
-        long startTime = System.nanoTime();
         if (this.dht.contains(param))
         {
             /* If the content exist in our own DHT, then return it. */
-            long endTime = System.nanoTime();
-            this.statistician.addContentLookup(endTime - startTime, 0);
             return this.dht.get(param);
         }
 
         /* Seems like it doesn't exist in our DHT, get it from other Nodes */
+        long startTime = System.nanoTime();
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();

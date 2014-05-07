@@ -8,7 +8,7 @@ package kademlia.core;
  */
 public interface KadConfiguration
 {
-    
+
     /**
      * @return Interval in milliseconds between execution of RestoreOperations.
      */
@@ -48,11 +48,16 @@ public interface KadConfiguration
     public int stale();
 
     /**
-     * Creates the folder in which this node data is to be stored
+     * Creates the folder in which this node data is to be stored.
      *
      * @param ownerId
      *
      * @return The folder path
      */
     public String getNodeDataFolder(String ownerId);
+
+    /**
+     * @return Whether we're in a testing or production system.
+     */
+    public boolean isTesting();
 }
