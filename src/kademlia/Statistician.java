@@ -1,5 +1,7 @@
 package kademlia;
 
+import java.text.DecimalFormat;
+
 /**
  * Class that keeps statistics for this Kademlia instance.
  *
@@ -111,13 +113,17 @@ public class Statistician
      *
      * @return The average time
      */
-    public long averageContentLookupTime()
+    public double averageContentLookupTime()
     {
-        return this.totalContentLookupTime / this.numContentLookups;
+        double avg = (double) this.totalContentLookupTime / (double) this.numContentLookups;
+        DecimalFormat df = new DecimalFormat("#.00");
+        return new Double(df.format(avg));
     }
 
     public double averageContentLookupRouteLength()
     {
-        return (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
+        double avg = (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
+        DecimalFormat df = new DecimalFormat("#.00");
+        return new Double(df.format(avg));
     }
 }
