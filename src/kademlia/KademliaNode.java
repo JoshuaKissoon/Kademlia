@@ -329,7 +329,7 @@ public class KademliaNode
         {
             /* If the content exist in our own DHT, then return it. */
             long endTime = System.nanoTime();
-            this.statistician.addContentLookupTime(endTime - startTime);
+            this.statistician.addContentLookup(endTime - startTime, 0);
             return this.dht.get(param);
         }
 
@@ -337,7 +337,7 @@ public class KademliaNode
         ContentLookupOperation clo = new ContentLookupOperation(server, this, param, this.config);
         clo.execute();
         long endTime = System.nanoTime();
-        this.statistician.addContentLookupTime(endTime - startTime);
+        this.statistician.addContentLookup(endTime - startTime, clo.routeLength());
         return clo.getContentFound();
     }
 

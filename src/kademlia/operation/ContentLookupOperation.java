@@ -56,10 +56,14 @@ public class ContentLookupOperation implements Operation, Receiver
     /* Used to sort nodes */
     private final Comparator comparator;
 
+    /* Statistical information */
+    private int routeLength;    // Length of the route to find this content
+
     
     {
         messagesTransiting = new HashMap<>();
         isContentFound = false;
+        routeLength = 1;
     }
 
     /**
@@ -250,6 +254,9 @@ public class ContentLookupOperation implements Operation, Receiver
         }
         else
         {
+            /* Our hop length is increased */
+            this.routeLength++;
+
             /* The reply received is a NodeReplyMessage with nodes closest to the content needed */
             NodeReplyMessage msg = (NodeReplyMessage) incoming;
 
@@ -310,5 +317,13 @@ public class ContentLookupOperation implements Operation, Receiver
         {
             throw new ContentNotFoundException("No Value was found for the given key.");
         }
+    }
+
+    /**
+     * @return How many hops it took in order to get to the content.
+     */
+    public int routeLength()
+    {
+        return this.routeLength;
     }
 }

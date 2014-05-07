@@ -17,9 +17,10 @@ public class Statistician
     /* Bootstrap timings */
     private long bootstrapTime;
 
-    /* Content lookup operation timing */
+    /* Content lookup operation timing & route length */
     private int numContentLookups;
     private long totalContentLookupTime;
+    private long totalRouteLength;
 
     
     {
@@ -28,6 +29,7 @@ public class Statistician
         this.bootstrapTime = 0;
         this.numContentLookups = 0;
         this.totalContentLookupTime = 0;
+        this.totalRouteLength = 0;
     }
 
     /**
@@ -84,12 +86,14 @@ public class Statistician
     /**
      * Add the timing for a new content lookup operation that took place
      *
-     * @param time The time the content lookup took in nanoseconds
+     * @param time        The time the content lookup took in nanoseconds
+     * @param routeLength The length of the route it took to get the content
      */
-    public void addContentLookupTime(long time)
+    public void addContentLookup(long time, int routeLength)
     {
         this.numContentLookups++;
         this.totalContentLookupTime += time;
+        this.totalRouteLength += routeLength;
     }
 
     public int numContentLookups()
