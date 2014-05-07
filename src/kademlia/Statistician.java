@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
  * @author Joshua Kissoon
  * @since 20140505
  */
-public class Statistician
+public class Statistician implements KadStatistician
 {
 
     /* How much data was sent and received by the server over the network */
@@ -35,65 +35,45 @@ public class Statistician
         this.totalRouteLength = 0;
     }
 
-    /**
-     * Used to indicate some data is sent
-     *
-     * @param size The size of the data sent
-     */
+    @Override
     public void sentData(long size)
     {
         this.totalDataSent += size;
         this.numDataSent++;
     }
 
-    /**
-     * @return The total data sent
-     */
+    @Override
     public long getTotalDataSent()
     {
         return this.totalDataSent;
     }
 
-    /**
-     * Used to indicate some data was received
-     *
-     * @param size The size of the data received
-     */
+    @Override
     public void receivedData(long size)
     {
         this.totalDataReceived += size;
         this.numDataReceived++;
     }
 
-    /**
-     * @return The total data received
-     */
+    @Override
     public long getTotalDataReceived()
     {
         return this.totalDataReceived;
     }
 
-    /**
-     * Sets the bootstrap time for this Kademlia Node
-     *
-     * @param time The bootstrap time in nanoseconds
-     */
+    @Override
     public void setBootstrapTime(long time)
     {
         this.bootstrapTime = time;
     }
 
+    @Override
     public long getBootstrapTime()
     {
         return this.bootstrapTime;
     }
 
-    /**
-     * Add the timing for a new content lookup operation that took place
-     *
-     * @param time        The time the content lookup took in nanoseconds
-     * @param routeLength The length of the route it took to get the content
-     */
+    @Override
     public void addContentLookup(long time, int routeLength)
     {
         this.numContentLookups++;
@@ -101,21 +81,19 @@ public class Statistician
         this.totalRouteLength += routeLength;
     }
 
+    @Override
     public int numContentLookups()
     {
         return this.numContentLookups;
     }
 
+    @Override
     public long totalContentLookupTime()
     {
         return this.totalContentLookupTime;
     }
 
-    /**
-     * Compute the average time a content lookup took
-     *
-     * @return The average time in milliseconds
-     */
+    @Override
     public double averageContentLookupTime()
     {
         double avg = (double) ((double) this.totalContentLookupTime / (double) this.numContentLookups) / 1000000D;
@@ -123,49 +101,51 @@ public class Statistician
         return new Double(df.format(avg));
     }
 
+    @Override
     public double averageContentLookupRouteLength()
     {
         double avg = (double) ((double) this.totalRouteLength / (double) this.numContentLookups);
         DecimalFormat df = new DecimalFormat("#.00");
         return new Double(df.format(avg));
     }
-    
+
+    @Override
     public String toString()
     {
         StringBuilder sb = new StringBuilder("Statistician: [");
-        
+
         sb.append("Bootstrap Time: ");
         sb.append(this.getBootstrapTime());
         sb.append("; ");
-        
+
         sb.append("Data Sent: ");
         sb.append("(");
         sb.append(this.numDataSent);
         sb.append(") ");
         sb.append(this.getTotalDataSent());
         sb.append(" bytes; ");
-        
+
         sb.append("Data Received: ");
         sb.append("(");
         sb.append(this.numDataReceived);
         sb.append(") ");
         sb.append(this.getTotalDataReceived());
         sb.append(" bytes; ");
-        
+
         sb.append("Num Content Lookups: ");
         sb.append(this.numContentLookups());
         sb.append("; ");
-        
+
         sb.append("Avg Content Lookup Time: ");
         sb.append(this.averageContentLookupTime());
         sb.append("; ");
-        
+
         sb.append("Avg Content Lookup Route Lth: ");
         sb.append(this.averageContentLookupRouteLength());
         sb.append("; ");
-        
+
         sb.append("]");
-        
+
         return sb.toString();
     }
 }

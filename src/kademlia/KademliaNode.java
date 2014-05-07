@@ -68,7 +68,7 @@ public class KademliaNode
     private final transient MessageFactory messageFactory;
 
     /* Statistics */
-    private final Statistician statistician;
+    private final KadStatistician statistician;
 
     
     {
@@ -454,7 +454,7 @@ public class KademliaNode
     /**
      * @return The statistician that manages all statistics
      */
-    public Statistician getStatistician()
+    public KadStatistician getStatistician()
     {
         return this.statistician;
     }
