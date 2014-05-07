@@ -111,7 +111,7 @@ public class KadServer
     {
         if (!isRunning)
         {
-            throw new KadServerDownException("Kad Server is not running on node " + this.localNode);
+            throw new KadServerDownException(this.localNode + " - Kad Server is not running.");
         }
 
         /* Generate a random communication ID */
@@ -120,11 +120,18 @@ public class KadServer
         /* If we have a receiver */
         if (recv != null)
         {
-            /* Setup the receiver to handle message response */
-            receivers.put(comm, recv);
-            TimerTask task = new TimeoutTask(comm, recv);
-            timer.schedule(task, this.config.responseTimeout());
-            tasks.put(comm, task);
+            try
+            {
+                /* Setup the receiver to handle message response */
+                receivers.put(comm, recv);
+                TimerTask task = new TimeoutTask(comm, recv);
+                timer.schedule(task, this.config.responseTimeout());
+                tasks.put(comm, task);
+            }
+            catch (IllegalStateException ex)
+            {
+                /* The timer is already cancelled so we cannot do anything here really */
+            }
         }
 
         /* Send the message */
@@ -154,7 +161,7 @@ public class KadServer
     /**
      * Internal sendMessage method called by the public sendMessage method after a communicationId is generated
      */
-    private void sendMessage(Node to, Message msg, int comm) throws IOException
+    private synchronized void sendMessage(Node to, Message msg, int comm) throws IOException
     {
         /* Use a try-with resource to auto-close streams after usage */
         try (ByteArrayOutputStream bout = new ByteArrayOutputStream(); DataOutputStream dout = new DataOutputStream(bout);)
@@ -185,7 +192,7 @@ public class KadServer
     /**
      * Listen for incoming messages in a separate thread
      */
-    private void listen()
+    private synchronized void listen()
     {
         try
         {
@@ -272,7 +279,7 @@ public class KadServer
     /**
      * Stops listening and shuts down the server
      */
-    public void shutdown()
+    public synchronized void shutdown()
     {
         this.isRunning = false;
         this.socket.close();

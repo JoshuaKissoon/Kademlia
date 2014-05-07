@@ -111,11 +111,11 @@ public class Statistician
     /**
      * Compute the average time a content lookup took
      *
-     * @return The average time
+     * @return The average time in milliseconds
      */
     public double averageContentLookupTime()
     {
-        double avg = (double) this.totalContentLookupTime / (double) this.numContentLookups;
+        double avg = (double) ((double) this.totalContentLookupTime / (double) this.numContentLookups) / 1000000D;
         DecimalFormat df = new DecimalFormat("#.00");
         return new Double(df.format(avg));
     }
