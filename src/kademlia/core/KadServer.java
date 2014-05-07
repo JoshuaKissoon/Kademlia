@@ -214,6 +214,15 @@ public class KadServer
                          * Simulating network latency
                          * We pause for 1 millisecond/100 bytes
                          */
+                        int pause = packet.getLength() / 100;
+                        try
+                        {
+                            Thread.sleep(pause);
+                        }
+                        catch (InterruptedException ex)
+                        {
+                            
+                        }
                     }
 
                     /* We've received a packet, now handle it */

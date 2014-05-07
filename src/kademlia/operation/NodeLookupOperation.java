@@ -12,7 +12,6 @@ import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
 import kademlia.exceptions.RoutingException;
-import kademlia.exceptions.UnknownMessageException;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeReplyMessage;
@@ -101,7 +100,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 50;     // We re-check every 300 milliseconds
+            int timeInterval = 10;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish())

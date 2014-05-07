@@ -112,7 +112,7 @@ public class ContentLookupOperation implements Operation, Receiver
              * keey trying until config.operationTimeout() time has expired
              */
             int totalTimeWaited = 0;
-            int timeInterval = 100;     // We re-check every 300 milliseconds
+            int timeInterval = 10;     // We re-check every 10 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish() && !isContentFound)
