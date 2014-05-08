@@ -19,7 +19,7 @@ public interface KadStatistician
     public void sentData(long size);
 
     /**
-     * @return The total data sent
+     * @return The total data sent in KiloBytes
      */
     public long getTotalDataSent();
 
@@ -31,7 +31,7 @@ public interface KadStatistician
     public void receivedData(long size);
 
     /**
-     * @return The total data received
+     * @return The total data received in KiloBytes
      */
     public long getTotalDataReceived();
 
