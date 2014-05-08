@@ -73,7 +73,7 @@ public class ContentRefreshOperation implements Operation
             for (Node n : closestNodes)
             {
                 /*We don't need to again store the content locally, it's already here*/
-                if (!n.equals(this.localNode))
+                if (!n.equals(this.localNode.getNode()))
                 {
                     /* Send a contentstore operation to the K-Closest nodes */
                     this.server.sendMessage(n, msg, null);
@@ -83,7 +83,7 @@ public class ContentRefreshOperation implements Operation
             /* Delete any content on this node that this node is not one of the K-Closest nodes to */
             try
             {
-                if (!closestNodes.contains(this.localNode))
+                if (!closestNodes.contains(this.localNode.getNode()))
                 {
                     this.dht.remove(e);
                 }

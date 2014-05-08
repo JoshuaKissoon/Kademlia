@@ -3,7 +3,6 @@ package kademlia.message;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import kademlia.dht.KadContent;
 import kademlia.dht.StorageEntry;
 import kademlia.node.Node;
 import kademlia.util.serializer.JsonSerializer;

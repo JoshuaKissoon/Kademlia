@@ -53,7 +53,7 @@ public class BucketRefreshOperation implements Operation
                 {
                     try
                     {
-                        new NodeLookupOperation(server, localNode, localNode.getNode().getNodeId(), BucketRefreshOperation.this.config).execute();
+                        new NodeLookupOperation(server, localNode, current, BucketRefreshOperation.this.config).execute();
                     }
                     catch (IOException e)
                     {
