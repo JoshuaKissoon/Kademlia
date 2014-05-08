@@ -267,7 +267,7 @@ public class KadServer
                 }
                 catch (IOException e)
                 {
-                    this.isRunning = false;
+                    //this.isRunning = false;
                     System.err.println("Server ran into a problem in listener method. Message: " + e.getMessage());
                 }
             }

@@ -1,6 +1,7 @@
 package kademlia.message;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
@@ -34,16 +35,20 @@ public class ContentLookupReceiver implements Receiver
     {
         ContentLookupMessage msg = (ContentLookupMessage) incoming;
         this.localNode.getRoutingTable().insert(msg.getOrigin());
-        
-        //System.out.println("Received request for content with GetParameter" + msg.getParameters());
-        //System.out.println("Have Content? " + this.dht.contains(msg.getParameters()));
 
         /* Check if we can have this data */
         if (this.dht.contains(msg.getParameters()))
         {
-            /* Return a ContentMessage with the required data */
-            ContentMessage cMsg = new ContentMessage(localNode.getNode(), this.dht.get(msg.getParameters()));
-            server.reply(msg.getOrigin(), cMsg, comm);
+            try
+            {
+                /* Return a ContentMessage with the required data */
+                ContentMessage cMsg = new ContentMessage(localNode.getNode(), this.dht.get(msg.getParameters()));
+                server.reply(msg.getOrigin(), cMsg, comm);
+            }
+            catch (NoSuchElementException ex)
+            {
+                /* @todo Not sure why this exception is thrown here, checkup the system when tests are writtem*/
+            }
         }
         else
         {

@@ -10,7 +10,7 @@ import java.io.File;
 public class DefaultConfiguration implements KadConfiguration
 {
 
-    private final static long RESTORE_INTERVAL = 60 * 1000;   // Default at 1 hour
+    private final static long RESTORE_INTERVAL = 30 * 1000; // in milliseconds
     private final static long RESPONSE_TIMEOUT = 1500;
     private final static long OPERATION_TIMEOUT = 3000;
     private final static int CONCURRENCY = 10;
