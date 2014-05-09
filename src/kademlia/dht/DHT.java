@@ -80,7 +80,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public synchronized boolean store(StorageEntry content) throws IOException
+    public boolean store(StorageEntry content) throws IOException
     {
         /* Lets check if we have this content and it's the updated version */
         if (this.contentManager.contains(content.getContentMetadata()))
@@ -139,10 +139,9 @@ public class DHT
              */
             return false;
         }
-
     }
 
-    public synchronized boolean store(KadContent content) throws IOException
+    public boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
     }
@@ -155,7 +154,7 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private synchronized StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -169,7 +168,7 @@ public class DHT
      *
      * @return boolean Whether any content exist that satisfy the criteria
      */
-    public synchronized boolean contains(GetParameter param)
+    public boolean contains(GetParameter param)
     {
         return this.contentManager.contains(param);
     }
@@ -183,7 +182,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public synchronized StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -212,7 +211,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public synchronized StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
@@ -241,12 +240,12 @@ public class DHT
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public synchronized void remove(KadContent content) throws ContentNotFoundException
+    public void remove(KadContent content) throws ContentNotFoundException
     {
         this.remove(new StorageEntryMetadata(content));
     }
 
-    public synchronized void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
@@ -270,7 +269,7 @@ public class DHT
      *
      * @return String The name of the folder
      */
-    private synchronized String getContentStorageFolderName(KademliaId key)
+    private String getContentStorageFolderName(KademliaId key)
     {
         /**
          * Each content is stored in a folder named after the first 10 characters of the NodeId
@@ -292,7 +291,7 @@ public class DHT
     /**
      * @return A List of all StorageEntries for this node
      */
-    public synchronized List<StorageEntryMetadata> getStorageEntries()
+    public List<StorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
     }
@@ -303,7 +302,7 @@ public class DHT
      *
      * @param ientries The entries to add
      */
-    public synchronized void putStorageEntries(List<StorageEntryMetadata> ientries)
+    public void putStorageEntries(List<StorageEntryMetadata> ientries)
     {
         for (StorageEntryMetadata e : ientries)
         {
