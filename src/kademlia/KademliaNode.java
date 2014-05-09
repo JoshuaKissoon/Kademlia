@@ -318,7 +318,7 @@ public class KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    public synchronized StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
         {
@@ -340,7 +340,7 @@ public class KademliaNode
      *
      * @throws java.io.IOException
      */
-    public void refresh() throws IOException
+    public synchronized void refresh() throws IOException
     {
         new KadRefreshOperation(this.server, this, this.dht, this.config).execute();
     }
@@ -368,7 +368,7 @@ public class KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
-    public void shutdown(final boolean saveState) throws IOException
+    public synchronized void shutdown(final boolean saveState) throws IOException
     {
         /* Shut down the server */
         this.server.shutdown();
@@ -388,7 +388,7 @@ public class KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
-    private void saveKadState() throws IOException
+    private synchronized void saveKadState() throws IOException
     {
         DataOutputStream dout;
 
@@ -459,7 +459,7 @@ public class KademliaNode
      * @return The string representation of this Kad instance
      */
     @Override
-    public String toString()
+    public synchronized String toString()
     {
         StringBuilder sb = new StringBuilder("\n\nPrinting Kad State for instance with owner: ");
         sb.append(this.ownerId);

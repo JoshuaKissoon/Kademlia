@@ -44,7 +44,7 @@ public class KadBucketImpl implements KadBucket
     }
 
     @Override
-    public void insert(Contact c)
+    public synchronized void insert(Contact c)
     {
         if (this.contacts.contains(c))
         {
@@ -99,25 +99,25 @@ public class KadBucketImpl implements KadBucket
     }
 
     @Override
-    public void insert(Node n)
+    public synchronized void insert(Node n)
     {
         this.insert(new Contact(n));
     }
 
     @Override
-    public boolean containsContact(Contact c)
+    public synchronized boolean containsContact(Contact c)
     {
         return this.contacts.contains(c);
     }
 
     @Override
-    public boolean containsNode(Node n)
+    public synchronized boolean containsNode(Node n)
     {
         return this.containsContact(new Contact(n));
     }
 
     @Override
-    public boolean removeContact(Contact c)
+    public synchronized boolean removeContact(Contact c)
     {
         /* If the contact does not exist, then we failed to remove it */
         if (!this.contacts.contains(c))
@@ -142,7 +142,7 @@ public class KadBucketImpl implements KadBucket
         return true;
     }
 
-    public Contact getFromContacts(Node n)
+    public synchronized Contact getFromContacts(Node n)
     {
         for (Contact c : this.contacts)
         {
@@ -156,7 +156,7 @@ public class KadBucketImpl implements KadBucket
         throw new NoSuchElementException("The contact does not exist in the contacts list.");
     }
 
-    public Contact removeFromContacts(Node n)
+    public synchronized Contact removeFromContacts(Node n)
     {
         for (Contact c : this.contacts)
         {
@@ -172,19 +172,19 @@ public class KadBucketImpl implements KadBucket
     }
 
     @Override
-    public boolean removeNode(Node n)
+    public synchronized boolean removeNode(Node n)
     {
         return this.removeContact(new Contact(n));
     }
 
     @Override
-    public int numContacts()
+    public synchronized int numContacts()
     {
         return this.contacts.size();
     }
 
     @Override
-    public int getDepth()
+    public synchronized int getDepth()
     {
         return this.depth;
     }
@@ -198,7 +198,7 @@ public class KadBucketImpl implements KadBucket
     /**
      * When the bucket is filled, we keep extra contacts in the replacement cache.
      */
-    private void insertIntoReplacementCache(Contact c)
+    private synchronized void insertIntoReplacementCache(Contact c)
     {
         /* Just return if this contact is already in our replacement cache */
         if (this.replacementCache.contains(c))
@@ -223,7 +223,7 @@ public class KadBucketImpl implements KadBucket
         }
     }
 
-    public Contact removeFromReplacementCache(Node n)
+    public synchronized Contact removeFromReplacementCache(Node n)
     {
         for (Contact c : this.replacementCache)
         {
@@ -239,7 +239,7 @@ public class KadBucketImpl implements KadBucket
     }
 
     @Override
-    public String toString()
+    public synchronized String toString()
     {
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);

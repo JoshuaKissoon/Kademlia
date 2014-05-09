@@ -25,7 +25,7 @@ import kademlia.util.serializer.KadSerializer;
 public class DHT
 {
 
-    private transient StoredContentManager entriesManager;
+    private transient StoredContentManager contentManager;
     private transient KadSerializer<StorageEntry> serializer = null;
     private transient KadConfiguration config;
 
@@ -43,7 +43,7 @@ public class DHT
      */
     public final void initialize()
     {
-        entriesManager = new StoredContentManager();
+        contentManager = new StoredContentManager();
     }
 
     /**
@@ -83,9 +83,9 @@ public class DHT
     public synchronized boolean store(StorageEntry content) throws IOException
     {
         /* Lets check if we have this content and it's the updated version */
-        if (this.entriesManager.contains(content.getContentMetadata()))
+        if (this.contentManager.contains(content.getContentMetadata()))
         {
-            StorageEntryMetadata current = this.entriesManager.get(content.getContentMetadata());
+            StorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
 
             /* update the last republished time */
             current.updateLastRepublished();
@@ -118,7 +118,7 @@ public class DHT
         {
             //System.out.println("Adding new content.");
             /* Keep track of this content in the entries manager */
-            StorageEntryMetadata sEntry = this.entriesManager.put(content.getContentMetadata());
+            StorageEntryMetadata sEntry = this.contentManager.put(content.getContentMetadata());
 
             /* Now we store the content locally in a file */
             String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
@@ -155,7 +155,7 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private synchronized StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -169,9 +169,9 @@ public class DHT
      *
      * @return boolean Whether any content exist that satisfy the criteria
      */
-    public boolean contains(GetParameter param)
+    public synchronized boolean contains(GetParameter param)
     {
-        return this.entriesManager.contains(param);
+        return this.contentManager.contains(param);
     }
 
     /**
@@ -183,7 +183,7 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public synchronized StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -212,12 +212,12 @@ public class DHT
      *
      * @throws java.io.IOException
      */
-    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
+    public synchronized StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
         {
-            StorageEntryMetadata e = this.entriesManager.get(param);
+            StorageEntryMetadata e = this.contentManager.get(param);
             return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
@@ -241,17 +241,17 @@ public class DHT
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public void remove(KadContent content) throws ContentNotFoundException
+    public synchronized void remove(KadContent content) throws ContentNotFoundException
     {
         this.remove(new StorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public synchronized void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
 
-        entriesManager.remove(entry);
+        contentManager.remove(entry);
 
         if (file.exists())
         {
@@ -270,7 +270,7 @@ public class DHT
      *
      * @return String The name of the folder
      */
-    private String getContentStorageFolderName(KademliaId key)
+    private synchronized String getContentStorageFolderName(KademliaId key)
     {
         /**
          * Each content is stored in a folder named after the first 10 characters of the NodeId
@@ -294,7 +294,7 @@ public class DHT
      */
     public synchronized List<StorageEntryMetadata> getStorageEntries()
     {
-        return entriesManager.getAllEntries();
+        return contentManager.getAllEntries();
     }
 
     /**
@@ -303,13 +303,13 @@ public class DHT
      *
      * @param ientries The entries to add
      */
-    public void putStorageEntries(List<StorageEntryMetadata> ientries)
+    public synchronized void putStorageEntries(List<StorageEntryMetadata> ientries)
     {
         for (StorageEntryMetadata e : ientries)
         {
             try
             {
-                this.entriesManager.put(e);
+                this.contentManager.put(e);
             }
             catch (ContentExistException ex)
             {
@@ -321,6 +321,6 @@ public class DHT
     @Override
     public synchronized String toString()
     {
-        return this.entriesManager.toString();
+        return this.contentManager.toString();
     }
 }
