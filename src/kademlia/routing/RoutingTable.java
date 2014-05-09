@@ -2,7 +2,9 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
 import kademlia.core.KadConfiguration;
+import kademlia.node.KeyComparator;
 import kademlia.node.Node;
 import kademlia.node.NodeId;
 
@@ -45,6 +47,7 @@ public class RoutingTable implements KadRoutingTable
         }
     }
 
+    @Override
     public void setConfiguration(KadConfiguration config)
     {
         this.config = config;
@@ -99,83 +102,21 @@ public class RoutingTable implements KadRoutingTable
     @Override
     public synchronized final List<Node> findClosest(NodeId target, int numNodesRequired)
     {
+        TreeSet<Node> sortedSet = new TreeSet<>(new KeyComparator(target));
+        sortedSet.addAll(this.getAllNodes());
+
         List<Node> closest = new ArrayList<>(numNodesRequired);
 
-        /* Get the bucket index to search for closest from */
-        int bucketIndex = this.getBucketId(target);
-
-        /* Add the contacts from this bucket to the return contacts */
-        for (Contact c : this.buckets[bucketIndex].getContacts())
+        /* Now we have the sorted set, lets get the top numRequired */
+        int count = 0;
+        for (Node n : sortedSet)
         {
-            if (closest.size() < numNodesRequired)
-            {
-                closest.add(c.getNode());
-            }
-            else
+            closest.add(n);
+            if (++count == numNodesRequired)
             {
                 break;
             }
         }
-
-        if (closest.size() >= numNodesRequired)
-        {
-            return closest;
-        }
-
-        /**
-         * We still need more nodes
-         * Lets add from nodes closer to localNode since they are the ones that will be closer to the given nid
-         */
-        for (int i = 1; (bucketIndex - i) >= 0; i++)
-        {
-            for (Contact c : this.buckets[bucketIndex - i].getContacts())
-            {
-                if (closest.size() < numNodesRequired)
-                {
-                    closest.add(c.getNode());
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            /* If we have enough contacts, then stop adding */
-            if (closest.size() >= numNodesRequired)
-            {
-                break;
-            }
-        }
-
-        if (closest.size() >= numNodesRequired)
-        {
-            return closest;
-        }
-
-        /**
-         * We still need more nodes, add from nodes farther to localNode
-         */
-        for (int i = 1; (bucketIndex + i) < NodeId.ID_LENGTH; i++)
-        {
-            for (Contact c : this.buckets[bucketIndex + i].getContacts())
-            {
-                if (closest.size() < numNodesRequired)
-                {
-                    closest.add(c.getNode());
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            /* If we have enough contacts, then stop adding */
-            if (closest.size() >= numNodesRequired)
-            {
-                break;
-            }
-        }
-
         return closest;
     }
 
