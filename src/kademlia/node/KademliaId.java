@@ -95,7 +95,7 @@ public class KademliaId implements Streamable
         if (o instanceof KademliaId)
         {
             KademliaId nid = (KademliaId) o;
-            return Arrays.equals(this.getBytes(), nid.getBytes());
+            return this.hashCode() == nid.hashCode();
         }
         return false;
     }

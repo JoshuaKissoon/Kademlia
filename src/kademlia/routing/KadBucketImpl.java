@@ -142,7 +142,7 @@ public class KadBucketImpl implements KadBucket
         return true;
     }
 
-    public synchronized Contact getFromContacts(Node n)
+    private synchronized Contact getFromContacts(Node n)
     {
         for (Contact c : this.contacts)
         {
@@ -156,7 +156,7 @@ public class KadBucketImpl implements KadBucket
         throw new NoSuchElementException("The contact does not exist in the contacts list.");
     }
 
-    public synchronized Contact removeFromContacts(Node n)
+    private synchronized Contact removeFromContacts(Node n)
     {
         for (Contact c : this.contacts)
         {
@@ -223,7 +223,7 @@ public class KadBucketImpl implements KadBucket
         }
     }
 
-    public synchronized Contact removeFromReplacementCache(Node n)
+    private synchronized Contact removeFromReplacementCache(Node n)
     {
         for (Contact c : this.replacementCache)
         {

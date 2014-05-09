@@ -111,11 +111,11 @@ public class Node implements Streamable
         if (o instanceof Node)
         {
             Node n = (Node) o;
-            if (o == this)
+            if (n == this)
             {
                 return true;
             }
-            return this.getNodeId().equals(((Node) o).getNodeId());
+            return this.getNodeId().equals(n.getNodeId());
         }
         return false;
     }
