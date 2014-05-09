@@ -18,12 +18,12 @@ import kademlia.message.Streamable;
 public class Node implements Streamable
 {
 
-    private NodeId nodeId;
+    private KademliaId nodeId;
     private InetAddress inetAddress;
     private int port;
     private final String strRep;
 
-    public Node(NodeId nid, InetAddress ip, int port)
+    public Node(KademliaId nid, InetAddress ip, int port)
     {
         this.nodeId = nid;
         this.inetAddress = ip;
@@ -57,7 +57,7 @@ public class Node implements Streamable
     /**
      * @return The NodeId object of this node
      */
-    public NodeId getNodeId()
+    public KademliaId getNodeId()
     {
         return this.nodeId;
     }
@@ -94,7 +94,7 @@ public class Node implements Streamable
     public final void fromStream(DataInputStream in) throws IOException
     {
         /* Load the NodeId */
-        this.nodeId = new NodeId(in);
+        this.nodeId = new KademliaId(in);
 
         /* Load the IP Address */
         byte[] ip = new byte[4];

@@ -12,7 +12,7 @@ import java.util.NoSuchElementException;
 import kademlia.core.KadConfiguration;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 import kademlia.util.serializer.JsonSerializer;
 import kademlia.util.serializer.KadSerializer;
 
@@ -155,7 +155,7 @@ public class DHT
      *
      * @return A KadContent object
      */
-    private StorageEntry retrieve(NodeId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    private StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -270,7 +270,7 @@ public class DHT
      *
      * @return String The name of the folder
      */
-    private String getContentStorageFolderName(NodeId key)
+    private String getContentStorageFolderName(KademliaId key)
     {
         /**
          * Each content is stored in a folder named after the first 10 characters of the NodeId

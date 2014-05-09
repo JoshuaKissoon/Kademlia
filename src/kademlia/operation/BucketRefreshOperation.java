@@ -4,7 +4,7 @@ import java.io.IOException;
 import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
 import kademlia.core.KadServer;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * At each time interval t, nodes need to refresh their K-Buckets
@@ -40,10 +40,10 @@ public class BucketRefreshOperation implements Operation
     @Override
     public synchronized void execute() throws IOException
     {
-        for (int i = 1; i < NodeId.ID_LENGTH; i++)
+        for (int i = 1; i < KademliaId.ID_LENGTH; i++)
         {
             /* Construct a NodeId that is i bits away from the current node Id */
-            final NodeId current = this.localNode.getNode().getNodeId().generateNodeIdByDistance(i);
+            final KademliaId current = this.localNode.getNode().getNodeId().generateNodeIdByDistance(i);
 
             /* Run the Node Lookup Operation, each in a different thread to speed up things */
             new Thread()

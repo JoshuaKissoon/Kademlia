@@ -2,7 +2,7 @@ package kademlia.tests;
 
 import com.google.gson.Gson;
 import kademlia.dht.KadContent;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * A simple DHT Content object to test DHT storage
@@ -15,7 +15,7 @@ public class DHTContentImpl implements KadContent
 
     public static final transient String TYPE = "DHTContentImpl";
 
-    private NodeId key;
+    private KademliaId key;
     private String data;
     private String ownerId;
     private final long createTs;
@@ -35,10 +35,10 @@ public class DHTContentImpl implements KadContent
     {
         this.ownerId = ownerId;
         this.data = data;
-        this.key = new NodeId();
+        this.key = new KademliaId();
     }
 
-    public DHTContentImpl(NodeId key, String ownerId)
+    public DHTContentImpl(KademliaId key, String ownerId)
     {
         this.key = key;
         this.ownerId = ownerId;
@@ -51,7 +51,7 @@ public class DHTContentImpl implements KadContent
     }
 
     @Override
-    public NodeId getKey()
+    public KademliaId getKey()
     {
         return this.key;
     }

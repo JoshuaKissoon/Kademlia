@@ -14,7 +14,7 @@ import java.util.BitSet;
 import java.util.Random;
 import kademlia.message.Streamable;
 
-public class NodeId implements Streamable
+public class KademliaId implements Streamable
 {
 
     public final transient static int ID_LENGTH = 160;
@@ -25,7 +25,7 @@ public class NodeId implements Streamable
      *
      * @param data The user generated key string
      */
-    public NodeId(String data)
+    public KademliaId(String data)
     {
         keyBytes = data.getBytes();
         if (keyBytes.length != ID_LENGTH / 8)
@@ -37,7 +37,7 @@ public class NodeId implements Streamable
     /**
      * Generate a random key
      */
-    public NodeId()
+    public KademliaId()
     {
         keyBytes = new byte[ID_LENGTH / 8];
         new Random().nextBytes(keyBytes);
@@ -48,7 +48,7 @@ public class NodeId implements Streamable
      *
      * @param bytes
      */
-    public NodeId(byte[] bytes)
+    public KademliaId(byte[] bytes)
     {
         if (bytes.length != ID_LENGTH / 8)
         {
@@ -64,7 +64,7 @@ public class NodeId implements Streamable
      *
      * @throws IOException
      */
-    public NodeId(DataInputStream in) throws IOException
+    public KademliaId(DataInputStream in) throws IOException
     {
         this.fromStream(in);
     }
@@ -92,9 +92,9 @@ public class NodeId implements Streamable
     @Override
     public boolean equals(Object o)
     {
-        if (o instanceof NodeId)
+        if (o instanceof KademliaId)
         {
-            NodeId nid = (NodeId) o;
+            KademliaId nid = (KademliaId) o;
             return Arrays.equals(this.getBytes(), nid.getBytes());
         }
         return false;
@@ -115,7 +115,7 @@ public class NodeId implements Streamable
      *
      * @return The distance of this NodeId from the given NodeId
      */
-    public NodeId xor(NodeId nid)
+    public KademliaId xor(KademliaId nid)
     {
         byte[] result = new byte[ID_LENGTH / 8];
         byte[] nidBytes = nid.getBytes();
@@ -125,7 +125,7 @@ public class NodeId implements Streamable
             result[i] = (byte) (this.keyBytes[i] ^ nidBytes[i]);
         }
 
-        NodeId resNid = new NodeId(result);
+        KademliaId resNid = new KademliaId(result);
 
         return resNid;
     }
@@ -137,7 +137,7 @@ public class NodeId implements Streamable
      *
      * @return NodeId The newly generated NodeId
      */
-    public NodeId generateNodeIdByDistance(int distance)
+    public KademliaId generateNodeIdByDistance(int distance)
     {
         byte[] result = new byte[ID_LENGTH / 8];
 
@@ -169,7 +169,7 @@ public class NodeId implements Streamable
             result[i] = Byte.MAX_VALUE;
         }
 
-        return this.xor(new NodeId(result));
+        return this.xor(new KademliaId(result));
     }
 
     /**
@@ -221,7 +221,7 @@ public class NodeId implements Streamable
      *
      * @return Integer The distance
      */
-    public int getDistance(NodeId to)
+    public int getDistance(KademliaId to)
     {
         /**
          * Compute the xor of this and to

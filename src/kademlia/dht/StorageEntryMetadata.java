@@ -1,7 +1,7 @@
 package kademlia.dht;
 
 import java.util.Objects;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Keeps track of data for a Content stored in the DHT
@@ -13,7 +13,7 @@ import kademlia.node.NodeId;
 public class StorageEntryMetadata
 {
 
-    private final NodeId key;
+    private final KademliaId key;
     private final String ownerId;
     private final String type;
     private final int contentHash;
@@ -33,7 +33,7 @@ public class StorageEntryMetadata
         this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
-    public NodeId getKey()
+    public KademliaId getKey()
     {
         return this.key;
     }

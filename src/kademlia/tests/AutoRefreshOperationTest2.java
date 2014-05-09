@@ -5,7 +5,7 @@ import java.util.TimerTask;
 import kademlia.core.DefaultConfiguration;
 import kademlia.KademliaNode;
 import kademlia.core.KadConfiguration;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Testing the Kademlia Auto Content and Node table refresh operations
@@ -21,16 +21,16 @@ public class AutoRefreshOperationTest2
         try
         {
             /* Setting up 2 Kad networks */
-            final KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF456789djem4567463"), 12049);
-            final KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("AS84k678DJRW84567465"), 4585);
-            final KademliaNode kad3 = new KademliaNode("Shameer", new NodeId("AS84k67894758456746A"), 8104);
+            final KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF456789djem4567463"), 12049);
+            final KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("AS84k678DJRW84567465"), 4585);
+            final KademliaNode kad3 = new KademliaNode("Shameer", new KademliaId("AS84k67894758456746A"), 8104);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");
             kad2.bootstrap(kad1.getNode());
             kad3.bootstrap(kad2.getNode());
 
-            DHTContentImpl c = new DHTContentImpl(new NodeId("AS84k678947584567465"), kad1.getOwnerId());
+            DHTContentImpl c = new DHTContentImpl(new KademliaId("AS84k678947584567465"), kad1.getOwnerId());
             c.setData("Setting the data");
             kad1.putLocally(c);
 

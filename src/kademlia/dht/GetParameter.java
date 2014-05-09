@@ -1,6 +1,6 @@
 package kademlia.dht;
 
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * A GET request can get content based on Key, Owner, Type, etc
@@ -15,7 +15,7 @@ import kademlia.node.NodeId;
 public class GetParameter
 {
 
-    private NodeId key;
+    private KademliaId key;
     private String ownerId = null;
     private String type = null;
 
@@ -25,7 +25,7 @@ public class GetParameter
      * @param key
      * @param type
      */
-    public GetParameter(NodeId key, String type)
+    public GetParameter(KademliaId key, String type)
     {
         this.key = key;
         this.type = type;
@@ -38,7 +38,7 @@ public class GetParameter
      * @param type
      * @param owner
      */
-    public GetParameter(NodeId key, String type, String owner)
+    public GetParameter(KademliaId key, String type, String owner)
     {
         this(key, owner);
         this.type = type;
@@ -84,7 +84,7 @@ public class GetParameter
         }
     }
 
-    public NodeId getKey()
+    public KademliaId getKey()
     {
         return this.key;
     }

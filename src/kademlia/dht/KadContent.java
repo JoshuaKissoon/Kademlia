@@ -1,6 +1,6 @@
 package kademlia.dht;
 
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Any piece of content that needs to be stored on the DHT
@@ -15,7 +15,7 @@ public interface KadContent
     /**
      * @return NodeId The DHT key for this content
      */
-    public NodeId getKey();
+    public KademliaId getKey();
 
     /**
      * @return String The type of content

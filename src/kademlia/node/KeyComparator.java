@@ -17,7 +17,7 @@ public class KeyComparator implements Comparator<Node>
     /**
      * @param key The NodeId relative to which the distance should be measured.
      */
-    public KeyComparator(NodeId key)
+    public KeyComparator(KademliaId key)
     {
         this.key = key.getInt();
     }

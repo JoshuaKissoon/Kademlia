@@ -22,7 +22,7 @@ import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 import kademlia.operation.ConnectOperation;
 import kademlia.operation.ContentLookupOperation;
 import kademlia.operation.Operation;
@@ -158,7 +158,7 @@ public class KademliaNode
         );
     }
 
-    public KademliaNode(String ownerId, NodeId defaultId, int udpPort) throws IOException
+    public KademliaNode(String ownerId, KademliaId defaultId, int udpPort) throws IOException
     {
         this(
                 ownerId,

@@ -3,7 +3,7 @@ package kademlia.routing;
 import java.util.List;
 import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Specification for Kademlia's Routing Table
@@ -47,7 +47,7 @@ public interface KadRoutingTable
      *
      * @return Integer The bucket ID in which the given node should be placed.
      */
-    public int getBucketId(NodeId nid);
+    public int getBucketId(KademliaId nid);
 
     /**
      * Find the closest set of contacts to a given NodeId
@@ -57,7 +57,7 @@ public interface KadRoutingTable
      *
      * @return List A List of contacts closest to target
      */
-    public List<Node> findClosest(NodeId target, int numNodesRequired);
+    public List<Node> findClosest(KademliaId target, int numNodesRequired);
 
     /**
      * @return List A List of all Nodes in this RoutingTable

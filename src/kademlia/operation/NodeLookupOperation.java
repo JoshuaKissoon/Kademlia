@@ -17,7 +17,7 @@ import kademlia.message.NodeLookupMessage;
 import kademlia.message.NodeReplyMessage;
 import kademlia.node.KeyComparator;
 import kademlia.node.Node;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Finds the K closest nodes to a specified identifier
@@ -62,7 +62,7 @@ public class NodeLookupOperation implements Operation, Receiver
      * @param lookupId  The ID for which to find nodes close to
      * @param config
      */
-    public NodeLookupOperation(KadServer server, KademliaNode localNode, NodeId lookupId, KadConfiguration config)
+    public NodeLookupOperation(KadServer server, KademliaNode localNode, KademliaId lookupId, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

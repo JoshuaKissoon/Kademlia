@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import kademlia.exceptions.ContentExistException;
 import kademlia.exceptions.ContentNotFoundException;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * It would be infeasible to keep all content in memory to be send when requested
@@ -20,7 +20,7 @@ import kademlia.node.NodeId;
 class StoredContentManager
 {
 
-    private final Map<NodeId, List<StorageEntryMetadata>> entries;
+    private final Map<KademliaId, List<StorageEntryMetadata>> entries;
 
     
     {

@@ -3,7 +3,7 @@ package kademlia.tests;
 import kademlia.KademliaNode;
 import kademlia.dht.GetParameter;
 import kademlia.dht.StorageEntry;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Testing the save and retrieve state operations.
@@ -20,8 +20,8 @@ public class SaveStateTest2
         try
         {
             /* Setting up 2 Kad networks */
-            KademliaNode kad1 = new KademliaNode("JoshuaK", new NodeId("ASF45678947584567463"), 12049);
-            KademliaNode kad2 = new KademliaNode("Crystal", new NodeId("ASF45678947584567464"), 4585);
+            KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF45678947584567463"), 12049);
+            KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("ASF45678947584567464"), 4585);
 
             /* Connecting 2 to 1 */
             System.out.println("Connecting Nodes 1 & 2");

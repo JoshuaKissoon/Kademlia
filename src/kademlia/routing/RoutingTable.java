@@ -6,7 +6,7 @@ import java.util.TreeSet;
 import kademlia.core.KadConfiguration;
 import kademlia.node.KeyComparator;
 import kademlia.node.Node;
-import kademlia.node.NodeId;
+import kademlia.node.KademliaId;
 
 /**
  * Implementation of a Kademlia routing table
@@ -40,8 +40,8 @@ public class RoutingTable implements KadRoutingTable
     @Override
     public final void initialize()
     {
-        this.buckets = new KadBucket[NodeId.ID_LENGTH];
-        for (int i = 0; i < NodeId.ID_LENGTH; i++)
+        this.buckets = new KadBucket[KademliaId.ID_LENGTH];
+        for (int i = 0; i < KademliaId.ID_LENGTH; i++)
         {
             buckets[i] = new KadBucketImpl(i, this.config);
         }
@@ -83,7 +83,7 @@ public class RoutingTable implements KadRoutingTable
      * @return Integer The bucket ID in which the given node should be placed.
      */
     @Override
-    public final int getBucketId(NodeId nid)
+    public final int getBucketId(KademliaId nid)
     {
         int bId = this.localNode.getNodeId().getDistance(nid) - 1;
 
@@ -100,7 +100,7 @@ public class RoutingTable implements KadRoutingTable
      * @return List A List of contacts closest to target
      */
     @Override
-    public synchronized final List<Node> findClosest(NodeId target, int numNodesRequired)
+    public synchronized final List<Node> findClosest(KademliaId target, int numNodesRequired)
     {
         TreeSet<Node> sortedSet = new TreeSet<>(new KeyComparator(target));
         sortedSet.addAll(this.getAllNodes());
