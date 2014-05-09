@@ -287,7 +287,7 @@ public class KademliaNode
      * @throws java.io.IOException
      *
      */
-    public synchronized int put(KadContent content) throws IOException
+    public int put(KadContent content) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, content, this.dht, this.config);
         sop.execute();
@@ -303,7 +303,7 @@ public class KademliaNode
      *
      * @throws java.io.IOException
      */
-    public synchronized void putLocally(KadContent content) throws IOException
+    public void putLocally(KadContent content) throws IOException
     {
         this.dht.store(content);
     }
@@ -318,7 +318,7 @@ public class KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public synchronized StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
         {
@@ -340,7 +340,7 @@ public class KademliaNode
      *
      * @throws java.io.IOException
      */
-    public synchronized void refresh() throws IOException
+    public void refresh() throws IOException
     {
         new KadRefreshOperation(this.server, this, this.dht, this.config).execute();
     }
@@ -368,7 +368,7 @@ public class KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
-    public synchronized void shutdown(final boolean saveState) throws IOException
+    public void shutdown(final boolean saveState) throws IOException
     {
         /* Shut down the server */
         this.server.shutdown();
@@ -388,7 +388,7 @@ public class KademliaNode
      *
      * @throws java.io.FileNotFoundException
      */
-    private synchronized void saveKadState() throws IOException
+    private void saveKadState() throws IOException
     {
         DataOutputStream dout;
 
@@ -459,7 +459,7 @@ public class KademliaNode
      * @return The string representation of this Kad instance
      */
     @Override
-    public synchronized String toString()
+    public String toString()
     {
         StringBuilder sb = new StringBuilder("\n\nPrinting Kad State for instance with owner: ");
         sb.append(this.ownerId);
