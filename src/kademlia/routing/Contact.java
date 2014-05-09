@@ -63,9 +63,15 @@ public class Contact implements Comparable<Contact>
         return this.lastSeen;
     }
 
-    public boolean equals(Contact c)
+    @Override
+    public boolean equals(Object c)
     {
-        return c.getNode().equals(this.getNode());
+        if (c instanceof Contact)
+        {
+            return ((Contact) c).getNode().equals(this.getNode());
+        }
+
+        return false;
     }
 
     /**
@@ -93,6 +99,12 @@ public class Contact implements Comparable<Contact>
         }
 
         return (this.lastSeen() > o.lastSeen()) ? 1 : -1;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.getNode().hashCode();
     }
 
 }

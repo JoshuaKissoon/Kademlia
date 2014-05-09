@@ -2,7 +2,8 @@ package kademlia.routing;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.NoSuchElementException;
+import java.util.TreeSet;
 import kademlia.core.KadConfiguration;
 import kademlia.node.Node;
 
@@ -19,17 +20,17 @@ public class KadBucketImpl implements KadBucket
     private final int depth;
 
     /* Contacts stored in this routing table */
-    private final TreeMap<Contact, Contact> contacts;
+    private final TreeSet<Contact> contacts;
 
     /* A set of last seen contacts that can replace any current contact that is unresponsive */
-    private final TreeMap<Contact, Contact> replacementCache;
+    private final TreeSet<Contact> replacementCache;
 
-    private KadConfiguration config;
+    private final KadConfiguration config;
 
     
     {
-        contacts = new TreeMap<>(new ContactLastSeenComparator());
-        replacementCache = new TreeMap<>(new ContactLastSeenComparator());
+        contacts = new TreeSet<>();
+        replacementCache = new TreeSet<>();
     }
 
     /**
@@ -45,15 +46,15 @@ public class KadBucketImpl implements KadBucket
     @Override
     public void insert(Contact c)
     {
-        if (this.contacts.containsKey(c))
+        if (this.contacts.contains(c))
         {
             /**
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
-            Contact tmp = this.contacts.remove(c);
+            Contact tmp = this.removeFromContacts(c.getNode());
             tmp.setSeenNow();
-            this.contacts.put(tmp, tmp);
+            this.contacts.add(tmp);
         }
         else
         {
@@ -62,7 +63,7 @@ public class KadBucketImpl implements KadBucket
             {
                 /* If the cache is empty, we check if any contacts are stale and replace the stalest one */
                 Contact stalest = null;
-                for (Contact tmp : this.contacts.keySet())
+                for (Contact tmp : this.contacts)
                 {
                     if (tmp.staleCount() > this.config.stale())
                     {
@@ -82,7 +83,7 @@ public class KadBucketImpl implements KadBucket
                 if (stalest != null)
                 {
                     this.contacts.remove(stalest);
-                    this.contacts.put(c, c);
+                    this.contacts.add(c);
                 }
                 else
                 {
@@ -92,7 +93,7 @@ public class KadBucketImpl implements KadBucket
             }
             else
             {
-                contacts.put(c, c);
+                this.contacts.add(c);
             }
         }
     }
@@ -106,7 +107,7 @@ public class KadBucketImpl implements KadBucket
     @Override
     public boolean containsContact(Contact c)
     {
-        return this.contacts.containsKey(c);
+        return this.contacts.contains(c);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class KadBucketImpl implements KadBucket
     public boolean removeContact(Contact c)
     {
         /* If the contact does not exist, then we failed to remove it */
-        if (!this.contacts.containsKey(c))
+        if (!this.contacts.contains(c))
         {
             return false;
         }
@@ -128,17 +129,46 @@ public class KadBucketImpl implements KadBucket
         {
             /* Replace the contact with one from the replacement cache */
             this.contacts.remove(c);
-            Contact replacement = this.replacementCache.firstKey();
-            this.contacts.put(replacement, replacement);
+            Contact replacement = this.replacementCache.first();
+            this.contacts.add(replacement);
             this.replacementCache.remove(replacement);
         }
         else
         {
             /* There is no replacement, just increment the contact's stale count */
-            this.contacts.get(c).incrementStaleCount();
+            this.getFromContacts(c.getNode()).incrementStaleCount();
         }
 
         return true;
+    }
+
+    public Contact getFromContacts(Node n)
+    {
+        for (Contact c : this.contacts)
+        {
+            if (c.getNode().equals(n))
+            {
+                return c;
+            }
+        }
+
+        /* This contact does not exist */
+        throw new NoSuchElementException("The contact does not exist in the contacts list.");
+    }
+
+    public Contact removeFromContacts(Node n)
+    {
+        for (Contact c : this.contacts)
+        {
+            if (c.getNode().equals(n))
+            {
+                this.contacts.remove(c);
+                return c;
+            }
+        }
+
+        /* We got here means this element does not exist */
+        throw new NoSuchElementException("Node does not exist in the replacement cache. ");
     }
 
     @Override
@@ -162,7 +192,7 @@ public class KadBucketImpl implements KadBucket
     @Override
     public synchronized List<Contact> getContacts()
     {
-        return (this.contacts.isEmpty()) ? new ArrayList<>() : new ArrayList<>(this.contacts.values());
+        return (this.contacts.isEmpty()) ? new ArrayList<>() : new ArrayList<>(this.contacts);
     }
 
     /**
@@ -171,25 +201,41 @@ public class KadBucketImpl implements KadBucket
     private void insertIntoReplacementCache(Contact c)
     {
         /* Just return if this contact is already in our replacement cache */
-        if (this.replacementCache.containsKey(c))
+        if (this.replacementCache.contains(c))
         {
             /**
              * If the contact is already in the bucket, lets update that we've seen it
              * We need to remove and re-add the contact to get the Sorted Set to update sort order
              */
-            Contact tmp = this.replacementCache.remove(c);
+            Contact tmp = this.removeFromReplacementCache(c.getNode());
             tmp.setSeenNow();
-            this.replacementCache.put(tmp, tmp);
-            return;
+            this.replacementCache.add(tmp);
         }
-
-        /* if our cache is filled, we remove the least recently seen contact */
-        if (this.replacementCache.size() > this.config.k())
+        else if (this.replacementCache.size() > this.config.k())
         {
-            this.replacementCache.remove(this.replacementCache.lastKey());
+            /* if our cache is filled, we remove the least recently seen contact */
+            this.replacementCache.remove(this.replacementCache.last());
+            this.replacementCache.add(c);
+        }
+        else
+        {
+            this.replacementCache.add(c);
+        }
+    }
+
+    public Contact removeFromReplacementCache(Node n)
+    {
+        for (Contact c : this.replacementCache)
+        {
+            if (c.getNode().equals(n))
+            {
+                this.replacementCache.remove(c);
+                return c;
+            }
         }
 
-        this.replacementCache.put(c, c);
+        /* We got here means this element does not exist */
+        throw new NoSuchElementException("Node does not exist in the replacement cache. ");
     }
 
     @Override
@@ -198,7 +244,7 @@ public class KadBucketImpl implements KadBucket
         StringBuilder sb = new StringBuilder("Bucket at depth: ");
         sb.append(this.depth);
         sb.append("\n Nodes: \n");
-        for (Contact n : this.contacts.values())
+        for (Contact n : this.contacts)
         {
             sb.append("Node: ");
             sb.append(n.getNode().getNodeId().toString());
