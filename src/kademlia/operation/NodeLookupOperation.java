@@ -40,6 +40,8 @@ public class NodeLookupOperation implements Operation, Receiver
     private final KademliaNode localNode;
     private final KadConfiguration config;
 
+    private boolean error;
+
     private final Message lookupMessage;        // Message sent to each peer
     private final Map<Node, String> nodes;
 
@@ -85,6 +87,8 @@ public class NodeLookupOperation implements Operation, Receiver
     {
         try
         {
+            error = true;
+
             /* Set the local node as already asked */
             nodes.put(this.localNode.getNode(), ASKED);
 
@@ -96,7 +100,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 10;     // We re-check every n milliseconds
+            int timeInterval = 10;     // We re-check every 300 milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish())
@@ -109,6 +113,17 @@ public class NodeLookupOperation implements Operation, Receiver
                     break;
                 }
             }
+
+            /**
+             * There is no need to throw an exception here!
+             * If the operation times out means we didn't get replies from all nodes,
+             * so lets just simply return the K-Closest nodes we knoe
+             */
+//            if (error)
+//            {
+//                /* If we still haven't received any responses by then, do a routing timeout */
+//                throw new RoutingException("Node Lookup Timeout.");
+//            }
 
             /* Now after we've finished, we would have an idea of offline nodes, lets update our routing table */
             this.localNode.getRoutingTable().setUnresponsiveContacts(this.getFailedNodes());
@@ -167,6 +182,7 @@ public class NodeLookupOperation implements Operation, Receiver
         if (unasked.isEmpty() && this.messagesTransiting.isEmpty())
         {
             /* We have no unasked nodes nor any messages in transit, we're finished! */
+            error = false;
             return true;
         }
 
