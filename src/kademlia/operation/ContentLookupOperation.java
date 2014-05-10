@@ -58,12 +58,13 @@ public class ContentLookupOperation implements Operation, Receiver
     private final Comparator comparator;
 
     /* Statistical information */
-    private RouteLengthChecker routeLengthChecker;
+    private final RouteLengthChecker routeLengthChecker;
 
     
     {
         messagesTransiting = new HashMap<>();
         isContentFound = false;
+        routeLengthChecker = new RouteLengthChecker();
     }
 
     /**
@@ -116,7 +117,7 @@ public class ContentLookupOperation implements Operation, Receiver
              * keey trying until config.operationTimeout() time has expired
              */
             int totalTimeWaited = 0;
-            int timeInterval = 10;     // We re-check every 10 milliseconds
+            int timeInterval = 10;     // We re-check every n milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish() && !isContentFound)

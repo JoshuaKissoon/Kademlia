@@ -272,11 +272,11 @@ public class DHT
     private String getContentStorageFolderName(KademliaId key)
     {
         /**
-         * Each content is stored in a folder named after the first 10 characters of the NodeId
+         * Each content is stored in a folder named after the first 2 characters of the NodeId
          *
          * The name of the file containing the content is the hash of this content
          */
-        String folderName = key.hexRepresentation().substring(0, 10);
+        String folderName = key.hexRepresentation().substring(0, 2);
         File contentStorageFolder = new File(this.config.getNodeDataFolder(ownerId) + File.separator + folderName);
 
         /* Create the content folder if it doesn't exist */
