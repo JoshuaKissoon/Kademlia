@@ -124,7 +124,7 @@ public class RoutingTable implements KadRoutingTable
      * @return List A List of all Nodes in this RoutingTable
      */
     @Override
-    public synchronized final List getAllNodes()
+    public synchronized final List<Node> getAllNodes()
     {
         List<Node> nodes = new ArrayList<>();
 
@@ -143,7 +143,7 @@ public class RoutingTable implements KadRoutingTable
      * @return List A List of all Nodes in this RoutingTable
      */
     @Override
-    public final List getAllContacts()
+    public final List<Contact> getAllContacts()
     {
         List<Contact> contacts = new ArrayList<>();
 
