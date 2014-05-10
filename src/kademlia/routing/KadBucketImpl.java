@@ -248,6 +248,9 @@ public class KadBucketImpl implements KadBucket
         {
             sb.append("Node: ");
             sb.append(n.getNode().getNodeId().toString());
+            sb.append(" (stale: ");
+            sb.append(n.staleCount());
+            sb.append(")");
             sb.append("\n");
         }
 

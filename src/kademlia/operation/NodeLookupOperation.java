@@ -100,7 +100,7 @@ public class NodeLookupOperation implements Operation, Receiver
 
             /* If we haven't finished as yet, wait for a maximum of config.operationTimeout() time */
             int totalTimeWaited = 0;
-            int timeInterval = 10;     // We re-check every 300 milliseconds
+            int timeInterval = 10;     // We re-check every n milliseconds
             while (totalTimeWaited < this.config.operationTimeout())
             {
                 if (!this.askNodesorFinish())
@@ -113,10 +113,10 @@ public class NodeLookupOperation implements Operation, Receiver
                     break;
                 }
             }
-            
+
             /**
-             * There is no need to throw an exception here! 
-             * If the operation times out means we didn't get replies from all nodes, 
+             * There is no need to throw an exception here!
+             * If the operation times out means we didn't get replies from all nodes,
              * so lets just simply return the K-Closest nodes we knoe
              */
 //            if (error)
@@ -273,6 +273,11 @@ public class NodeLookupOperation implements Operation, Receiver
     @Override
     public synchronized void receive(Message incoming, int comm) throws IOException
     {
+        if (!(incoming instanceof NodeReplyMessage))
+        {
+            /* Not sure why we get a message of a different type here... @todo Figure it out. */
+            return;
+        }
         /* We receive a NodeReplyMessage with a set of nodes, read this message */
         NodeReplyMessage msg = (NodeReplyMessage) incoming;
 
