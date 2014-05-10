@@ -66,7 +66,7 @@ public class KadBucketImpl implements KadBucket
                 Contact stalest = null;
                 for (Contact tmp : this.contacts)
                 {
-                    if (tmp.staleCount() > this.config.stale())
+                    if (tmp.staleCount() >= this.config.stale())
                     {
                         /* Contact is stale */
                         if (stalest == null)
