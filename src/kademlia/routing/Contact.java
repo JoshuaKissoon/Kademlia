@@ -90,6 +90,14 @@ public class Contact implements Comparable<Contact>
         return this.staleCount;
     }
 
+    /**
+     * Reset the stale count of the contact if it's recently seen
+     */
+    public void resetStaleCount()
+    {
+        this.staleCount = 0;
+    }
+
     @Override
     public int compareTo(Contact o)
     {

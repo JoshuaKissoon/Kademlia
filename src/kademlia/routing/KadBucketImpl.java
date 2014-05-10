@@ -54,6 +54,7 @@ public class KadBucketImpl implements KadBucket
              */
             Contact tmp = this.removeFromContacts(c.getNode());
             tmp.setSeenNow();
+            tmp.resetStaleCount();
             this.contacts.add(tmp);
         }
         else
@@ -125,6 +126,7 @@ public class KadBucketImpl implements KadBucket
             return false;
         }
 
+        /* Contact exist, lets remove it only if our replacement cache has a replacement */
         if (!this.replacementCache.isEmpty())
         {
             /* Replace the contact with one from the replacement cache */
