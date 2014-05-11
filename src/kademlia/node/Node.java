@@ -5,7 +5,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import kademlia.message.Streamable;
 
 /**
@@ -67,7 +66,7 @@ public class Node implements Streamable
      *
      * @return
      */
-    public SocketAddress getSocketAddress()
+    public InetSocketAddress getSocketAddress()
     {
         return new InetSocketAddress(this.inetAddress, this.port);
     }
