@@ -9,7 +9,7 @@ package kademlia.dht;
 public class StorageEntry
 {
 
-    private final byte[] content;
+    private final String content;
     private final StorageEntryMetadata metadata;
 
     public StorageEntry(KadContent content)
@@ -19,18 +19,13 @@ public class StorageEntry
 
     public StorageEntry(KadContent content, StorageEntryMetadata metadata)
     {
-        this.content = content.toBytes();
+        this.content = new String(content.toBytes());
         this.metadata = metadata;
     }
-
-    public byte[] getContent()
+    
+    public String getContent()
     {
         return this.content;
-    }
-
-    public String getContentString()
-    {
-        return new String(this.content);
     }
 
     public StorageEntryMetadata getContentMetadata()
