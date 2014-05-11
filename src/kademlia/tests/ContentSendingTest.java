@@ -41,7 +41,7 @@ public class ContentSendingTest
             gp.setOwnerId(c.getOwnerId());
             System.out.println("Get Parameter: " + gp);
             StorageEntry conte = kad2.get(gp);
-            System.out.println("Content Found: " + new DHTContentImpl().fromBytes(conte.getContent().getBytes()));
+            System.out.println("Content Found: " + new DHTContentImpl().fromBytes(conte.getContentString().getBytes()));
             System.out.println("Content Metadata: " + conte.getContentMetadata());
 
         }

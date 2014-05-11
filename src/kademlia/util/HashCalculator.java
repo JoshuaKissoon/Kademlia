@@ -1,4 +1,4 @@
-package kademlia.util.hashing;
+package kademlia.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
