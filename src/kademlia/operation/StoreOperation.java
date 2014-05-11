@@ -23,22 +23,22 @@ public class StoreOperation implements Operation
 
     private final KadServer server;
     private final KademliaNode localNode;
-    private final KadContent content;
+    private final StorageEntry storageEntry;
     private final DHT localDht;
     private final KadConfiguration config;
 
     /**
      * @param server
      * @param localNode
-     * @param content   The content to be stored on the DHT
-     * @param localDht  The local DHT
+     * @param storageEntry The content to be stored on the DHT
+     * @param localDht     The local DHT
      * @param config
      */
-    public StoreOperation(KadServer server, KademliaNode localNode, KadContent content, DHT localDht, KadConfiguration config)
+    public StoreOperation(KadServer server, KademliaNode localNode, StorageEntry storageEntry, DHT localDht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
-        this.content = content;
+        this.storageEntry = storageEntry;
         this.localDht = localDht;
         this.config = config;
     }
@@ -47,20 +47,20 @@ public class StoreOperation implements Operation
     public synchronized void execute() throws IOException
     {
         /* Get the nodes on which we need to store the content */
-        NodeLookupOperation ndlo = new NodeLookupOperation(this.server, this.localNode, this.content.getKey(), this.config);
+        NodeLookupOperation ndlo = new NodeLookupOperation(this.server, this.localNode, this.storageEntry.getContentMetadata().getKey(), this.config);
         ndlo.execute();
         List<Node> nodes = ndlo.getClosestNodes();
 
         /* Create the message */
-        Message msg = new StoreContentMessage(this.localNode.getNode(), new StorageEntry(this.content));
+        Message msg = new StoreContentMessage(this.localNode.getNode(), this.storageEntry);
 
         /*Store the message on all of the K-Nodes*/
         for (Node n : nodes)
         {
-            if (n.equals(this.localNode))
+            if (n.equals(this.localNode.getNode()))
             {
                 /* Store the content locally */
-                this.localDht.store(content);
+                this.localDht.store(this.storageEntry);
             }
             else
             {
