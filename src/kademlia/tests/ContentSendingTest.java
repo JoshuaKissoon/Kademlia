@@ -1,6 +1,7 @@
 package kademlia.tests;
 
 import java.io.IOException;
+import java.util.UUID;
 import kademlia.dht.GetParameter;
 import kademlia.KademliaNode;
 import kademlia.dht.StorageEntry;
@@ -30,7 +31,13 @@ public class ContentSendingTest
             /**
              * Lets create the content and share it
              */
-            DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), "Some Data");
+            String data = "";
+            for (int i = 0; i < 500; i++)
+            {
+                data += UUID.randomUUID();
+            }
+            System.out.println(data);
+            DHTContentImpl c = new DHTContentImpl(kad2.getOwnerId(), data);
             kad2.put(c);
 
             /**
