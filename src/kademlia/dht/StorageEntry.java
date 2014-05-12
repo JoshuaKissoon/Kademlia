@@ -9,31 +9,31 @@ package kademlia.dht;
 public class StorageEntry
 {
 
-    private byte[] content;
+    private String content;
     private final StorageEntryMetadata metadata;
 
-    public StorageEntry(KadContent content)
+    public StorageEntry(final KadContent content)
     {
         this(content, new StorageEntryMetadata(content));
     }
 
-    public StorageEntry(KadContent content, StorageEntryMetadata metadata)
+    public StorageEntry(final KadContent content, final StorageEntryMetadata metadata)
     {
-        this.content = content.toBytes();
+        this.setContent(content.toSerializedForm());
         this.metadata = metadata;
     }
 
-    public void setContent(byte[] data)
+    public final void setContent(final byte[] data)
     {
-        this.content = data;
+        this.content = new String(data);
     }
 
-    public byte[] getContent()
+    public final byte[] getContent()
     {
-        return this.content;
+        return this.content.getBytes();
     }
 
-    public StorageEntryMetadata getContentMetadata()
+    public final StorageEntryMetadata getContentMetadata()
     {
         return this.metadata;
     }

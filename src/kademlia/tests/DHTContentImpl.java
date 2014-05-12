@@ -89,14 +89,14 @@ public class DHTContentImpl implements KadContent
     }
 
     @Override
-    public byte[] toBytes()
+    public byte[] toSerializedForm()
     {
         Gson gson = new Gson();
         return gson.toJson(this).getBytes();
     }
 
     @Override
-    public DHTContentImpl fromBytes(byte[] data)
+    public DHTContentImpl fromSerializedForm(byte[] data)
     {
         Gson gson = new Gson();
         DHTContentImpl val = gson.fromJson(new String(data), DHTContentImpl.class);
