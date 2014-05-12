@@ -50,10 +50,11 @@ public interface KadStatistician
     /**
      * Add the timing for a new content lookup operation that took place
      *
-     * @param time        The time the content lookup took in nanoseconds
-     * @param routeLength The length of the route it took to get the content
+     * @param time         The time the content lookup took in nanoseconds
+     * @param routeLength  The length of the route it took to get the content
+     * @param isSuccessful Whether the content lookup was successful or not
      */
-    public void addContentLookup(long time, int routeLength);
+    public void addContentLookup(long time, int routeLength, boolean isSuccessful);
 
     /**
      * @return The total number of content lookups performed.

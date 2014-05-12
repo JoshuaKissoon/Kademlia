@@ -306,6 +306,14 @@ public class ContentLookupOperation implements Operation, Receiver
 
         this.askNodesorFinish();
     }
+    
+    /**
+     * @return Whether the content was found or not.
+     */
+    public boolean isContentFound()
+    {
+        return this.isContentFound;
+    }
 
     /**
      * @return The list of all content found during the lookup operation

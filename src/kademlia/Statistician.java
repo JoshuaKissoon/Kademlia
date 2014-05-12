@@ -74,7 +74,7 @@ public class Statistician implements KadStatistician
     }
 
     @Override
-    public void addContentLookup(long time, int routeLength)
+    public void addContentLookup(long time, int routeLength, boolean isSuccessful)
     {
         this.numContentLookups++;
         this.totalContentLookupTime += time;
