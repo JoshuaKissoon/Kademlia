@@ -21,7 +21,7 @@ public class Statistician implements KadStatistician
     private long bootstrapTime;
 
     /* Content lookup operation timing & route length */
-    private int numContentLookups;
+    private int numContentLookups, numFailedContentLookups;
     private long totalContentLookupTime;
     private long totalRouteLength;
 
@@ -76,15 +76,28 @@ public class Statistician implements KadStatistician
     @Override
     public void addContentLookup(long time, int routeLength, boolean isSuccessful)
     {
-        this.numContentLookups++;
-        this.totalContentLookupTime += time;
-        this.totalRouteLength += routeLength;
+        if (isSuccessful)
+        {
+            this.numContentLookups++;
+            this.totalContentLookupTime += time;
+            this.totalRouteLength += routeLength;
+        }
+        else
+        {
+            this.numFailedContentLookups++;
+        }
     }
 
     @Override
     public int numContentLookups()
     {
         return this.numContentLookups;
+    }
+
+    @Override
+    public int numFailedContentLookups()
+    {
+        return this.numFailedContentLookups;
     }
 
     @Override

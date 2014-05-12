@@ -62,6 +62,11 @@ public interface KadStatistician
     public int numContentLookups();
 
     /**
+     * @return How many content lookups have failed.
+     */
+    public int numFailedContentLookups();
+
+    /**
      * @return The total time spent on content lookups.
      */
     public long totalContentLookupTime();
