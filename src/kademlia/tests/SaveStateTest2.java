@@ -53,7 +53,7 @@ public class SaveStateTest2
             /* Trying to get a content stored on the restored node */
             GetParameter gp = new GetParameter(c.getKey(), kad2.getOwnerId(), c.getType());
             StorageEntry content = kad2.get(gp);
-            DHTContentImpl cc = new DHTContentImpl().fromBytes(content.getContent().getBytes());
+            DHTContentImpl cc = new DHTContentImpl().fromBytes(content.getContent());
             System.out.println("Content received: " + cc);
         }
 
