@@ -3,6 +3,7 @@ package kademlia.node;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import kademlia.message.Streamable;
@@ -14,7 +15,7 @@ import kademlia.message.Streamable;
  * @since 20140202
  * @version 0.1
  */
-public class Node implements Streamable
+public class Node implements Streamable, Serializable
 {
 
     private KademliaId nodeId;

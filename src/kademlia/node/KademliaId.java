@@ -8,13 +8,14 @@ package kademlia.node;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Random;
 import kademlia.message.Streamable;
 
-public class KademliaId implements Streamable
+public class KademliaId implements Streamable, Serializable
 {
 
     public final transient static int ID_LENGTH = 160;
