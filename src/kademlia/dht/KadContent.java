@@ -50,7 +50,7 @@ public interface KadContent
      * Each object is responsible for transforming itself to byte format since the
      * structure of methods may differ.
      *
-     * @return byte[] The content in byte format
+     * @return The content in byte format
      */
     public byte[] toSerializedForm();
 
@@ -59,7 +59,7 @@ public interface KadContent
      *
      * @param data The object in byte format
      *
-     * @return A new object from the given byte[]
+     * @return A new object from the given
      */
     public KadContent fromSerializedForm(byte[] data);
 }
