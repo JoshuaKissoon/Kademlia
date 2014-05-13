@@ -51,8 +51,11 @@ public class NodeLookupReceiver implements Receiver
         /* Respond to the NodeLookupMessage */
         Message reply = new NodeReplyMessage(this.localNode.getNode(), nodes);
 
-        /* Let the Server send the reply */
-        this.server.reply(origin, reply, comm);
+        if (this.server.isRunning())
+        {
+            /* Let the Server send the reply */
+            this.server.reply(origin, reply, comm);
+        }
     }
 
     /**

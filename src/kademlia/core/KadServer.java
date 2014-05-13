@@ -221,7 +221,7 @@ public class KadServer
                         }
                         catch (InterruptedException ex)
                         {
-                            
+
                         }
                     }
 
@@ -347,6 +347,11 @@ public class KadServer
         {
             System.out.println("Receiver for comm: " + r + "; Receiver: " + this.receivers.get(r));
         }
+    }
+
+    public boolean isRunning()
+    {
+        return this.isRunning;
     }
 
 }
