@@ -194,7 +194,21 @@ public class KadBucketImpl implements KadBucket
     @Override
     public synchronized List<Contact> getContacts()
     {
-        return (this.contacts.isEmpty()) ? new ArrayList<>() : new ArrayList<>(this.contacts);
+        final ArrayList<Contact> ret = new ArrayList<>();
+
+        /* If we have no contacts, return the blank arraylist */
+        if (this.contacts.isEmpty())
+        {
+            return ret;
+        }
+
+        /* We have contacts, lets copy put them into the arraylist and return */
+        for (Contact c : this.contacts)
+        {
+            ret.add(c);
+        }
+
+        return ret;
     }
 
     /**
