@@ -1,4 +1,4 @@
-package kademlia.tests;
+package kademlia.simulations;
 
 import kademlia.KademliaNode;
 import kademlia.node.KademliaId;

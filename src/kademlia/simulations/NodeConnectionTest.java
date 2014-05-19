@@ -1,4 +1,4 @@
-package kademlia.tests;
+package kademlia.simulations;
 
 import java.io.IOException;
 import kademlia.KademliaNode;

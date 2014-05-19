@@ -1,4 +1,4 @@
-package kademlia.tests;
+package kademlia.simulations;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -13,10 +13,11 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @since 20140309
  */
-public class AutoRefreshOperationTest2
+public class AutoRefreshOperation2 implements Simulation
 {
 
-    public AutoRefreshOperationTest2()
+    @Override
+    public void runSimulation()
     {
         try
         {
@@ -67,10 +68,5 @@ public class AutoRefreshOperationTest2
         {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args)
-    {
-        new AutoRefreshOperationTest2();
     }
 }

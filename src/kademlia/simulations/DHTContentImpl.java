@@ -1,4 +1,4 @@
-package kademlia.tests;
+package kademlia.simulations;
 
 import com.google.gson.Gson;
 import kademlia.dht.KadContent;

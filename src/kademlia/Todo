@@ -2,3 +2,4 @@
 
 1. Implement the "Optimized Contact Accounting" features as mentioned in the paper
 2. Implement the "Accelerated Lookups" featured as described in the paper
+3. Add a setup file on how to setup Kademlia and run it.
