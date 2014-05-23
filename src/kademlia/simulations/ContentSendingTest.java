@@ -3,7 +3,7 @@ package kademlia.simulations;
 import java.io.IOException;
 import java.util.UUID;
 import kademlia.dht.GetParameter;
-import kademlia.KademliaNode;
+import kademlia.JKademliaNode;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
@@ -22,9 +22,9 @@ public class ContentSendingTest
         try
         {
             /* Setting up 2 Kad networks */
-            KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF45678947584567467"), 7574);
+            JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF45678947584567467"), 7574);
             System.out.println("Created Node Kad 1: " + kad1.getNode().getNodeId());
-            KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("ASERTKJDHGVHERJHGFLK"), 7572);
+            JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("ASERTKJDHGVHERJHGFLK"), 7572);
             System.out.println("Created Node Kad 2: " + kad2.getNode().getNodeId());
             kad2.bootstrap(kad1.getNode());
 

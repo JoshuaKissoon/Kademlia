@@ -1,6 +1,6 @@
 package kademlia.simulations;
 
-import kademlia.KademliaNode;
+import kademlia.JKademliaNode;
 import kademlia.dht.GetParameter;
 import kademlia.dht.StorageEntry;
 import kademlia.node.KademliaId;
@@ -20,8 +20,8 @@ public class SaveStateTest2
         try
         {
             /* Setting up 2 Kad networks */
-            KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF45678947584567463"), 12049);
-            KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("ASF45678947584567464"), 4585);
+            JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF45678947584567463"), 12049);
+            JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("ASF45678947584567464"), 4585);
 
             /* Connecting 2 to 1 */
             System.out.println("Connecting Nodes 1 & 2");
@@ -46,7 +46,7 @@ public class SaveStateTest2
             kad1.shutdown(true);
 
             System.out.println("\n\n\nReloading Kad instance from file");
-            kad1 = KademliaNode.loadFromFile("JoshuaK");
+            kad1 = JKademliaNode.loadFromFile("JoshuaK");
             kad1.bootstrap(kad2.getNode());
             System.out.println(kad2);
 

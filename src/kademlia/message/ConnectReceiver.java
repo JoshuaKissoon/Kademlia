@@ -1,7 +1,7 @@
 package kademlia.message;
 
 import java.io.IOException;
-import kademlia.KademliaNode;
+import kademlia.JKademliaNode;
 import kademlia.KadServer;
 
 /**
@@ -14,9 +14,9 @@ public class ConnectReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final JKademliaNode localNode;
 
-    public ConnectReceiver(KadServer server, KademliaNode local)
+    public ConnectReceiver(KadServer server, JKademliaNode local)
     {
         this.server = server;
         this.localNode = local;

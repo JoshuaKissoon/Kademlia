@@ -1,7 +1,7 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import kademlia.KademliaNode;
+import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.node.KademliaId;
@@ -17,10 +17,10 @@ public class BucketRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final KademliaNode localNode;
+    private final JKademliaNode localNode;
     private final KadConfiguration config;
 
-    public BucketRefreshOperation(KadServer server, KademliaNode localNode, KadConfiguration config)
+    public BucketRefreshOperation(KadServer server, JKademliaNode localNode, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

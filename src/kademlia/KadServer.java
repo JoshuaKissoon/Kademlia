@@ -68,7 +68,7 @@ public class KadServer
      *
      * @throws java.net.SocketException
      */
-    public KadServer(int udpPort, MessageFactory mFactory, Node localNode, KadConfiguration config, KadStatistician statistician) throws SocketException
+    public KadServer(int udpPort, KademliaMessageFactory mFactory, Node localNode, KadConfiguration config, KadStatistician statistician) throws SocketException
     {
         this.config = config;
         this.socket = new DatagramSocket(udpPort);

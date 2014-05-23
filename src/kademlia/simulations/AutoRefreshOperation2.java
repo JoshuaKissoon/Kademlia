@@ -3,7 +3,7 @@ package kademlia.simulations;
 import java.util.Timer;
 import java.util.TimerTask;
 import kademlia.DefaultConfiguration;
-import kademlia.KademliaNode;
+import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.node.KademliaId;
 
@@ -22,9 +22,9 @@ public class AutoRefreshOperation2 implements Simulation
         try
         {
             /* Setting up 2 Kad networks */
-            final KademliaNode kad1 = new KademliaNode("JoshuaK", new KademliaId("ASF456789djem4567463"), 12049);
-            final KademliaNode kad2 = new KademliaNode("Crystal", new KademliaId("AS84k678DJRW84567465"), 4585);
-            final KademliaNode kad3 = new KademliaNode("Shameer", new KademliaId("AS84k67894758456746A"), 8104);
+            final JKademliaNode kad1 = new JKademliaNode("JoshuaK", new KademliaId("ASF456789djem4567463"), 12049);
+            final JKademliaNode kad2 = new JKademliaNode("Crystal", new KademliaId("AS84k678DJRW84567465"), 4585);
+            final JKademliaNode kad3 = new JKademliaNode("Shameer", new KademliaId("AS84k67894758456746A"), 8104);
 
             /* Connecting nodes */
             System.out.println("Connecting Nodes");
