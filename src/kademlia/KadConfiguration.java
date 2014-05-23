@@ -1,4 +1,4 @@
-package kademlia.core;
+package kademlia;
 
 /**
  * Interface that defines a KadConfiguration object

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.TreeSet;
-import kademlia.core.KadConfiguration;
+import kademlia.KadConfiguration;
 import kademlia.node.Node;
 
 /**

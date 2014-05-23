@@ -1,7 +1,7 @@
 package kademlia.routing;
 
 import java.util.List;
-import kademlia.core.KadConfiguration;
+import kademlia.KadConfiguration;
 import kademlia.node.Node;
 import kademlia.node.KademliaId;
 

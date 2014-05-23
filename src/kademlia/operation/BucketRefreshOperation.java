@@ -2,8 +2,8 @@ package kademlia.operation;
 
 import java.io.IOException;
 import kademlia.KademliaNode;
-import kademlia.core.KadConfiguration;
-import kademlia.core.KadServer;
+import kademlia.KadConfiguration;
+import kademlia.KadServer;
 import kademlia.node.KademliaId;
 
 /**

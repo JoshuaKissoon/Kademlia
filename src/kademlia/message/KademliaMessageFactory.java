@@ -2,7 +2,7 @@ package kademlia.message;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import kademlia.core.KadServer;
+import kademlia.KadServer;
 
 /**
  * A factory that handles creating messages and receivers

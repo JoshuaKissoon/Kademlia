@@ -1,4 +1,4 @@
-package kademlia.core;
+package kademlia;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

@@ -3,3 +3,12 @@
 1. Implement the "Optimized Contact Accounting" features as mentioned in the paper
 2. Implement the "Accelerated Lookups" featured as described in the paper
 3. Add a setup file on how to setup Kademlia and run it.
+
+
+Next Steps:
+- Write Unit Tests
+- Improve multi-threading system
+-- I think server is slow in handling requests because the listen method runs in a single thread.
+--- Listen() method should create a new thread to handle every incoming request.
+- KadStatistician
+-- Let the statistician keep track of failed get requests!

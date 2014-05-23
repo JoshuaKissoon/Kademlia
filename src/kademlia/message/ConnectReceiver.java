@@ -2,7 +2,7 @@ package kademlia.message;
 
 import java.io.IOException;
 import kademlia.KademliaNode;
-import kademlia.core.KadServer;
+import kademlia.KadServer;
 
 /**
  * Receives a ConnectMessage and sends an AcknowledgeMessage as reply.

@@ -3,8 +3,8 @@ package kademlia.message;
 import java.io.IOException;
 import java.util.List;
 import kademlia.KademliaNode;
-import kademlia.core.KadConfiguration;
-import kademlia.core.KadServer;
+import kademlia.KadConfiguration;
+import kademlia.KadServer;
 import kademlia.node.Node;
 
 /**

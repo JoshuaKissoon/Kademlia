@@ -8,7 +8,7 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import kademlia.core.KadServer;
+import kademlia.KadServer;
 import kademlia.exceptions.RoutingException;
 import kademlia.node.Node;
 

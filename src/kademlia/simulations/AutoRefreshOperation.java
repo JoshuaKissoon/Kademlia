@@ -2,9 +2,9 @@ package kademlia.simulations;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.core.DefaultConfiguration;
+import kademlia.DefaultConfiguration;
 import kademlia.KademliaNode;
-import kademlia.core.KadConfiguration;
+import kademlia.KadConfiguration;
 import kademlia.node.KademliaId;
 
 /**

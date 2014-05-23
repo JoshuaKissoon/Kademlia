@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import kademlia.routing.RoutingTable;
 import java.lang.reflect.Type;
 import java.util.List;
-import kademlia.core.KadConfiguration;
+import kademlia.KadConfiguration;
 import kademlia.routing.Contact;
 
 /**
