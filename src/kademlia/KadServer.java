@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-import kademlia.KadStatistician;
 import kademlia.exceptions.KadServerDownException;
+import kademlia.message.KademliaMessageFactory;
 import kademlia.message.Message;
 import kademlia.message.MessageFactory;
 import kademlia.node.Node;
@@ -45,7 +45,7 @@ public class KadServer
     private final Node localNode;
 
     /* Factories */
-    private final MessageFactory messageFactory;
+    private final KademliaMessageFactory messageFactory;
 
     private final KadStatistician statistician;
 
