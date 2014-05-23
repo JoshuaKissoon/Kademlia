@@ -13,7 +13,7 @@ import kademlia.dht.DHT;
  * @author Joshua Kissoon
  * @since 20140202
  */
-public class MessageFactory
+public class MessageFactory implements KademliaMessageFactory
 {
 
     private final KademliaNode localNode;
@@ -27,6 +27,7 @@ public class MessageFactory
         this.config = config;
     }
 
+    @Override
     public Message createMessage(byte code, DataInputStream in) throws IOException
     {
         switch (code)
@@ -54,6 +55,7 @@ public class MessageFactory
         }
     }
 
+    @Override
     public Receiver createReceiver(byte code, KadServer server)
     {
         switch (code)
