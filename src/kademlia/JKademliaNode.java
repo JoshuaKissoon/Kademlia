@@ -40,7 +40,7 @@ import kademlia.util.serializer.JsonSerializer;
  * @todo Handle IPv6 Addresses
  *
  */
-public class JKademliaNode
+public class JKademliaNode implements KademliaNode
 {
 
     /* Kademlia Attributes */
@@ -99,9 +99,7 @@ public class JKademliaNode
         this.startRefreshOperation();
     }
 
-    /**
-     * Schedule the recurring refresh operation
-     */
+    @Override
     public final void startRefreshOperation()
     {
         this.refreshOperationTimer = new Timer(true);
@@ -124,6 +122,7 @@ public class JKademliaNode
         refreshOperationTimer.schedule(refreshOperationTTask, this.config.restoreInterval(), this.config.restoreInterval());
     }
 
+    @Override
     public final void stopRefreshOperation()
     {
         /* Close off the timer tasks */
@@ -223,47 +222,31 @@ public class JKademliaNode
         return new JKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
     }
 
-    /**
-     * @return Node The local node for this system
-     */
+    @Override
     public Node getNode()
     {
         return this.localNode;
     }
 
-    /**
-     * @return The KadServer used to send/receive messages
-     */
+    @Override
     public KadServer getServer()
     {
         return this.server;
     }
 
-    /**
-     * @return The DHT for this kad instance
-     */
+    @Override
     public DHT getDHT()
     {
         return this.dht;
     }
 
-    /**
-     * @return The current KadConfiguration object being used
-     */
+    @Override
     public KadConfiguration getCurrentConfiguration()
     {
         return this.config;
     }
 
-    /**
-     * Connect to an existing peer-to-peer network.
-     *
-     * @param n The known node in the peer-to-peer network
-     *
-     * @throws RoutingException      If the bootstrap node could not be contacted
-     * @throws IOException           If a network error occurred
-     * @throws IllegalStateException If this object is closed
-     * */
+    @Override
     public synchronized final void bootstrap(Node n) throws IOException, RoutingException
     {
         long startTime = System.nanoTime();
@@ -273,34 +256,14 @@ public class JKademliaNode
         this.statistician.setBootstrapTime(endTime - startTime);
     }
 
-    /**
-     * Stores the specified value under the given key
-     * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
-     *
-     * @param content The content to put onto the DHT
-     *
-     * @return Integer How many nodes the content was stored on
-     *
-     * @throws java.io.IOException
-     *
-     */
+    @Override
     public int put(KadContent content) throws IOException
     {
         return this.put(new StorageEntry(content));
     }
 
-    /**
-     * Stores the specified value under the given key
-     * This value is stored on K nodes on the network, or all nodes if there are > K total nodes in the network
-     *
-     * @param entry The StorageEntry with the content to put onto the DHT
-     *
-     * @return Integer How many nodes the content was stored on
-     *
-     * @throws java.io.IOException
-     *
-     */
-    private int put(StorageEntry entry) throws IOException
+    @Override
+    public int put(StorageEntry entry) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, entry, this.dht, this.config);
         sop.execute();
@@ -309,28 +272,13 @@ public class JKademliaNode
         return sop.numNodesStoredAt();
     }
 
-    /**
-     * Store a content on the local node's DHT
-     *
-     * @param content The content to put on the DHT
-     *
-     * @throws java.io.IOException
-     */
+    @Override
     public void putLocally(KadContent content) throws IOException
     {
         this.dht.store(new StorageEntry(content));
     }
 
-    /**
-     * Get some content stored on the DHT
-     *
-     * @param param The parameters used to search for the content
-     *
-     * @return DHTContent The content
-     *
-     * @throws java.io.IOException
-     * @throws kademlia.exceptions.ContentNotFoundException
-     */
+    @Override
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
@@ -348,39 +296,25 @@ public class JKademliaNode
         return clo.getContentFound();
     }
 
-    /**
-     * Allow the user of the System to call refresh even out of the normal Kad refresh timing
-     *
-     * @throws java.io.IOException
-     */
+    @Override
     public void refresh() throws IOException
     {
         new KadRefreshOperation(this.server, this, this.dht, this.config).execute();
     }
 
-    /**
-     * @return String The ID of the owner of this local network
-     */
+    @Override
     public String getOwnerId()
     {
         return this.ownerId;
     }
 
-    /**
-     * @return Integer The port on which this kad instance is running
-     */
+    @Override
     public int getPort()
     {
         return this.udpPort;
     }
 
-    /**
-     * Here we handle properly shutting down the Kademlia instance
-     *
-     * @param saveState Whether to save the application state or not
-     *
-     * @throws java.io.FileNotFoundException
-     */
+    @Override
     public void shutdown(final boolean saveState) throws IOException
     {
         /* Shut down the server */
@@ -396,12 +330,8 @@ public class JKademliaNode
         }
     }
 
-    /**
-     * Saves the node state to a text file
-     *
-     * @throws java.io.FileNotFoundException
-     */
-    private void saveKadState() throws IOException
+    @Override
+    public void saveKadState() throws IOException
     {
         DataOutputStream dout;
 
@@ -450,17 +380,13 @@ public class JKademliaNode
         return nodeStateFolder.toString();
     }
 
-    /**
-     * @return The routing table for this node.
-     */
+    @Override
     public RoutingTable getRoutingTable()
     {
         return this.routingTable;
     }
 
-    /**
-     * @return The statistician that manages all statistics
-     */
+    @Override
     public KadStatistician getStatistician()
     {
         return this.statistician;
