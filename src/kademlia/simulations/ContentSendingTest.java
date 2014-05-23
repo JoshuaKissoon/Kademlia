@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 import kademlia.dht.GetParameter;
 import kademlia.JKademliaNode;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.KademliaStorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 
@@ -47,7 +47,7 @@ public class ContentSendingTest
             GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
             System.out.println("Get Parameter: " + gp);
-            StorageEntry conte = kad2.get(gp);
+            KademliaStorageEntry conte = kad2.get(gp);
             System.out.println("Content Found: " + new DHTContentImpl().fromSerializedForm(conte.getContent()));
             System.out.println("Content Metadata: " + conte.getContentMetadata());
 

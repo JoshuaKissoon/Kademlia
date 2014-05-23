@@ -6,7 +6,7 @@ package kademlia.dht;
  * @author Joshua Kissoon
  * @since 20140402
  */
-public class StorageEntry
+public class StorageEntry implements KademliaStorageEntry
 {
 
     private String content;
@@ -23,16 +23,19 @@ public class StorageEntry
         this.metadata = metadata;
     }
 
+    @Override
     public final void setContent(final byte[] data)
     {
         this.content = new String(data);
     }
 
+    @Override
     public final byte[] getContent()
     {
         return this.content.getBytes();
     }
 
+    @Override
     public final StorageEntryMetadata getContentMetadata()
     {
         return this.metadata;

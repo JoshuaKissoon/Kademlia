@@ -15,6 +15,7 @@ import kademlia.dht.GetParameter;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
 import kademlia.dht.KademliaDHT;
+import kademlia.dht.KademliaStorageEntry;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
@@ -265,7 +266,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public int put(StorageEntry entry) throws IOException
+    public int put(KademliaStorageEntry entry) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, entry, this.dht, this.config);
         sop.execute();
@@ -281,7 +282,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
         {

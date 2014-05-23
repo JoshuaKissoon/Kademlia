@@ -3,7 +3,7 @@ package kademlia.simulations;
 import java.io.IOException;
 import kademlia.dht.GetParameter;
 import kademlia.JKademliaNode;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.KademliaStorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.node.KademliaId;
 
@@ -33,7 +33,7 @@ public class RefreshOperationTest
             GetParameter gp = new GetParameter(c.getKey(), DHTContentImpl.TYPE);
             gp.setType(DHTContentImpl.TYPE);
             gp.setOwnerId(c.getOwnerId());
-            StorageEntry conte = kad2.get(gp);
+            KademliaStorageEntry conte = kad2.get(gp);
 
             kad2.refresh();
         }

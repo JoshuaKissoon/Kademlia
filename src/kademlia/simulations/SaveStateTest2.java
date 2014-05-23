@@ -2,7 +2,7 @@ package kademlia.simulations;
 
 import kademlia.JKademliaNode;
 import kademlia.dht.GetParameter;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.KademliaStorageEntry;
 import kademlia.node.KademliaId;
 
 /**
@@ -52,7 +52,7 @@ public class SaveStateTest2
 
             /* Trying to get a content stored on the restored node */
             GetParameter gp = new GetParameter(c.getKey(), kad2.getOwnerId(), c.getType());
-            StorageEntry content = kad2.get(gp);
+            KademliaStorageEntry content = kad2.get(gp);
             DHTContentImpl cc = new DHTContentImpl().fromSerializedForm(content.getContent());
             System.out.println("Content received: " + cc);
         }
