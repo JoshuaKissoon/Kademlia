@@ -9,7 +9,7 @@ import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.node.Node;
-import kademlia.routing.JKademliaRoutingTable;
+import kademlia.routing.KademliaRoutingTable;
 
 /**
  * The main Kademlia Node on the network, this node manages everything for this local system.
@@ -145,7 +145,7 @@ public interface KademliaNode
     /**
      * @return The routing table for this node.
      */
-    public JKademliaRoutingTable getRoutingTable();
+    public KademliaRoutingTable getRoutingTable();
 
     /**
      * @return The statistician that manages all statistics

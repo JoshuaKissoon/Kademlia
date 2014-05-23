@@ -2,7 +2,7 @@ package kademlia.simulations;
 
 import kademlia.JKademliaNode;
 import kademlia.node.KademliaId;
-import kademlia.routing.JKademliaRoutingTable;
+import kademlia.routing.KademliaRoutingTable;
 
 /**
  * Testing how the routing table works and checking if everything works properly
@@ -24,7 +24,7 @@ public class RoutingTableSimulation
             JKademliaNode kad4 = new JKademliaNode("Lokesh", new KademliaId("ASF45678947584567466"), 8335);
             JKademliaNode kad5 = new JKademliaNode("Chandu", new KademliaId("ASF45678947584567467"), 13345);
 
-            JKademliaRoutingTable rt = kad1.getRoutingTable();
+            KademliaRoutingTable rt = kad1.getRoutingTable();
             
             rt.insert(kad2.getNode());
             rt.insert(kad3.getNode());

@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.KadConfiguration;
 import kademlia.routing.Contact;
+import kademlia.routing.KademliaRoutingTable;
 
 /**
  * A KadSerializer that serializes routing tables to JSON format
@@ -39,7 +40,7 @@ import kademlia.routing.Contact;
  *
  * @since 20140310
  */
-public class JsonRoutingTableSerializer implements KadSerializer<JKademliaRoutingTable>
+public class JsonRoutingTableSerializer implements KadSerializer<KademliaRoutingTable>
 {
 
     private final Gson gson;
@@ -66,7 +67,7 @@ public class JsonRoutingTableSerializer implements KadSerializer<JKademliaRoutin
     }
 
     @Override
-    public void write(JKademliaRoutingTable data, DataOutputStream out) throws IOException
+    public void write(KademliaRoutingTable data, DataOutputStream out) throws IOException
     {
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
@@ -83,7 +84,7 @@ public class JsonRoutingTableSerializer implements KadSerializer<JKademliaRoutin
     }
 
     @Override
-    public JKademliaRoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
+    public KademliaRoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))
@@ -91,7 +92,7 @@ public class JsonRoutingTableSerializer implements KadSerializer<JKademliaRoutin
             reader.beginArray();
 
             /* Read the basic JKademliaRoutingTable */
-            JKademliaRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
+            KademliaRoutingTable tbl = gson.fromJson(reader, KademliaRoutingTable.class);
             tbl.setConfiguration(config);
             
             /* Now get the Contacts and add them back to the JKademliaRoutingTable */

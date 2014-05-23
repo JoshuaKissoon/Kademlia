@@ -26,6 +26,7 @@ import kademlia.operation.Operation;
 import kademlia.operation.KadRefreshOperation;
 import kademlia.operation.StoreOperation;
 import kademlia.routing.JKademliaRoutingTable;
+import kademlia.routing.KademliaRoutingTable;
 import kademlia.util.serializer.JsonDHTSerializer;
 import kademlia.util.serializer.JsonRoutingTableSerializer;
 import kademlia.util.serializer.JsonSerializer;
@@ -50,7 +51,7 @@ public class JKademliaNode implements KademliaNode
     private final transient Node localNode;
     private final transient KadServer server;
     private final transient DHT dht;
-    private transient JKademliaRoutingTable routingTable;
+    private transient KademliaRoutingTable routingTable;
     private final int udpPort;
     private transient KadConfiguration config;
 
@@ -86,7 +87,7 @@ public class JKademliaNode implements KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public JKademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, JKademliaRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, KademliaRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -131,7 +132,7 @@ public class JKademliaNode implements KademliaNode
         this.refreshOperationTimer.purge();
     }
 
-    public JKademliaNode(String ownerId, Node node, int udpPort, JKademliaRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node node, int udpPort, KademliaRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this(
                 ownerId,
@@ -204,7 +205,7 @@ public class JKademliaNode implements KademliaNode
          * @section Read the routing table
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "routingtable.kns"));
-        JKademliaRoutingTable irtbl = new JsonRoutingTableSerializer(iconfig).read(din);
+        KademliaRoutingTable irtbl = new JsonRoutingTableSerializer(iconfig).read(din);
 
         /**
          * @section Read the node state
@@ -381,7 +382,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public JKademliaRoutingTable getRoutingTable()
+    public KademliaRoutingTable getRoutingTable()
     {
         return this.routingTable;
     }
