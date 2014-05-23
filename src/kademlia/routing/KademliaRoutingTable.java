@@ -72,7 +72,7 @@ public interface KademliaRoutingTable
     /**
      * @return Bucket[] The buckets in this Kad Instance
      */
-    public KadBucket[] getBuckets();
+    public KademliaBucket[] getBuckets();
 
     /**
      * Method used by operations to notify the routing table of any contacts that have been unresponsive.

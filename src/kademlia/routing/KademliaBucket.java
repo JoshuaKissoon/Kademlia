@@ -9,7 +9,7 @@ import kademlia.node.Node;
  * @author Joshua Kissoon
  * @created 20140215
  */
-public interface KadBucket
+public interface KademliaBucket
 {
 
     /**

@@ -18,7 +18,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
 {
 
     private final Node localNode;  // The current node
-    private transient KadBucket[] buckets;
+    private transient KademliaBucket[] buckets;
 
     private transient KadConfiguration config;
 
@@ -40,10 +40,10 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
     @Override
     public final void initialize()
     {
-        this.buckets = new KadBucket[KademliaId.ID_LENGTH];
+        this.buckets = new KademliaBucket[KademliaId.ID_LENGTH];
         for (int i = 0; i < KademliaId.ID_LENGTH; i++)
         {
-            buckets[i] = new KadBucketImpl(i, this.config);
+            buckets[i] = new JKademliaBucket(i, this.config);
         }
     }
 
@@ -128,7 +128,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
     {
         List<Node> nodes = new ArrayList<>();
 
-        for (KadBucket b : this.buckets)
+        for (KademliaBucket b : this.buckets)
         {
             for (Contact c : b.getContacts())
             {
@@ -147,7 +147,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
     {
         List<Contact> contacts = new ArrayList<>();
 
-        for (KadBucket b : this.buckets)
+        for (KademliaBucket b : this.buckets)
         {
             contacts.addAll(b.getContacts());
         }
@@ -159,7 +159,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
      * @return Bucket[] The buckets in this Kad Instance
      */
     @Override
-    public final KadBucket[] getBuckets()
+    public final KademliaBucket[] getBuckets()
     {
         return this.buckets;
     }
@@ -169,7 +169,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
      *
      * @param buckets
      */
-    public final void setBuckets(KadBucket[] buckets)
+    public final void setBuckets(KademliaBucket[] buckets)
     {
         this.buckets = buckets;
     }
@@ -211,7 +211,7 @@ public class JKademliaRoutingTable implements KademliaRoutingTable
     {
         StringBuilder sb = new StringBuilder("\nPrinting Routing Table Started ***************** \n");
         int totalContacts = 0;
-        for (KadBucket b : this.buckets)
+        for (KademliaBucket b : this.buckets)
         {
             if (b.numContacts() > 0)
             {

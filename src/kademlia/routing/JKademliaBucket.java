@@ -13,7 +13,7 @@ import kademlia.node.Node;
  * @author Joshua Kissoon
  * @created 20140215
  */
-public class KadBucketImpl implements KadBucket
+public class JKademliaBucket implements KademliaBucket
 {
 
     /* How deep is this bucket in the Routing Table */
@@ -37,7 +37,7 @@ public class KadBucketImpl implements KadBucket
      * @param depth  How deep in the routing tree is this bucket
      * @param config
      */
-    public KadBucketImpl(int depth, KadConfiguration config)
+    public JKademliaBucket(int depth, KadConfiguration config)
     {
         this.depth = depth;
         this.config = config;
