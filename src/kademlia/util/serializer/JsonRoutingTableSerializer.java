@@ -9,7 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import kademlia.routing.RoutingTable;
+import kademlia.routing.JKademliaRoutingTable;
 import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.KadConfiguration;
@@ -17,13 +17,13 @@ import kademlia.routing.Contact;
 
 /**
  * A KadSerializer that serializes routing tables to JSON format
- * The generic serializer is not working for routing tables
- *
- * Why a RoutingTable specific serializer?
- * The routing table structure:
- * - RoutingTable
- * -- Buckets[]
- * --- Map<NodeId, Node>
+ The generic serializer is not working for routing tables
+
+ Why a JKademliaRoutingTable specific serializer?
+ The routing table structure:
+ - JKademliaRoutingTable
+ -- Buckets[]
+ --- Map<NodeId, Node>
  * ---- NodeId:KeyBytes
  * ---- Node: NodeId, InetAddress, Port
  *
@@ -31,15 +31,15 @@ import kademlia.routing.Contact;
  * especially at the Map part.
  *
  * Solution
- * - Make the Buckets[] transient
- * - Simply store all Nodes in the serialized object
- * - When reloading, re-add all nodes to the RoutingTable
+ - Make the Buckets[] transient
+ - Simply store all Nodes in the serialized object
+ - When reloading, re-add all nodes to the JKademliaRoutingTable
  *
  * @author Joshua Kissoon
  *
  * @since 20140310
  */
-public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
+public class JsonRoutingTableSerializer implements KadSerializer<JKademliaRoutingTable>
 {
 
     private final Gson gson;
@@ -66,14 +66,14 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
     }
 
     @Override
-    public void write(RoutingTable data, DataOutputStream out) throws IOException
+    public void write(JKademliaRoutingTable data, DataOutputStream out) throws IOException
     {
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
             writer.beginArray();
 
-            /* Write the basic RoutingTable */
-            gson.toJson(data, RoutingTable.class, writer);
+            /* Write the basic JKademliaRoutingTable */
+            gson.toJson(data, JKademliaRoutingTable.class, writer);
 
             /* Now Store the Contacts  */
             gson.toJson(data.getAllContacts(), contactCollectionType, writer);
@@ -83,18 +83,18 @@ public class JsonRoutingTableSerializer implements KadSerializer<RoutingTable>
     }
 
     @Override
-    public RoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
+    public JKademliaRoutingTable read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))
         {
             reader.beginArray();
 
-            /* Read the basic RoutingTable */
-            RoutingTable tbl = gson.fromJson(reader, RoutingTable.class);
+            /* Read the basic JKademliaRoutingTable */
+            JKademliaRoutingTable tbl = gson.fromJson(reader, JKademliaRoutingTable.class);
             tbl.setConfiguration(config);
             
-            /* Now get the Contacts and add them back to the RoutingTable */
+            /* Now get the Contacts and add them back to the JKademliaRoutingTable */
             List<Contact> contacts = gson.fromJson(reader, contactCollectionType);
             tbl.initialize();
 

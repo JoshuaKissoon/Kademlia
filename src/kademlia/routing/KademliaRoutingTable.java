@@ -11,7 +11,7 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @since 20140501
  */
-public interface KadRoutingTable
+public interface KademliaRoutingTable
 {
 
     /**

@@ -36,9 +36,9 @@ public class ContentRefreshOperation implements Operation
 
     /**
      * For each content stored on this DHT, distribute it to the K closest nodes
-     * Also delete the content if this node is no longer one of the K closest nodes
-     *
-     * We assume that our RoutingTable is updated, and we can get the K closest nodes from that table
+ Also delete the content if this node is no longer one of the K closest nodes
+
+ We assume that our JKademliaRoutingTable is updated, and we can get the K closest nodes from that table
      *
      * @throws java.io.IOException
      */

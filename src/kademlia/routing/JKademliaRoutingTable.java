@@ -14,7 +14,7 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @created 20140215
  */
-public class RoutingTable implements KadRoutingTable
+public class JKademliaRoutingTable implements KademliaRoutingTable
 {
 
     private final Node localNode;  // The current node
@@ -22,7 +22,7 @@ public class RoutingTable implements KadRoutingTable
 
     private transient KadConfiguration config;
 
-    public RoutingTable(Node localNode, KadConfiguration config)
+    public JKademliaRoutingTable(Node localNode, KadConfiguration config)
     {
         this.localNode = localNode;
         this.config = config;
@@ -35,7 +35,7 @@ public class RoutingTable implements KadRoutingTable
     }
 
     /**
-     * Initialize the RoutingTable to it's default state
+     * Initialize the JKademliaRoutingTable to it's default state
      */
     @Override
     public final void initialize()
@@ -121,7 +121,7 @@ public class RoutingTable implements KadRoutingTable
     }
 
     /**
-     * @return List A List of all Nodes in this RoutingTable
+     * @return List A List of all Nodes in this JKademliaRoutingTable
      */
     @Override
     public synchronized final List<Node> getAllNodes()
@@ -140,7 +140,7 @@ public class RoutingTable implements KadRoutingTable
     }
 
     /**
-     * @return List A List of all Nodes in this RoutingTable
+     * @return List A List of all Nodes in this JKademliaRoutingTable
      */
     @Override
     public final List<Contact> getAllContacts()
