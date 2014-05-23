@@ -12,6 +12,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.List;
 import kademlia.dht.DHT;
+import kademlia.dht.KademliaDHT;
 import kademlia.dht.StorageEntryMetadata;
 
 /**
@@ -38,7 +39,7 @@ import kademlia.dht.StorageEntryMetadata;
  *
  * @since 20140310
  */
-public class JsonDHTSerializer implements KadSerializer<DHT>
+public class JsonDHTSerializer implements KadSerializer<KademliaDHT>
 {
 
     private final Gson gson;
@@ -54,7 +55,7 @@ public class JsonDHTSerializer implements KadSerializer<DHT>
     }
 
     @Override
-    public void write(DHT data, DataOutputStream out) throws IOException
+    public void write(KademliaDHT data, DataOutputStream out) throws IOException
     {
         try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(out)))
         {
@@ -72,7 +73,7 @@ public class JsonDHTSerializer implements KadSerializer<DHT>
     }
 
     @Override
-    public DHT read(DataInputStream in) throws IOException, ClassNotFoundException
+    public KademliaDHT read(DataInputStream in) throws IOException, ClassNotFoundException
     {
         try (DataInputStream din = new DataInputStream(in);
                 JsonReader reader = new JsonReader(new InputStreamReader(in)))

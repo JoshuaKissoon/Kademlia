@@ -14,6 +14,7 @@ import java.util.TimerTask;
 import kademlia.dht.GetParameter;
 import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaDHT;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
@@ -50,7 +51,7 @@ public class JKademliaNode implements KademliaNode
     /* Objects to be used */
     private final transient Node localNode;
     private final transient KadServer server;
-    private final transient DHT dht;
+    private final transient KademliaDHT dht;
     private transient KademliaRoutingTable routingTable;
     private final int udpPort;
     private transient KadConfiguration config;
@@ -87,7 +88,7 @@ public class JKademliaNode implements KademliaNode
      *                     from disk <i>or</i> a network error occurred while
      *                     attempting to bootstrap to the network
      * */
-    public JKademliaNode(String ownerId, Node localNode, int udpPort, DHT dht, KademliaRoutingTable routingTable, KadConfiguration config) throws IOException
+    public JKademliaNode(String ownerId, Node localNode, int udpPort, KademliaDHT dht, KademliaRoutingTable routingTable, KadConfiguration config) throws IOException
     {
         this.ownerId = ownerId;
         this.udpPort = udpPort;
@@ -217,7 +218,7 @@ public class JKademliaNode implements KademliaNode
          * @section Read the DHT
          */
         din = new DataInputStream(new FileInputStream(getStateStorageFolderName(ownerId, iconfig) + File.separator + "dht.kns"));
-        DHT idht = new JsonDHTSerializer().read(din);
+        KademliaDHT idht = new JsonDHTSerializer().read(din);
         idht.setConfiguration(iconfig);
 
         return new JKademliaNode(ownerId, inode, ikad.getPort(), idht, irtbl, iconfig);
@@ -236,7 +237,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public DHT getDHT()
+    public KademliaDHT getDHT()
     {
         return this.dht;
     }

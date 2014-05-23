@@ -3,8 +3,8 @@ package kademlia;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import kademlia.dht.GetParameter;
-import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
+import kademlia.dht.KademliaDHT;
 import kademlia.dht.StorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
@@ -44,7 +44,7 @@ public interface KademliaNode
     /**
      * @return The DHT for this kad instance
      */
-    public DHT getDHT();
+    public KademliaDHT getDHT();
 
     /**
      * @return The current KadConfiguration object being used

@@ -5,7 +5,7 @@ import java.util.List;
 import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.dht.DHT;
+import kademlia.dht.KademliaDHT;
 import kademlia.dht.StorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
@@ -23,10 +23,10 @@ public class ContentRefreshOperation implements Operation
 
     private final KadServer server;
     private final JKademliaNode localNode;
-    private final DHT dht;
+    private final KademliaDHT dht;
     private final KadConfiguration config;
 
-    public ContentRefreshOperation(KadServer server, JKademliaNode localNode, DHT dht, KadConfiguration config)
+    public ContentRefreshOperation(KadServer server, JKademliaNode localNode, KademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

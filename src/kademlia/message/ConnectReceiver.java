@@ -1,8 +1,8 @@
 package kademlia.message;
 
 import java.io.IOException;
-import kademlia.JKademliaNode;
 import kademlia.KadServer;
+import kademlia.KademliaNode;
 
 /**
  * Receives a ConnectMessage and sends an AcknowledgeMessage as reply.
@@ -14,9 +14,9 @@ public class ConnectReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final JKademliaNode localNode;
+    private final KademliaNode localNode;
 
-    public ConnectReceiver(KadServer server, JKademliaNode local)
+    public ConnectReceiver(KadServer server, KademliaNode local)
     {
         this.server = server;
         this.localNode = local;

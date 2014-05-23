@@ -22,7 +22,7 @@ import kademlia.util.serializer.KadSerializer;
  * @author Joshua Kissoon
  * @since 20140226
  */
-public class DHT
+public class DHT implements KademliaDHT
 {
 
     private transient StoredContentManager contentManager;
@@ -38,29 +38,19 @@ public class DHT
         this.initialize();
     }
 
-    /**
-     * Initialize this DHT to it's default state
-     */
+    @Override
     public final void initialize()
     {
         contentManager = new StoredContentManager();
     }
 
-    /**
-     * Set a new configuration. Mainly used when we restore the DHT state from a file
-     *
-     * @param con The new configuration file
-     */
+    @Override
     public void setConfiguration(KadConfiguration con)
     {
         this.config = con;
     }
 
-    /**
-     * Creates a new Serializer or returns an existing serializer
-     *
-     * @return The new ContentSerializer
-     */
+    @Override
     public KadSerializer<StorageEntry> getSerializer()
     {
         if (null == serializer)
@@ -71,15 +61,7 @@ public class DHT
         return serializer;
     }
 
-    /**
-     * Handle storing content locally
-     *
-     * @param content The DHT content to store
-     *
-     * @return boolean true if we stored the content, false if the content already exists and is up to date
-     *
-     * @throws java.io.IOException
-     */
+    @Override
     public boolean store(StorageEntry content) throws IOException
     {
         /* Lets check if we have this content and it's the updated version */
@@ -141,47 +123,27 @@ public class DHT
         }
     }
 
+    @Override
     public boolean store(KadContent content) throws IOException
     {
         return this.store(new StorageEntry(content));
     }
 
-    /**
-     * Retrieves a Content from local storage
-     *
-     * @param key      The Key of the content to retrieve
-     * @param hashCode The hash code of the content to retrieve
-     *
-     * @return A KadContent object
-     */
-    private StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    @Override
+    public StorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
         return this.getSerializer().read(din);
     }
 
-    /**
-     * Check if any content for the given criteria exists in this DHT
-     *
-     * @param param The content search criteria
-     *
-     * @return boolean Whether any content exist that satisfy the criteria
-     */
+    @Override
     public boolean contains(GetParameter param)
     {
         return this.contentManager.contains(param);
     }
 
-    /**
-     * Retrieve and create a KadContent object given the StorageEntry object
-     *
-     * @param entry The StorageEntry used to retrieve this content
-     *
-     * @return KadContent The content object
-     *
-     * @throws java.io.IOException
-     */
+    @Override
     public StorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
@@ -201,16 +163,7 @@ public class DHT
         throw new NoSuchElementException();
     }
 
-    /**
-     * Get the StorageEntry for the content if any exist,
-     * retrieve the KadContent from the storage system and return it
-     *
-     * @param param The parameters used to filter the content needed
-     *
-     * @return KadContent A KadContent found on the DHT satisfying the given criteria
-     *
-     * @throws java.io.IOException
-     */
+    @Override
     public StorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
@@ -232,19 +185,13 @@ public class DHT
         throw new NoSuchElementException();
     }
 
-    /**
-     * Delete a content from local storage
-     *
-     * @param content The Content to Remove
-     *
-     *
-     * @throws kademlia.exceptions.ContentNotFoundException
-     */
+    @Override
     public void remove(KadContent content) throws ContentNotFoundException
     {
         this.remove(new StorageEntryMetadata(content));
     }
 
+    @Override
     public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
     {
         String folder = this.getContentStorageFolderName(entry.getKey());
@@ -288,20 +235,13 @@ public class DHT
         return contentStorageFolder.toString();
     }
 
-    /**
-     * @return A List of all StorageEntries for this node
-     */
+    @Override
     public List<StorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
     }
 
-    /**
-     * Used to add a list of storage entries for existing content to the DHT.
-     * Mainly used when retrieving StorageEntries from a saved state file.
-     *
-     * @param ientries The entries to add
-     */
+    @Override
     public void putStorageEntries(List<StorageEntryMetadata> ientries)
     {
         for (StorageEntryMetadata e : ientries)

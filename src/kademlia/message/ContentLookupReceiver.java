@@ -2,10 +2,10 @@ package kademlia.message;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
-import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.dht.DHT;
+import kademlia.KademliaNode;
+import kademlia.dht.KademliaDHT;
 
 /**
  * Responds to a ContentLookupMessage by sending a ContentMessage containing the requested content;
@@ -18,11 +18,11 @@ public class ContentLookupReceiver implements Receiver
 {
 
     private final KadServer server;
-    private final JKademliaNode localNode;
-    private final DHT dht;
+    private final KademliaNode localNode;
+    private final KademliaDHT dht;
     private final KadConfiguration config;
 
-    public ContentLookupReceiver(KadServer server, JKademliaNode localNode, DHT dht, KadConfiguration config)
+    public ContentLookupReceiver(KadServer server, KademliaNode localNode, KademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

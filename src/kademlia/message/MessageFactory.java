@@ -2,10 +2,10 @@ package kademlia.message;
 
 import java.io.DataInputStream;
 import java.io.IOException;
-import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.dht.DHT;
+import kademlia.KademliaNode;
+import kademlia.dht.KademliaDHT;
 
 /**
  * Handles creating messages and receivers
@@ -16,11 +16,11 @@ import kademlia.dht.DHT;
 public class MessageFactory implements KademliaMessageFactory
 {
 
-    private final JKademliaNode localNode;
-    private final DHT dht;
+    private final KademliaNode localNode;
+    private final KademliaDHT dht;
     private final KadConfiguration config;
 
-    public MessageFactory(JKademliaNode local, DHT dht, KadConfiguration config)
+    public MessageFactory(KademliaNode local, KademliaDHT dht, KadConfiguration config)
     {
         this.localNode = local;
         this.dht = dht;

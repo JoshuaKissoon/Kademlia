@@ -4,7 +4,7 @@ import java.io.IOException;
 import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
-import kademlia.dht.DHT;
+import kademlia.dht.KademliaDHT;
 
 /**
  * An operation that handles refreshing the entire Kademlia Systems including buckets and content
@@ -17,10 +17,10 @@ public class KadRefreshOperation implements Operation
 
     private final KadServer server;
     private final JKademliaNode localNode;
-    private final DHT dht;
+    private final KademliaDHT dht;
     private final KadConfiguration config;
 
-    public KadRefreshOperation(KadServer server, JKademliaNode localNode, DHT dht, KadConfiguration config)
+    public KadRefreshOperation(KadServer server, JKademliaNode localNode, KademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;
