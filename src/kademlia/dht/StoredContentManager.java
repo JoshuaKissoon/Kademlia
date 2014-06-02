@@ -20,7 +20,7 @@ import kademlia.node.KademliaId;
 class StoredContentManager
 {
 
-    private final Map<KademliaId, List<StorageEntryMetadata>> entries;
+    private final Map<KademliaId, List<KademliaStorageEntryMetadata>> entries;
 
     
     {
@@ -32,7 +32,7 @@ class StoredContentManager
      *
      * @param content The content to store a reference to
      */
-    public StorageEntryMetadata put(KadContent content) throws ContentExistException
+    public KademliaStorageEntryMetadata put(KadContent content) throws ContentExistException
     {
         return this.put(new StorageEntryMetadata(content));
     }
@@ -42,7 +42,7 @@ class StoredContentManager
      *
      * @param entry The StorageEntry to store
      */
-    public StorageEntryMetadata put(StorageEntryMetadata entry) throws ContentExistException
+    public KademliaStorageEntryMetadata put(KademliaStorageEntryMetadata entry) throws ContentExistException
     {
         if (!this.entries.containsKey(entry.getKey()))
         {
@@ -74,7 +74,7 @@ class StoredContentManager
         if (this.entries.containsKey(param.getKey()))
         {
             /* Content with this key exist, check if any match the rest of the search criteria */
-            for (StorageEntryMetadata e : this.entries.get(param.getKey()))
+            for (KademliaStorageEntryMetadata e : this.entries.get(param.getKey()))
             {
                 /* If any entry satisfies the given parameters, return true */
                 if (e.satisfiesParameters(param))
@@ -100,7 +100,7 @@ class StoredContentManager
     /**
      * Check if a StorageEntry exist on this DHT
      */
-    public synchronized boolean contains(StorageEntryMetadata entry)
+    public synchronized boolean contains(KademliaStorageEntryMetadata entry)
     {
         return this.contains(new GetParameter(entry));
     }
@@ -112,12 +112,12 @@ class StoredContentManager
      *
      * @return List of content for the specific search parameters
      */
-    public StorageEntryMetadata get(GetParameter param) throws NoSuchElementException
+    public KademliaStorageEntryMetadata get(GetParameter param) throws NoSuchElementException
     {
         if (this.entries.containsKey(param.getKey()))
         {
             /* Content with this key exist, check if any match the rest of the search criteria */
-            for (StorageEntryMetadata e : this.entries.get(param.getKey()))
+            for (KademliaStorageEntryMetadata e : this.entries.get(param.getKey()))
             {
                 /* If any entry satisfies the given parameters, return true */
                 if (e.satisfiesParameters(param))
@@ -135,7 +135,7 @@ class StoredContentManager
         }
     }
 
-    public StorageEntryMetadata get(StorageEntryMetadata md)
+    public KademliaStorageEntryMetadata get(KademliaStorageEntryMetadata md)
     {
         return this.get(new GetParameter(md));
     }
@@ -143,11 +143,11 @@ class StoredContentManager
     /**
      * @return A list of all storage entries
      */
-    public synchronized List<StorageEntryMetadata> getAllEntries()
+    public synchronized List<KademliaStorageEntryMetadata> getAllEntries()
     {
-        List<StorageEntryMetadata> entriesRet = new ArrayList<>();
+        List<KademliaStorageEntryMetadata> entriesRet = new ArrayList<>();
 
-        for (List<StorageEntryMetadata> entrySet : this.entries.values())
+        for (List<KademliaStorageEntryMetadata> entrySet : this.entries.values())
         {
             if (entrySet.size() > 0)
             {
@@ -163,7 +163,7 @@ class StoredContentManager
         this.remove(new StorageEntryMetadata(content));
     }
 
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public void remove(KademliaStorageEntryMetadata entry) throws ContentNotFoundException
     {
         if (contains(entry))
         {
@@ -180,14 +180,14 @@ class StoredContentManager
     {
         StringBuilder sb = new StringBuilder("Stored Content: \n");
         int count = 0;
-        for (List<StorageEntryMetadata> es : this.entries.values())
+        for (List<KademliaStorageEntryMetadata> es : this.entries.values())
         {
             if (entries.size() < 1)
             {
                 continue;
             }
 
-            for (StorageEntryMetadata e : es)
+            for (KademliaStorageEntryMetadata e : es)
             {
                 sb.append(++count);
                 sb.append(". ");

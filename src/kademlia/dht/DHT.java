@@ -67,7 +67,7 @@ public class DHT implements KademliaDHT
         /* Lets check if we have this content and it's the updated version */
         if (this.contentManager.contains(content.getContentMetadata()))
         {
-            StorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
+            KademliaStorageEntryMetadata current = this.contentManager.get(content.getContentMetadata());
 
             /* update the last republished time */
             current.updateLastRepublished();
@@ -100,7 +100,7 @@ public class DHT implements KademliaDHT
         {
             //System.out.println("Adding new content.");
             /* Keep track of this content in the entries manager */
-            StorageEntryMetadata sEntry = this.contentManager.put(content.getContentMetadata());
+            KademliaStorageEntryMetadata sEntry = this.contentManager.put(content.getContentMetadata());
 
             /* Now we store the content locally in a file */
             String contentStorageFolder = this.getContentStorageFolderName(content.getContentMetadata().getKey());
@@ -144,7 +144,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public KademliaStorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public KademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -169,7 +169,7 @@ public class DHT implements KademliaDHT
         /* Load a KadContent if any exist for the given criteria */
         try
         {
-            StorageEntryMetadata e = this.contentManager.get(param);
+            KademliaStorageEntryMetadata e = this.contentManager.get(param);
             return this.retrieve(e.getKey(), e.hashCode());
         }
         catch (FileNotFoundException e)
@@ -192,7 +192,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException
+    public void remove(KademliaStorageEntryMetadata entry) throws ContentNotFoundException
     {
         String folder = this.getContentStorageFolderName(entry.getKey());
         File file = new File(folder + File.separator + entry.hashCode() + ".kct");
@@ -236,15 +236,15 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public List<StorageEntryMetadata> getStorageEntries()
+    public List<KademliaStorageEntryMetadata> getStorageEntries()
     {
         return contentManager.getAllEntries();
     }
 
     @Override
-    public void putStorageEntries(List<StorageEntryMetadata> ientries)
+    public void putStorageEntries(List<KademliaStorageEntryMetadata> ientries)
     {
-        for (StorageEntryMetadata e : ientries)
+        for (KademliaStorageEntryMetadata e : ientries)
         {
             try
             {

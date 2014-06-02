@@ -69,7 +69,7 @@ public class GetParameter
      *
      * @param md
      */
-    public GetParameter(StorageEntryMetadata md)
+    public GetParameter(KademliaStorageEntryMetadata md)
     {
         this.key = md.getKey();
 

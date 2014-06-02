@@ -81,7 +81,7 @@ public interface KademliaDHT
      *
      * @throws java.io.IOException
      */
-    public KademliaStorageEntry get(StorageEntryMetadata entry) throws IOException, NoSuchElementException;
+    public KademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
 
     /**
      * Get the StorageEntry for the content if any exist.
@@ -104,12 +104,12 @@ public interface KademliaDHT
      */
     public void remove(KadContent content) throws ContentNotFoundException;
 
-    public void remove(StorageEntryMetadata entry) throws ContentNotFoundException;
+    public void remove(KademliaStorageEntryMetadata entry) throws ContentNotFoundException;
 
     /**
      * @return A List of all StorageEntries for this node
      */
-    public List<StorageEntryMetadata> getStorageEntries();
+    public List<KademliaStorageEntryMetadata> getStorageEntries();
 
     /**
      * Used to add a list of storage entries for existing content to the DHT.
@@ -117,6 +117,6 @@ public interface KademliaDHT
      *
      * @param ientries The entries to add
      */
-    public void putStorageEntries(List<StorageEntryMetadata> ientries);
+    public void putStorageEntries(List<KademliaStorageEntryMetadata> ientries);
 
 }

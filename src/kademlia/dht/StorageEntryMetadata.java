@@ -10,7 +10,7 @@ import kademlia.node.KademliaId;
  * @author Joshua Kissoon
  * @since 20140226
  */
-public class StorageEntryMetadata
+public class StorageEntryMetadata implements KademliaStorageEntryMetadata
 {
 
     private final KademliaId key;
@@ -33,26 +33,31 @@ public class StorageEntryMetadata
         this.lastRepublished = System.currentTimeMillis() / 1000L;
     }
 
+    @Override
     public KademliaId getKey()
     {
         return this.key;
     }
 
+    @Override
     public String getOwnerId()
     {
         return this.ownerId;
     }
 
+    @Override
     public String getType()
     {
         return this.type;
     }
 
+    @Override
     public int getContentHash()
     {
         return this.contentHash;
     }
 
+    @Override
     public long getLastUpdatedTimestamp()
     {
         return this.updatedTs;
@@ -66,6 +71,7 @@ public class StorageEntryMetadata
      *
      * @return boolean Whether this content satisfies the parameters
      */
+    @Override
     public boolean satisfiesParameters(GetParameter params)
     {
         /* Check that owner id matches */
@@ -89,6 +95,7 @@ public class StorageEntryMetadata
         return true;
     }
 
+    @Override
     public long lastRepublished()
     {
         return this.lastRepublished;
@@ -97,6 +104,7 @@ public class StorageEntryMetadata
     /**
      * Whenever we republish a content or get this content from the network, we update the last republished time
      */
+    @Override
     public void updateLastRepublished()
     {
         this.lastRepublished = System.currentTimeMillis() / 1000L;
@@ -105,7 +113,7 @@ public class StorageEntryMetadata
     @Override
     public boolean equals(Object o)
     {
-        if (o instanceof StorageEntryMetadata)
+        if (o instanceof KademliaStorageEntryMetadata)
         {
             return this.hashCode() == o.hashCode();
         }

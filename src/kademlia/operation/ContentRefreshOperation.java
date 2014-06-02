@@ -6,6 +6,7 @@ import kademlia.KadConfiguration;
 import kademlia.KadServer;
 import kademlia.KademliaNode;
 import kademlia.dht.KademliaDHT;
+import kademlia.dht.KademliaStorageEntryMetadata;
 import kademlia.dht.StorageEntryMetadata;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.message.Message;
@@ -46,13 +47,13 @@ public class ContentRefreshOperation implements Operation
     public void execute() throws IOException
     {
         /* Get a list of all storage entries for content */
-        List<StorageEntryMetadata> entries = this.dht.getStorageEntries();
+        List<KademliaStorageEntryMetadata> entries = this.dht.getStorageEntries();
 
         /* If a content was last republished before this time, then we need to republish it */
         final long minRepublishTime = (System.currentTimeMillis() / 1000L) - this.config.restoreInterval();
 
         /* For each storage entry, distribute it */
-        for (StorageEntryMetadata e : entries)
+        for (KademliaStorageEntryMetadata e : entries)
         {
             /* Check last update time of this entry and only distribute it if it has been last updated > 1 hour ago */
             if (e.lastRepublished() > minRepublishTime)

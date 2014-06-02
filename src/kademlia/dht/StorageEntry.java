@@ -10,14 +10,14 @@ public class StorageEntry implements KademliaStorageEntry
 {
 
     private String content;
-    private final StorageEntryMetadata metadata;
+    private final KademliaStorageEntryMetadata metadata;
 
     public StorageEntry(final KadContent content)
     {
         this(content, new StorageEntryMetadata(content));
     }
 
-    public StorageEntry(final KadContent content, final StorageEntryMetadata metadata)
+    public StorageEntry(final KadContent content, final KademliaStorageEntryMetadata metadata)
     {
         this.setContent(content.toSerializedForm());
         this.metadata = metadata;
@@ -36,7 +36,7 @@ public class StorageEntry implements KademliaStorageEntry
     }
 
     @Override
-    public final StorageEntryMetadata getContentMetadata()
+    public final KademliaStorageEntryMetadata getContentMetadata()
     {
         return this.metadata;
     }
