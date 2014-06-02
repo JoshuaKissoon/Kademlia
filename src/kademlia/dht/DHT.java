@@ -126,7 +126,7 @@ public class DHT implements KademliaDHT
     @Override
     public boolean store(KadContent content) throws IOException
     {
-        return this.store(new StorageEntry(content));
+        return this.store(new JKademliaStorageEntry(content));
     }
 
     @Override

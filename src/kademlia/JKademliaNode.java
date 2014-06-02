@@ -16,7 +16,7 @@ import kademlia.dht.DHT;
 import kademlia.dht.KadContent;
 import kademlia.dht.KademliaDHT;
 import kademlia.dht.KademliaStorageEntry;
-import kademlia.dht.StorageEntry;
+import kademlia.dht.JKademliaStorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.MessageFactory;
@@ -262,7 +262,7 @@ public class JKademliaNode implements KademliaNode
     @Override
     public int put(KadContent content) throws IOException
     {
-        return this.put(new StorageEntry(content));
+        return this.put(new JKademliaStorageEntry(content));
     }
 
     @Override
@@ -278,7 +278,7 @@ public class JKademliaNode implements KademliaNode
     @Override
     public void putLocally(KadContent content) throws IOException
     {
-        this.dht.store(new StorageEntry(content));
+        this.dht.store(new JKademliaStorageEntry(content));
     }
 
     @Override
