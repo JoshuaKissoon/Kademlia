@@ -1,9 +1,9 @@
 package kademlia.operation;
 
 import java.io.IOException;
-import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
+import kademlia.KademliaNode;
 import kademlia.dht.KademliaDHT;
 
 /**
@@ -16,11 +16,11 @@ public class KadRefreshOperation implements Operation
 {
 
     private final KadServer server;
-    private final JKademliaNode localNode;
+    private final KademliaNode localNode;
     private final KademliaDHT dht;
     private final KadConfiguration config;
 
-    public KadRefreshOperation(KadServer server, JKademliaNode localNode, KademliaDHT dht, KadConfiguration config)
+    public KadRefreshOperation(KadServer server, KademliaNode localNode, KademliaDHT dht, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

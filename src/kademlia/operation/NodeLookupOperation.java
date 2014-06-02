@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
+import kademlia.KademliaNode;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.Message;
 import kademlia.message.NodeLookupMessage;
@@ -37,7 +37,7 @@ public class NodeLookupOperation implements Operation, Receiver
     private static final String FAILED = "Failed";
 
     private final KadServer server;
-    private final JKademliaNode localNode;
+    private final KademliaNode localNode;
     private final KadConfiguration config;
 
     private final Message lookupMessage;        // Message sent to each peer
@@ -60,7 +60,7 @@ public class NodeLookupOperation implements Operation, Receiver
      * @param lookupId  The ID for which to find nodes close to
      * @param config
      */
-    public NodeLookupOperation(KadServer server, JKademliaNode localNode, KademliaId lookupId, KadConfiguration config)
+    public NodeLookupOperation(KadServer server, KademliaNode localNode, KademliaId lookupId, KadConfiguration config)
     {
         this.server = server;
         this.localNode = localNode;

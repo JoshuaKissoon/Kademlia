@@ -10,6 +10,7 @@ import java.io.IOException;
 import kademlia.JKademliaNode;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
+import kademlia.KademliaNode;
 import kademlia.exceptions.RoutingException;
 import kademlia.message.AcknowledgeMessage;
 import kademlia.message.ConnectMessage;
@@ -22,7 +23,7 @@ public class ConnectOperation implements Operation, Receiver
     public static final int MAX_CONNECT_ATTEMPTS = 5;       // Try 5 times to connect to a node
 
     private final KadServer server;
-    private final JKademliaNode localNode;
+    private final KademliaNode localNode;
     private final Node bootstrapNode;
     private final KadConfiguration config;
 
@@ -35,7 +36,7 @@ public class ConnectOperation implements Operation, Receiver
      * @param bootstrap Node to use to bootstrap the local node onto the network
      * @param config
      */
-    public ConnectOperation(KadServer server, JKademliaNode local, Node bootstrap, KadConfiguration config)
+    public ConnectOperation(KadServer server, KademliaNode local, Node bootstrap, KadConfiguration config)
     {
         this.server = server;
         this.localNode = local;
