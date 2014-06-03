@@ -10,14 +10,14 @@ public class JKademliaStorageEntry implements KademliaStorageEntry
 {
 
     private String content;
-    private final KademliaStorageEntryMetadata metadata;
+    private final StorageEntryMetadata metadata;
 
     public JKademliaStorageEntry(final KadContent content)
     {
         this(content, new StorageEntryMetadata(content));
     }
 
-    public JKademliaStorageEntry(final KadContent content, final KademliaStorageEntryMetadata metadata)
+    public JKademliaStorageEntry(final KadContent content, final StorageEntryMetadata metadata)
     {
         this.setContent(content.toSerializedForm());
         this.metadata = metadata;

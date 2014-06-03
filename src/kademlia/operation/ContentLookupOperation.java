@@ -14,6 +14,7 @@ import kademlia.JKademliaNode;
 import kademlia.dht.GetParameter;
 import kademlia.KadConfiguration;
 import kademlia.KadServer;
+import kademlia.dht.JKademliaStorageEntry;
 import kademlia.dht.KademliaStorageEntry;
 import kademlia.exceptions.ContentNotFoundException;
 import kademlia.exceptions.RoutingException;
@@ -43,7 +44,7 @@ public class ContentLookupOperation implements Operation, Receiver
 
     private final KadServer server;
     private final JKademliaNode localNode;
-    private KademliaStorageEntry contentFound = null;
+    private JKademliaStorageEntry contentFound = null;
     private final KadConfiguration config;
 
     private final ContentLookupMessage lookupMessage;
@@ -253,7 +254,7 @@ public class ContentLookupOperation implements Operation, Receiver
             this.localNode.getRoutingTable().insert(msg.getOrigin());
 
             /* Get the Content and check if it satisfies the required parameters */
-            KademliaStorageEntry content = msg.getContent();
+            JKademliaStorageEntry content = msg.getContent();
             this.contentFound = content;
             this.isContentFound = true;
         }
@@ -320,7 +321,7 @@ public class ContentLookupOperation implements Operation, Receiver
      *
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public KademliaStorageEntry getContentFound() throws ContentNotFoundException
+    public JKademliaStorageEntry getContentFound() throws ContentNotFoundException
     {
         if (this.isContentFound)
         {

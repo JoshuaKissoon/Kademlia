@@ -35,7 +35,7 @@ public interface KademliaDHT
      *
      * @return The new ContentSerializer
      */
-    public KadSerializer<KademliaStorageEntry> getSerializer();
+    public KadSerializer<JKademliaStorageEntry> getSerializer();
 
     /**
      * Handle storing content locally
@@ -46,7 +46,7 @@ public interface KademliaDHT
      *
      * @throws java.io.IOException
      */
-    public boolean store(KademliaStorageEntry content) throws IOException;
+    public boolean store(JKademliaStorageEntry content) throws IOException;
 
     public boolean store(KadContent content) throws IOException;
 
@@ -61,7 +61,7 @@ public interface KademliaDHT
      * @throws java.io.FileNotFoundException
      * @throws java.lang.ClassNotFoundException
      */
-    public KademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
+    public JKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException;
 
     /**
      * Check if any content for the given criteria exists in this DHT
@@ -81,7 +81,7 @@ public interface KademliaDHT
      *
      * @throws java.io.IOException
      */
-    public KademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
+    public JKademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException;
 
     /**
      * Get the StorageEntry for the content if any exist.
@@ -92,7 +92,7 @@ public interface KademliaDHT
      *
      * @throws java.io.IOException
      */
-    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
+    public JKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException;
 
     /**
      * Delete a content from local storage

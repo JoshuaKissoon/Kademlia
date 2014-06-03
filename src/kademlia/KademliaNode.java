@@ -3,6 +3,7 @@ package kademlia;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import kademlia.dht.GetParameter;
+import kademlia.dht.JKademliaStorageEntry;
 import kademlia.dht.KadContent;
 import kademlia.dht.KademliaDHT;
 import kademlia.dht.KademliaStorageEntry;
@@ -86,7 +87,7 @@ public interface KademliaNode
      * @throws java.io.IOException
      *
      */
-    public int put(KademliaStorageEntry entry) throws IOException;
+    public int put(JKademliaStorageEntry entry) throws IOException;
 
     /**
      * Store a content on the local node's DHT
@@ -107,7 +108,7 @@ public interface KademliaNode
      * @throws java.io.IOException
      * @throws kademlia.exceptions.ContentNotFoundException
      */
-    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException;
+    public JKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException;
 
     /**
      * Allow the user of the System to call refresh even out of the normal Kad refresh timing

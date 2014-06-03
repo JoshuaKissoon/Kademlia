@@ -266,7 +266,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public int put(KademliaStorageEntry entry) throws IOException
+    public int put(JKademliaStorageEntry entry) throws IOException
     {
         StoreOperation sop = new StoreOperation(this.server, this, entry, this.dht, this.config);
         sop.execute();
@@ -282,7 +282,7 @@ public class JKademliaNode implements KademliaNode
     }
 
     @Override
-    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
+    public JKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException, ContentNotFoundException
     {
         if (this.dht.contains(param))
         {

@@ -26,7 +26,7 @@ public class DHT implements KademliaDHT
 {
 
     private transient StoredContentManager contentManager;
-    private transient KadSerializer<KademliaStorageEntry> serializer = null;
+    private transient KadSerializer<JKademliaStorageEntry> serializer = null;
     private transient KadConfiguration config;
 
     private final String ownerId;
@@ -51,7 +51,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public KadSerializer<KademliaStorageEntry> getSerializer()
+    public KadSerializer<JKademliaStorageEntry> getSerializer()
     {
         if (null == serializer)
         {
@@ -62,7 +62,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public boolean store(KademliaStorageEntry content) throws IOException
+    public boolean store(JKademliaStorageEntry content) throws IOException
     {
         /* Lets check if we have this content and it's the updated version */
         if (this.contentManager.contains(content.getContentMetadata()))
@@ -130,7 +130,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public KademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
+    public JKademliaStorageEntry retrieve(KademliaId key, int hashCode) throws FileNotFoundException, IOException, ClassNotFoundException
     {
         String folder = this.getContentStorageFolderName(key);
         DataInputStream din = new DataInputStream(new FileInputStream(folder + File.separator + hashCode + ".kct"));
@@ -144,7 +144,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public KademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
+    public JKademliaStorageEntry get(KademliaStorageEntryMetadata entry) throws IOException, NoSuchElementException
     {
         try
         {
@@ -164,7 +164,7 @@ public class DHT implements KademliaDHT
     }
 
     @Override
-    public KademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException
+    public JKademliaStorageEntry get(GetParameter param) throws NoSuchElementException, IOException
     {
         /* Load a KadContent if any exist for the given criteria */
         try
