@@ -40,8 +40,8 @@ public class GetParameter
      */
     public GetParameter(KademliaId key, String type, String owner)
     {
-        this(key, owner);
-        this.type = type;
+        this(key, type);
+        this.ownerId = owner;
     }
 
     /**
