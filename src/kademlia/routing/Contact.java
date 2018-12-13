@@ -1,5 +1,6 @@
 package kademlia.routing;
 
+import kademlia.node.KademliaId;
 import kademlia.node.Node;
 
 /**
@@ -104,6 +105,17 @@ public class Contact implements Comparable<Contact>
         if (this.getNode().equals(o.getNode()))
         {
             return 0;
+        }
+
+        if (this.lastSeen() == o.lastSeen()) {
+
+            for (int i = 0; i < KademliaId.ID_LENGTH / 8; i++) {
+                int compare = Byte.compare(this.getNode().getNodeId().getBytes()[i], o.getNode().getNodeId().getBytes()[i]);
+                if (compare != 0) {
+                    return compare;
+                }
+            }
+
         }
 
         return (this.lastSeen() > o.lastSeen()) ? 1 : -1;
